@@ -4,5 +4,7 @@
 *.xml
 
 
+
 spacify-java/target/
 /.idea/libraries/
+/.idea/
