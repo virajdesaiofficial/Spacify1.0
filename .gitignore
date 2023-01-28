@@ -1,0 +1,8 @@
+#extensions
+*.class
+*.iml
+*.xml
+
+
+spacify-java/target/
+/.idea/libraries/
