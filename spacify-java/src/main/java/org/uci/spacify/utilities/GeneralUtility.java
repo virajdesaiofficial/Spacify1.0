@@ -1,4 +1,4 @@
-package org.uci.spacify.Utilities;
+package org.uci.spacify.utilities;
 
 import org.springframework.stereotype.Component;
 

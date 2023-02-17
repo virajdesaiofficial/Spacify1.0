@@ -1,4 +1,4 @@
-package org.uci.spacify.Services;
+package org.uci.spacify.services;
 
 import org.springframework.stereotype.Service;
 

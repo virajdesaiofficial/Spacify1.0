@@ -1,4 +1,4 @@
-package org.uci.spacify.Configurations;
+package org.uci.spacify.configurations;
 
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
