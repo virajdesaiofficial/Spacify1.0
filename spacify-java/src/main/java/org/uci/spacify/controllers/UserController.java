@@ -3,7 +3,7 @@ package org.uci.spacify.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.uci.spacify.entity.User;
+import org.uci.spacify.entity.UserEntity;
 import org.uci.spacify.services.UserService;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class UserController {
     GET API for getting all user
      */
     @GetMapping("/all")
-    public List<User> getAllUsers() {
+    public List<UserEntity> getAllUsers() {
         return this.userService.getAllUsers();
     }
 
@@ -28,8 +28,8 @@ public class UserController {
     GET API for getting a specific user
      */
     @GetMapping("/user/{userId}")
-    public ResponseEntity<User> getUser(@PathVariable(value = "userId") String userId) {
-        Optional<User> user = this.userService.getUser(userId);
+    public ResponseEntity<UserEntity> getUser(@PathVariable(value = "userId") String userId) {
+        Optional<UserEntity> user = this.userService.getUser(userId);
         if (user.isPresent()) {
             return ResponseEntity.ok().body(user.get());
         } else {
@@ -41,8 +41,8 @@ public class UserController {
     POST API for adding new user
      */
     @PostMapping("/addUser")
-    public User createUser(@RequestBody User user) {
-        return this.userService.addUser(user);
+    public UserEntity createUser(@RequestBody UserEntity userEntity) {
+        return this.userService.addUser(userEntity);
     }
 
 }

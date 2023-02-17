@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Setter
 @Entity
 @Table(name = "User", schema = "corespacify")
-public class User {
+public class UserEntity {
     @Id
     @Column(name="user_id")
     private String userId;
@@ -33,7 +33,7 @@ public class User {
     @Column(name="access_level", columnDefinition = "VARCHAR(20)")
     private AccessLevel accessLevel;
 
-    public User(String userId, String email, String firstName, String lastName, AccessLevel accessLevel) {
+    public UserEntity(String userId, String email, String firstName, String lastName, AccessLevel accessLevel) {
         this.userId = userId;
         this.email = email;
         this.firstName = firstName;
@@ -41,7 +41,7 @@ public class User {
         this.accessLevel = accessLevel;
     }
 
-    public User() {
+    public UserEntity() {
 
     }
 }

@@ -2,7 +2,7 @@ package org.uci.spacify.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.uci.spacify.entity.User;
+import org.uci.spacify.entity.UserEntity;
 import org.uci.spacify.repsitory.UserRepository;
 
 import java.util.List;
@@ -13,15 +13,15 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<User> getAllUsers() {
+    public List<UserEntity> getAllUsers() {
         return this.userRepository.findAll();
     }
 
-    public Optional<User> getUser(String userId) {
+    public Optional<UserEntity> getUser(String userId) {
         return this.userRepository.findById(userId);
     }
 
-    public User addUser(User user) {
-        return this.userRepository.save(user);
+    public UserEntity addUser(UserEntity userEntity) {
+        return this.userRepository.save(userEntity);
     }
 }
