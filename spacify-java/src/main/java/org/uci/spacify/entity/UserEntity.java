@@ -10,10 +10,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import static org.uci.spacify.utilities.Constants.SCHEMA_NAME;
+
 @Getter
 @Setter
 @Entity
-@Table(name = "User", schema = "corespacify")
+@Table(name = "User", schema = SCHEMA_NAME)
 public class UserEntity {
     @Id
     @Column(name="user_id")

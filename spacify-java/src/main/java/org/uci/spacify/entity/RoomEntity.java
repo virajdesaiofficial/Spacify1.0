@@ -6,10 +6,12 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import static org.uci.spacify.utilities.Constants.SCHEMA_NAME;
+
 @Getter
 @Setter
 @Entity
-@Table(name="room", schema="corespacify")
+@Table(name="room", schema=SCHEMA_NAME)
 public class RoomEntity {
     @Id
     @Column(name="room_id")

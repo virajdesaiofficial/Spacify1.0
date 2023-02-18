@@ -7,10 +7,12 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 
+import static org.uci.spacify.utilities.Constants.SCHEMA_NAME;
+
 @Getter
 @Setter
 @Entity
-@Table(name="monitoring", schema="corespacify")
+@Table(name="monitoring", schema=SCHEMA_NAME)
 public class MonitoringEntity {
     @Id
     @Column(name = "monitoring_id")

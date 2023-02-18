@@ -5,8 +5,10 @@ import com.sun.istack.NotNull;
 import javax.persistence.*;
 import java.util.Date;
 
+import static org.uci.spacify.utilities.Constants.SCHEMA_NAME;
+
 @Entity
-@Table(name="incentive", schema = "corespacify")
+@Table(name="incentive", schema = SCHEMA_NAME)
 public class IncentiveEntity {
     @Id
     @Column(name = "incentive_id")
