@@ -20,3 +20,5 @@ SELECT * FROM corespacify.owner;
 SELECT * FROM corespacify.subscriber;
 SELECT * FROM corespacify.room;
 SELECT * FROM corespacify.reservation;
+
+-- end of file
