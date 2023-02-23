@@ -31,15 +31,13 @@ public class ReservationEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date timeTo;
 
-    @ManyToOne
-    @JoinColumn(name="reserved_by")
+    @Column(name="reserved_by")
     @NotNull
-    private UserEntity userEntity;
+    private String user_id;
 
-    @ManyToOne
-    @JoinColumn(name = "reserved_room")
+    @Column(name = "reserved_room")
     @NotNull
-    private RoomEntity roomEntity;
+    private Long roomId;
 
     public ReservationEntity() {
     }

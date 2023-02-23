@@ -23,10 +23,9 @@ public class IncentiveEntity {
     @NotNull
     private Date timestamp;
 
-    @ManyToOne
-    @JoinColumn(name="user_id")
+    @Column(name="user_id")
     @NotNull
-    private UserEntity user;
+    private String user_id;
 
     public IncentiveEntity() {
     }
