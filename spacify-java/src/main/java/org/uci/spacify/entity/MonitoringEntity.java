@@ -20,7 +20,7 @@ public class MonitoringEntity {
 
     @Column(name="tippers_space_id")
     @NotNull
-    private Long tippersSpaceId;
+    private Integer tippersSpaceId;
 
     @Column(name="mac_address")
     @NotNull
@@ -38,7 +38,7 @@ public class MonitoringEntity {
     public MonitoringEntity() {
     }
 
-    public MonitoringEntity(Long monitoring_id, Long tippersSpaceId, String macAddress, Integer roomOccupancy, Date timestamp) {
+    public MonitoringEntity(Long monitoring_id, Integer tippersSpaceId, String macAddress, Integer roomOccupancy, Date timestamp) {
         this.monitoring_id = monitoring_id;
         this.tippersSpaceId = tippersSpaceId;
         this.macAddress = macAddress;
