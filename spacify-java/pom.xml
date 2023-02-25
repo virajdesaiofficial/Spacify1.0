@@ -95,7 +95,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        org.uci.spacify.Main
+                                        org.uci.spacifyPortal.Main
                                     </mainClass>
                                 </manifest>
                             </archive>
