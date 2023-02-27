@@ -3,7 +3,9 @@ package org.uci.spacify.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import static org.uci.spacify.utilities.Constants.SCHEMA_NAME;
 
@@ -16,5 +18,9 @@ public class OwnerEntity {
     private UserRoomPK userRoomPK;
 
     public OwnerEntity() {
+    }
+
+    public OwnerEntity(UserRoomPK userRoomPK) {
+        this.userRoomPK = userRoomPK;
     }
 }
