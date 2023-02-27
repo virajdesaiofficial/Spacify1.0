@@ -1,7 +1,7 @@
 import './App.css';
-import Navigation from "./components/nav/Navigation";
-import Home from "./components/home/Home";
-import Create from "./components/createRoom/Create";
+import Navigation from "./components/Nav/Navigation";
+import Home from "./components/Home/Home";
+import Create from "./components/CreateRoom/Create";
 import Team from "./components/team/Team";
 import React from "react";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
