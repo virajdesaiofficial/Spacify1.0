@@ -12,6 +12,10 @@ INSERT INTO corespacify.user VALUES('chinmank', 'student', 'chinmank@uci.edu', '
 INSERT INTO corespacify.user VALUES('dmohanku', 'student', 'dmohanku@uci.edu', 'DJ', 'Kumar');
 INSERT INTO corespacify.user VALUES('sharad', 'faculty', 'sharad@ics.uci.edu', 'Sharad', 'Mehrotra');
 
+UPDATE corespacify.user SET access_level='STUDENT' WHERE access_level='student';
+UPDATE corespacify.user SET access_level='ADMIN' WHERE access_level='admin';
+UPDATE corespacify.user SET access_level='FACULTY' WHERE access_level='faculty';
+
 -- room table entries
 
 INSERT INTO corespacify.room VALUES(1, 'something', 'study', 12);
