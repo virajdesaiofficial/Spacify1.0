@@ -25,17 +25,22 @@ public class RoomEntity {
     private Integer tippersSpaceId;
 
     @Column(name = "room_type")
-    private String roomType;
+    @Enumerated(EnumType.STRING)
+    private RoomType roomType;
 
     @Column(name = "room_rules")
     private String roomRules;
 
+    @Column(name="description")
+    private String description;
+
     public RoomEntity() {
     }
 
-    public RoomEntity(Integer tippersSpaceId, String roomType, String roomRules) {
+    public RoomEntity(Integer tippersSpaceId, RoomType roomType, String roomRules, String description) {
         this.tippersSpaceId = tippersSpaceId;
         this.roomType = roomType;
         this.roomRules = roomRules;
+        this.description = description;
     }
 }
