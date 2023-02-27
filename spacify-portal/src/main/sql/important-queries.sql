@@ -20,14 +20,3 @@ SELECT * FROM corespacify.owner;
 SELECT * FROM corespacify.subscriber;
 SELECT * FROM corespacify.room;
 SELECT * FROM corespacify.reservation;
-
--- INSERT INTO corespacify.user VALUES('desaivh', 'admin', 'desaivh@uci.edu', 'Viraj', 'Desai');
--- SELECT * FROM corespacify.user;
-
--- INSERT INTO corespacify.room VALUES(1, 'something', 'study', 12);
--- SELECT * FROM corespacify.room;
-
--- INSERT INTO corespacify.reservation VALUES(1, 8, '2023-2-22'::timestamp, now(), 1, 'desaivh');
--- SELECT * FROM corespacify.reservation;
-
--- DELETE FROM corespacify.reservation;
