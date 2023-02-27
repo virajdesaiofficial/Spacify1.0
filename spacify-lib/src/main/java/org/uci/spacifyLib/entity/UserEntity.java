@@ -2,6 +2,7 @@ package org.uci.spacifyLib.entity;
 
 import com.sun.istack.NotNull;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -32,6 +33,7 @@ public class UserEntity {
     private String lastName;
 
     @Column(name = "access_level", columnDefinition = "VARCHAR(20)")
+    @Enumerated(EnumType.STRING)
     private AccessLevel accessLevel;
 
     public UserEntity(String userId, String email, String firstName, String lastName, AccessLevel accessLevel) {
