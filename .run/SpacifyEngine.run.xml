@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SpacifyEngine" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../../../../../Program Files/Java/jdk-19" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <envs>
+      <env name="server.port" value="8082" />
+      <env name="spring.profiles.active" value="dev" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="org.uci.spacifyEngine.Main" />
+    <module name="spacify-engine" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
