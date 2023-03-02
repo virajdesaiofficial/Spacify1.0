@@ -29,7 +29,7 @@ public class SpacifyEngine {
     public Rules incentiveCredited(@RequestBody  Rules rule) {
         List<String> listOfRules = new ArrayList<>();
         listOfRules.add("occupancy rule");
-//        listOfRules.add("duration rule");
+        listOfRules.add("duration rule");
         KieSession kieSession = kieContainer.newKieSession();
         kieSession.insert(rule);
         kieSession.setGlobal("ruleObj", rule);
