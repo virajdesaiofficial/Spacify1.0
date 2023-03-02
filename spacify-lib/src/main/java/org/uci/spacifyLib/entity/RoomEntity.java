@@ -1,8 +1,11 @@
 package org.uci.spacifyLib.entity;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.uci.spacify.dto.Rules;
+import org.uci.spacify.dto.RulesSerializer;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,9 +36,9 @@ public class RoomEntity {
     public RoomEntity() {
     }
 
-    public RoomEntity(Integer tippersSpaceId, String roomType, String roomRules) {
+    public RoomEntity(Integer tippersSpaceId, String roomType, Rules roomRules) throws JsonProcessingException {
         this.tippersSpaceId = tippersSpaceId;
         this.roomType = roomType;
-        this.roomRules = roomRules;
+        this.roomRules = RulesSerializer.serialize(roomRules);
     }
 }
