@@ -5,8 +5,11 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.uci.spacifyEngine.services.ReservationService;
 import org.uci.spacifyEngine.services.RulesFilter;
 import org.uci.spacifyLib.dto.Rules;
+import org.uci.spacifyLib.entity.ReservationEntity;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +25,14 @@ public class SpacifyEngine {
     @ResponseBody
     public String dummyController() {
         return "alive";
+    }
+
+    @Autowired
+    private ReservationService reservationService;
+
+    @GetMapping("/all")
+    public List<ReservationEntity> getAllReservations() {
+        return this.reservationService.getAllReservatons();
     }
 
     @PostMapping("/calculateIncentives")
