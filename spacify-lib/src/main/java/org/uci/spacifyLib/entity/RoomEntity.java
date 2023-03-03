@@ -4,13 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.uci.spacify.dto.Rules;
-import org.uci.spacify.dto.RulesSerializer;
+import org.uci.spacifyLib.dto.UiRules;
+import org.uci.spacifyLib.utilities.SpacifyUtility;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.List;
 
 import static org.uci.spacifyLib.utilities.Constants.SCHEMA_NAME;
 
@@ -36,9 +37,9 @@ public class RoomEntity {
     public RoomEntity() {
     }
 
-    public RoomEntity(Integer tippersSpaceId, String roomType, Rules roomRules) throws JsonProcessingException {
+    public RoomEntity(Integer tippersSpaceId, String roomType, List<UiRules> roomRules) throws JsonProcessingException {
         this.tippersSpaceId = tippersSpaceId;
         this.roomType = roomType;
-        this.roomRules = RulesSerializer.serialize(roomRules);
+        this.roomRules = SpacifyUtility.serializeListOfRules(roomRules);
     }
 }

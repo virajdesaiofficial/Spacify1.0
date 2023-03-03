@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.uci.spacifyEngine.services.ReservationService;
 import org.uci.spacifyEngine.services.RulesFilter;
-import org.uci.spacifyLib.dto.Rules;
+import org.uci.spacifyLib.dto.RulesTBDeleted;
 import org.uci.spacifyLib.entity.ReservationEntity;
 
 
@@ -37,7 +37,7 @@ public class SpacifyEngine {
 
     @PostMapping("/calculateIncentives")
     @ResponseBody
-    public Rules incentiveCredited(@RequestBody  Rules rule) {
+    public RulesTBDeleted incentiveCredited(@RequestBody RulesTBDeleted rule) {
         List<String> listOfRules = new ArrayList<>();
         listOfRules.add("occupancy rule");
         listOfRules.add("duration rule");

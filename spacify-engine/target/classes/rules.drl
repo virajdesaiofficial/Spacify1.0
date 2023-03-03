@@ -1,6 +1,6 @@
 
-import org.uci.spacifyLib.dto.Rules;
-global org.uci.spacifyLib.dto.Rules ruleObj;
+import org.uci.spacifyLib.dto.RulesTBDeleted;
+global org.uci.spacifyLib.dto.RulesTBDeleted ruleObj;
 
 dialect  "mvel"
 

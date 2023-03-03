@@ -1,15 +1,16 @@
-package org.uci.spacify.services;
+package org.uci.spacifyPortal.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.uci.spacify.dto.Rules;
-import org.uci.spacify.entity.OwnerEntity;
-import org.uci.spacify.entity.RoomEntity;
-import org.uci.spacify.entity.UserRoomPK;
-import org.uci.spacify.repsitory.OwnerRepository;
-import org.uci.spacify.repsitory.RoomRepository;
+import org.uci.spacifyLib.dto.UiRules;
+import org.uci.spacifyLib.entity.OwnerEntity;
+import org.uci.spacifyLib.entity.RoomEntity;
+import org.uci.spacifyLib.entity.UserRoomPK;
+import org.uci.spacifyLib.repsitory.OwnerRepository;
+import org.uci.spacifyLib.repsitory.RoomRepository;
+import org.uci.spacifyLib.utilities.SpacifyUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,19 +24,11 @@ public class CreateRoomService {
     @Autowired
     private RoomRepository roomRepository;
 
-    public void createRoom(String roomId, String owner, List<Rules> rules) throws JsonProcessingException {
-        List<org.uci.spacify.dto.Rules> roomRules = new ArrayList<>();
-        for (Rules rule : rules) {
-            org.uci.spacify.dto.Rules roomRule = new org.uci.spacify.dto.Rules();
-            roomRule.setRuleId(rule.getRuleId());
-            roomRule.setParams(rule.getParams());
-            roomRules.add(roomRule);
-        }
+    public void createRoom(String roomId, String owner, List<UiRules> rules) throws JsonProcessingException {
 
-        ObjectMapper mapper = new ObjectMapper();
         RoomEntity room = new RoomEntity();
         room.setRoomId(Long.valueOf(roomId));
-        room.setRoomRules(mapper.writeValueAsString(roomRules));
+        room.setRoomRules(SpacifyUtility.serializeListOfRules(rules));
 
         UserRoomPK userRoomPK = new UserRoomPK();
         userRoomPK.setRoom_id(Long.valueOf(roomId));
