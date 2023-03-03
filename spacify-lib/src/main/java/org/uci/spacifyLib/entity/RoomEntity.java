@@ -1,17 +1,10 @@
 package org.uci.spacifyLib.entity;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.uci.spacifyLib.dto.UiRules;
-import org.uci.spacifyLib.utilities.SpacifyUtility;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.List;
+import javax.persistence.*;
 
 import static org.uci.spacifyLib.utilities.Constants.SCHEMA_NAME;
 
@@ -29,17 +22,22 @@ public class RoomEntity {
     private Integer tippersSpaceId;
 
     @Column(name = "room_type")
-    private String roomType;
+    @Enumerated(EnumType.STRING)
+    private RoomType roomType;
 
     @Column(name = "room_rules")
     private String roomRules;
 
+    @Column(name="description")
+    private String description;
+
     public RoomEntity() {
     }
 
-    public RoomEntity(Integer tippersSpaceId, String roomType, List<UiRules> roomRules) throws JsonProcessingException {
+    public RoomEntity(Integer tippersSpaceId, RoomType roomType, String roomRules, String description) {
         this.tippersSpaceId = tippersSpaceId;
         this.roomType = roomType;
-        this.roomRules = SpacifyUtility.serializeListOfRules(roomRules);
+        this.roomRules = roomRules;
+        this.description = description;
     }
 }

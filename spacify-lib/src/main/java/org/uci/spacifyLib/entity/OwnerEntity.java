@@ -19,4 +19,8 @@ public class OwnerEntity {
 
     public OwnerEntity() {
     }
+
+    public OwnerEntity(UserRoomPK userRoomPK) {
+        this.userRoomPK = userRoomPK;
+    }
 }

@@ -55,12 +55,6 @@
             <artifactId>drools-decisiontables</artifactId>
             <version>${drools.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.uci</groupId>
-            <artifactId>spacify-java</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
 
     </dependencies>
 
