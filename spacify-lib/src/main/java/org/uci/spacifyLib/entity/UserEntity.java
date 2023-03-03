@@ -1,16 +1,13 @@
-package org.uci.spacifyLib.entity;
+package org.uci.spacify.entity;
 
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import static org.uci.spacifyLib.utilities.Constants.SCHEMA_NAME;
+import static org.uci.spacify.utilities.Constants.SCHEMA_NAME;
 
 @Getter
 @Setter
@@ -18,21 +15,21 @@ import static org.uci.spacifyLib.utilities.Constants.SCHEMA_NAME;
 @Table(name = "User", schema = SCHEMA_NAME)
 public class UserEntity {
     @Id
-    @Column(name = "user_id")
+    @Column(name="user_id")
     private String userId;
 
-    @Column(name = "email")
-    @NotNull
+    @Column(name="email")
+    @NonNull
     private String email;
 
-    @Column(name = "first_name")
+    @Column(name="first_name")
     @NotNull
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name="last_name")
     private String lastName;
 
-    @Column(name = "access_level", columnDefinition = "VARCHAR(20)")
+    @Column(name="access_level", columnDefinition = "VARCHAR(20)")
     @Enumerated(EnumType.STRING)
     private AccessLevel accessLevel;
 

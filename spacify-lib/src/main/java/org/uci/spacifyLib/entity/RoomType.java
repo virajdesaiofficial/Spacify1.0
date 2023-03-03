@@ -1,4 +1,4 @@
-package org.uci.spacifyLib.entity;
+package org.uci.spacify.entity;
 
 public enum RoomType {
     STUDY("Study"),
