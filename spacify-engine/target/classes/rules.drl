@@ -1,0 +1,21 @@
+
+import org.uci.spacifyLib.dto.RulesTBDeleted;
+global org.uci.spacifyLib.dto.RulesTBDeleted ruleObj;
+
+dialect  "mvel"
+
+rule "occupancy rule"
+    when
+        Rules( calculatedValue1 > thresholdValue1 )
+    then
+
+        ruleObj.setTotalCredits(ruleObj.getTotalCredits() + ruleObj.getIncentive());
+end
+
+rule "duration rule"
+    when
+        Rules( calculatedValue2 > thresholdValue2 )
+    then
+
+        ruleObj.setTotalCredits(ruleObj.getTotalCredits() + ruleObj.getIncentive());
+end

@@ -25,6 +25,14 @@
             </modules>
         </profile>
 
+        <profile>
+            <id>spacify-engine</id>
+            <modules>
+                <module>spacify-lib</module>
+                <module>spacify-engine</module>
+            </modules>
+        </profile>
+
     </profiles>
 
     <build>
