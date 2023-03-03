@@ -20,3 +20,27 @@ SELECT * FROM corespacify.owner;
 SELECT * FROM corespacify.subscriber;
 SELECT * FROM corespacify.room;
 SELECT * FROM corespacify.reservation;
+
+-- Run the below queries for autogenerating roomId
+SELECT MAX(room_id) + 1 FROM corespacify.room;
+CREATE SEQUENCE room_id_sequence START WITH 11; -- replace '11' with max above
+ALTER TABLE corespacify.room ALTER COLUMN room_id SET DEFAULT nextval('room_id_sequence');
+ALTER TABLE corespacify.room ALTER COLUMN room_id SET DEFAULT nextval('room_id_sequence'::regclass);
+ALTER SEQUENCE room_id_sequence OWNER TO app;
+
+-- ALTER SEQUENCE room_id_sequence RESTART WITH 11;
+
+CREATE OR REPLACE FUNCTION setDefaultRoomId()
+RETURNS Trigger AS
+$$
+BEGIN
+NEW.room_id := nextval('room_id_sequence'::regclass);
+RETURN NEW;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+CREATE TRIGGER setDefault
+BEFORE INSERT ON corespacify.room
+FOR EACH ROW
+EXECUTE FUNCTION setDefaultRoomId();
