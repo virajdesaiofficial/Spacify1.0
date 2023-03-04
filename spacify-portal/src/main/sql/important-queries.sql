@@ -43,4 +43,5 @@ LANGUAGE PLPGSQL;
 CREATE TRIGGER setDefault
 BEFORE INSERT ON corespacify.room
 FOR EACH ROW
+WHEN (NEW.room_id = -1)
 EXECUTE FUNCTION setDefaultRoomId();
