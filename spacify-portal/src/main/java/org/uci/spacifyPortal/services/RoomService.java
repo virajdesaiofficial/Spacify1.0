@@ -1,14 +1,18 @@
 package org.uci.spacifyPortal.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.uci.spacifyLib.dto.Rule;
 import org.uci.spacifyLib.entity.RoomEntity;
 import org.uci.spacifyLib.entity.RoomType;
 import org.uci.spacifyLib.repsitory.RoomRepository;
+import org.uci.spacifyLib.utilities.SpacifyUtility;
 import org.uci.spacifyPortal.utilities.CreateRequest;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class RoomService {
@@ -36,5 +40,16 @@ public class RoomService {
 
     public boolean doesRoomExist(int tippersSpaceId) {
         return Objects.nonNull(this.roomRepository.findByTippersSpaceId(tippersSpaceId));
+    }
+
+    public boolean addRules(long roomId, String owner, List<Rule> rules) throws JsonProcessingException {
+        Optional<RoomEntity> room = this.roomRepository.findById(roomId);
+
+        if (room.isPresent()) {
+            room.get().setRoomRules(SpacifyUtility.serializeListOfRules(rules));
+            this.roomRepository.save(room.get());
+            return true;
+        }
+        return false;
     }
 }

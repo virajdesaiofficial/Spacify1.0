@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.uci.spacifyLib.dto.RulesRequest;
 import org.uci.spacifyLib.entity.RoomEntity;
 import org.uci.spacifyPortal.services.OwnerService;
 import org.uci.spacifyPortal.services.RoomService;
@@ -51,5 +52,13 @@ public class RoomController {
     @GetMapping("/tippers/all")
     public List<Integer> getAll() {
         return Arrays.asList(112,113,111,100);
+    }
+
+    @PostMapping("/addRules")
+    public ResponseEntity<String> addRules(@RequestBody RulesRequest request) throws Exception {
+        // Call the rule service with the provided data
+        this.roomService.addRules(request.getRoomId(), request.getUserId(), request.getRules());
+
+        return new ResponseEntity<>("Room created successfully", HttpStatus.CREATED);
     }
 }
