@@ -21,16 +21,16 @@ public class AvailableSlotsEntity {
     @Id
     @NotNull
     @Column(name = "available_slots_id")
-    private Long available_slots_id;
+    private Long availableSlotsId;
 
     @Column(name = "time_from")
-    private Time time_from;
+    private Time timeFrom;
 
     @Column(name = "time_to")
-    private Time time_to;
+    private Time timeTo;
 
     @Column(name = "room_type")
-    private String room_type;
+    private String roomType;
 
     public AvailableSlotsEntity() {
     }

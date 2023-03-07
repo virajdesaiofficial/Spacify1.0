@@ -28,7 +28,7 @@ public class AvailableSlotsService {
     @Autowired
     private AvailableSlotsRepository availableSlotsRepository;
 
-    public List<AvailableSlotsEntity> getAllAvailableSlots() {
+    public List<ReservationEntity> getAllAvailableSlots() {
         String room_type = "study";         //to take from UI
         LocalDateTime from_date_time = LocalDateTime.parse("2023-02-20T13:00");     //to take from UI
         LocalDateTime to_date_time = LocalDateTime.parse("2023-02-20T15:00");       //to take from UI
@@ -37,8 +37,8 @@ public class AvailableSlotsService {
         List<AvailableSlotsEntity> AvailableSlotsEntityList;
         AvailableSlotsEntityList = (List<AvailableSlotsEntity>) availableSlotsRepository.findByroomType(room_type);
 
-        Time available_slots_time_from = AvailableSlotsEntityList.get(0).getTime_from();
-        Time available_slots_time_to = AvailableSlotsEntityList.get(0).getTime_to();
+        Time available_slots_time_from = AvailableSlotsEntityList.get(0).getTimeFrom();
+        Time available_slots_time_to = AvailableSlotsEntityList.get(0).getTimeTo();
 
         List<RoomEntity> RoomEntityList;
         RoomEntityList = (List<RoomEntity>) roomRepository.findByroomType(room_type);  //find all rooms with room_type="study"
@@ -64,7 +64,7 @@ public class AvailableSlotsService {
             time_to.add(arr.get(i).getTimeTo());
 //            System.out.println("list is " + arr.get(i).getTimeTo());
         }
-        System.out.println(time_to);
+//        System.out.println(time_to);
 
 //        System.out.println("list is " + (reservationRepository.findByroomIdIn(r_id)));
 //        for(int i = 0; i< r_id.size(); i++) {
@@ -80,6 +80,6 @@ public class AvailableSlotsService {
 //            System.out.println("time from " + reservationEntity.getTimeFrom() + "time to " + reservationEntity.getTimeTo());
 //        }
 
-        return AvailableSlotsEntityList;
+        return arr;
     }
 }

@@ -41,7 +41,7 @@ public class SpacifyEngine {
     private AvailableSlotsService availableSlotsService;
 
     @GetMapping("/availableSlots")
-    public List<AvailableSlotsEntity> getAllAvailableSlots() {
+    public List<ReservationEntity> getAllAvailableSlots() {
         return this.availableSlotsService.getAllAvailableSlots();
     }
 
