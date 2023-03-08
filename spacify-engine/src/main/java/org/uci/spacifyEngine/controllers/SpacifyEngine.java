@@ -5,12 +5,12 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.uci.spacifyEngine.services.AvailableSlotsService;
 import org.uci.spacifyEngine.services.ReservationService;
 import org.uci.spacifyEngine.services.RulesFilter;
 import org.uci.spacifyLib.dto.Rules;
-import org.uci.spacifyLib.entity.AvailableSlotsEntity;
 import org.uci.spacifyLib.entity.ReservationEntity;
+import org.uci.spacifyEngine.services.AvailableSlotsService;
+import org.uci.spacifyLib.entity.AvailableSlotsEntity;
 
 
 import java.util.ArrayList;
