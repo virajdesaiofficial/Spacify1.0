@@ -12,15 +12,15 @@ public class CreateRequest {
 
     private String roomType;
 
-    private String roomDescription;
+    private String roomName;
 
     public CreateRequest() {
     }
 
-    public CreateRequest(int tippersSpaceId, String userId, String roomType, String roomDescription) {
+    public CreateRequest(int tippersSpaceId, String userId, String roomType, String roomName) {
         this.tippersSpaceId = tippersSpaceId;
         this.userId = userId;
         this.roomType = roomType;
-        this.roomDescription = roomDescription;
+        this.roomName = roomName;
     }
 }

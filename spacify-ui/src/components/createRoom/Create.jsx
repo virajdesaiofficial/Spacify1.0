@@ -21,7 +21,7 @@ function Create(props) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             // TODO: Use the actual roomType, description etc when available
-            body: JSON.stringify({ userId: userId, tippersSpaceId: tippersSpaceId, roomType: 'STUDY', roomDescription: 'mock name' })
+            body: JSON.stringify({ userId: userId, tippersSpaceId: tippersSpaceId, roomType: 'STUDY', roomName: 'mock name' })
         };
         fetch(CREATE_ROOM_API, requestHeader)
             .then((res) => res.json())
@@ -74,7 +74,7 @@ function Create(props) {
                     <option value=''>Select Room</option>
                     {rooms.map((item, index) => {
                         return (
-                            <option key={index} value={item}>{item}</option>
+                            <option key={index} value={item.tippersSpaceId}>{item.name}</option>
                         );
                     })}
                 </Form.Select>
