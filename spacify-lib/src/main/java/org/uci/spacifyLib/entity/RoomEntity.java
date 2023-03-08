@@ -29,15 +29,15 @@ public class RoomEntity {
     private String roomRules;
 
     @Column(name="description")
-    private String description;
+    private String roomName;
 
     public RoomEntity() {
     }
 
-    public RoomEntity(Integer tippersSpaceId, RoomType roomType, String roomRules, String description) {
+    public RoomEntity(Integer tippersSpaceId, RoomType roomType, String roomRules, String roomName) {
         this.tippersSpaceId = tippersSpaceId;
         this.roomType = roomType;
         this.roomRules = roomRules;
-        this.description = description;
+        this.roomName = roomName;
     }
 }

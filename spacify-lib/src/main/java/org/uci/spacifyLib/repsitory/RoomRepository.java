@@ -6,4 +6,6 @@ import org.uci.spacifyLib.entity.RoomEntity;
 
 @Repository
 public interface RoomRepository  extends JpaRepository<RoomEntity, Long> {
+
+    RoomEntity findByTippersSpaceId(int tippersSpaceId);
 }

@@ -5,6 +5,11 @@ import Create from "./components/createRoom/Create";
 import Team from "./components/team/Team";
 import React from "react";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import Rules from "./components/rules/Rules";
+import SignIn from "./components/signin/SignIn";
+import SignUp from "./components/signup/SignUp";
+import UserProfile from "./components/userProfile/UserProfile";
+import Reservation from "./components/reservation/Reservation";
 
 const router = createBrowserRouter([
     {
@@ -21,6 +26,26 @@ const router = createBrowserRouter([
             {
                 path: "/team",
                 element: <Team />
+            },
+            {
+                path: "/reserve",
+                element: <Reservation />
+            },
+            {
+                path: "/rules",
+                element: <Rules />
+            },
+            {
+                path: "/signIn",
+                element: <SignIn />
+            },
+            {
+                path: "/signUp",
+                element: <SignUp />
+            },
+            {
+                path: "/user",
+                element: <UserProfile />
             }
         ]
     }
@@ -28,9 +53,9 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-      <div>
+      <section className="app_container">
           <RouterProvider router={router}/>
-      </div>
+      </section>
   );
 }
 
