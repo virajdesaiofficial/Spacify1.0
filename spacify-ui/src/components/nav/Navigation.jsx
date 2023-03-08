@@ -13,8 +13,9 @@ function Navigation() {
                     <Navbar.Brand href="/">Spacify</Navbar.Brand>
                     <Nav className="me-auto">
                         <Nav.Link><Link to={"/"} className="link">Home</Link></Nav.Link>
-                        <Nav.Link><Link to={"/create"} className="link">Create Room</Link></Nav.Link>
+                        <Nav.Link><Link to={"/reservation"} className="link">Reserve</Link></Nav.Link>
                         <Nav.Link><Link to={"/team"} className="link">Team</Link></Nav.Link>
+                        <Nav.Link><Link to={"/user"} className="link">Profile</Link></Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>

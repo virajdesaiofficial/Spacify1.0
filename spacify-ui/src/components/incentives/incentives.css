@@ -1,0 +1,18 @@
+.incentive-points-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.incentive-points-heading {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.incentive-points-number {
+  font-size: 32px;
+  font-weight: bold;
+  color: #4CAF50;
+}

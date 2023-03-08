@@ -1,0 +1,35 @@
+.rooms-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.rooms-header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.location-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.location-header {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.room-dropdown {
+  width: 200px;
+  height: 40px;
+  font-size: 16px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid gray;
+}
