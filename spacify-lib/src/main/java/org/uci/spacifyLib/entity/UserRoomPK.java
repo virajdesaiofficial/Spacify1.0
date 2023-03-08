@@ -12,16 +12,16 @@ import java.io.Serializable;
 @Embeddable
 public class UserRoomPK implements Serializable {
     @Column(name = "user_id")
-    private String user_id;
+    private String userId;
 
     @Column(name = "room_id")
-    private Long room_id;
+    private Long roomId;
 
     public UserRoomPK() {
     }
 
-    public UserRoomPK(String user_id, Long room_id) {
-        this.user_id = user_id;
-        this.room_id = room_id;
+    public UserRoomPK(String userId, Long roomId) {
+        this.userId = userId;
+        this.roomId = roomId;
     }
 }

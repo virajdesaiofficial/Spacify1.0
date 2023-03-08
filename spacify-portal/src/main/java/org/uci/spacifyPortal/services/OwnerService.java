@@ -6,6 +6,8 @@ import org.uci.spacifyLib.entity.OwnerEntity;
 import org.uci.spacifyLib.entity.UserRoomPK;
 import org.uci.spacifyLib.repsitory.OwnerRepository;
 
+import java.util.List;
+
 @Service
 public class OwnerService {
     @Autowired
@@ -17,5 +19,8 @@ public class OwnerService {
         this.ownerRepository.save(ownerEntity);
     }
 
+    public List<OwnerEntity> getAllOwnedRooms(String userId) {
+        return this.ownerRepository.findAllByUserRoomPK_UserId(userId);
+    }
 
 }
