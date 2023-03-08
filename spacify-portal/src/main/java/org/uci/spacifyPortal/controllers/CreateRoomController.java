@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.uci.spacifyLib.dto.CreateRoom;
-import org.uci.spacifyLib.dto.UiRules;
+import org.uci.spacifyLib.dto.Rule;
+import org.uci.spacifyLib.dto.RulesRequest;
 import org.uci.spacifyLib.entity.RoomEntity;
 import org.uci.spacifyPortal.services.CreateRoomService;
 import org.uci.spacifyPortal.services.OwnerService;
@@ -27,10 +27,10 @@ public class CreateRoomController {
     private OwnerService ownerService;
 
     @PostMapping("/room")
-    public ResponseEntity<String> createRoom(@RequestBody CreateRoom request) throws Exception {
-        String roomId = request.getRoomId();
-        String owner = request.getOwner();
-        List<UiRules> rules = request.getRules();
+    public ResponseEntity<String> createRoom(@RequestBody RulesRequest request) throws Exception {
+        Long roomId = request.getRoomId();
+        String owner = request.getUserId();
+        List<Rule> rules = request.getRules();
 
         // Call the create room service with the provided data
         createRoomService.createRoom(roomId, owner, rules);
@@ -76,9 +76,9 @@ public class CreateRoomController {
     }
 
     @PostMapping("/addRules")
-    public ResponseEntity<String> addRules(@RequestBody CreateRoom request) throws Exception {
+    public ResponseEntity<String> addRules(@RequestBody RulesRequest request) throws Exception {
         // Call the rule service with the provided data
-        this.createRoomService.addRules(request.getRoomId(), request.getOwner(), request.getRules());
+        this.createRoomService.addRules(request.getRoomId(), request.getUserId(), request.getRules());
 
         return new ResponseEntity<>("Room created successfully", HttpStatus.CREATED);
     }

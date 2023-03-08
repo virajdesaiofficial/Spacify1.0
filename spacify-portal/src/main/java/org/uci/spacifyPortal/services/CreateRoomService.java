@@ -3,7 +3,7 @@ package org.uci.spacifyPortal.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.uci.spacifyLib.dto.UiRules;
+import org.uci.spacifyLib.dto.Rule;
 import org.uci.spacifyLib.entity.OwnerEntity;
 import org.uci.spacifyLib.entity.RoomEntity;
 import org.uci.spacifyLib.entity.RoomType;
@@ -27,7 +27,7 @@ public class CreateRoomService {
     @Autowired
     private RoomRepository roomRepository;
 
-    public void createRoom(String roomId, String owner, List<UiRules> rules) throws JsonProcessingException {
+    public void createRoom(Long roomId, String owner, List<Rule> rules) throws JsonProcessingException {
 
         RoomEntity room = new RoomEntity();
         room.setRoomId(Long.valueOf(roomId));
@@ -69,8 +69,8 @@ public class CreateRoomService {
         return Objects.nonNull(this.roomRepository.findByTippersSpaceId(tippersSpaceId));
     }
 
-    public boolean addRules(String roomId, String owner, List<UiRules> rules) throws JsonProcessingException {
-        Optional<RoomEntity> room = this.roomRepository.findById(Long.valueOf(roomId));
+    public boolean addRules(Long roomId, String owner, List<Rule> rules) throws JsonProcessingException {
+        Optional<RoomEntity> room = this.roomRepository.findById(roomId);
 
         if (room.isPresent()) {
             room.get().setRoomRules(SpacifyUtility.serializeListOfRules(rules));

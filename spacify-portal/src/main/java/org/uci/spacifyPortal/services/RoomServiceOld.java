@@ -4,47 +4,20 @@
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Service;
 //import org.uci.spacifyLib.dto.Rule;
-//import org.uci.spacifyLib.entity.OwnerEntity;
 //import org.uci.spacifyLib.entity.RoomEntity;
 //import org.uci.spacifyLib.entity.RoomType;
-//import org.uci.spacifyLib.entity.UserRoomPK;
-//import org.uci.spacifyLib.repsitory.OwnerRepository;
 //import org.uci.spacifyLib.repsitory.RoomRepository;
 //import org.uci.spacifyLib.utilities.SpacifyUtility;
 //import org.uci.spacifyPortal.utilities.CreateRequest;
 //
-//import java.util.ArrayList;
 //import java.util.List;
 //import java.util.Objects;
 //import java.util.Optional;
 //
 //@Service
-//public class RoomService {
-//
-//    @Autowired
-//    private OwnerRepository ownerRepository;
-//
+//public class RoomServiceOld {
 //    @Autowired
 //    private RoomRepository roomRepository;
-//
-//    public void createRoom(Long roomId, String owner, List<Rule> rules) throws JsonProcessingException {
-//
-//        RoomEntity room = new RoomEntity();
-//        room.setRoomId(Long.valueOf(roomId));
-//        room.setRoomRules(SpacifyUtility.serializeListOfRules(rules));
-//
-//        UserRoomPK userRoomPK = new UserRoomPK();
-//        userRoomPK.setRoom_id(roomId);
-//        userRoomPK.setUser_id(owner);
-//        OwnerEntity ownerEntity = new OwnerEntity();
-//        ownerEntity.setUserRoomPK(userRoomPK);
-//
-//        List<OwnerEntity> owners = new ArrayList<>();
-//        owners.add(ownerEntity);
-//
-//        roomRepository.save(room);
-//        ownerRepository.saveAll(owners);
-//    }
 //
 //    public RoomEntity createRoom(CreateRequest createRequest) {
 //        RoomEntity roomEntity = new RoomEntity();
@@ -79,5 +52,4 @@
 //        }
 //        return false;
 //    }
-//
 //}

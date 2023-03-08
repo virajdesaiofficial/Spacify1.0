@@ -4,37 +4,25 @@
 //import org.springframework.http.HttpStatus;
 //import org.springframework.http.ResponseEntity;
 //import org.springframework.web.bind.annotation.*;
-//import org.uci.spacifyLib.dto.Rule;
 //import org.uci.spacifyLib.dto.RulesRequest;
 //import org.uci.spacifyLib.entity.RoomEntity;
 //import org.uci.spacifyPortal.services.OwnerService;
-//import org.uci.spacifyPortal.services.RoomService;
+//import org.uci.spacifyPortal.services.RoomServiceOld;
 //import org.uci.spacifyPortal.utilities.CreateRequest;
 //
 //import java.util.Arrays;
 //import java.util.List;
 //
+//@CrossOrigin(maxAge = 3600)
 //@RestController
 //@RequestMapping("/api/v1/room")
-//public class RoomController {
+//public class RoomControllerOld {
 //
 //    @Autowired
-//    private RoomService roomService;
+//    private RoomServiceOld roomServiceOld;
 //
 //    @Autowired
 //    private OwnerService ownerService;
-//
-//    @PostMapping("/room")
-//    public ResponseEntity<String> createRoom(@RequestBody RulesRequest request) throws Exception {
-//        Long roomId = request.getRoomId();
-//        String owner = request.getUserId();
-//        List<Rule> rules = request.getRules();
-//
-//        // Call the create room service with the provided data
-//        roomService.createRoom(roomId, owner, rules);
-//
-//        return new ResponseEntity<>("Room created successfully", HttpStatus.CREATED);
-//    }
 //
 //    /*
 //    POST API for adding new room and owner
@@ -42,11 +30,11 @@
 //    @PostMapping("/create")
 //    public ResponseEntity<String>  createRoom(@RequestBody CreateRequest createRequest) {
 //        try {
-//            boolean roomExists = this.roomService.doesRoomExist(createRequest.getTippersSpaceId());
+//            boolean roomExists = this.roomServiceOld.doesRoomExist(createRequest.getTippersSpaceId());
 //            if (roomExists) {
 //                return new ResponseEntity<>("Room is already owned. Please reach out to owner for access.", HttpStatus.IM_USED);
 //            }
-//            RoomEntity roomEntity = this.roomService.createRoom(createRequest);
+//            RoomEntity roomEntity = this.roomServiceOld.createRoom(createRequest);
 //            this.ownerService.createOwner(createRequest.getUserId(), roomEntity.getRoomId());
 //            return new ResponseEntity<>("Successful", HttpStatus.OK);
 //        } catch (Exception e) {
@@ -56,7 +44,7 @@
 //
 //    @GetMapping("/all")
 //    public List<RoomEntity> getAllRooms() {
-//        return  this.roomService.getAllRooms();
+//        return  this.roomServiceOld.getAllRooms();
 //    }
 //
 //
@@ -69,9 +57,8 @@
 //    @PostMapping("/addRules")
 //    public ResponseEntity<String> addRules(@RequestBody RulesRequest request) throws Exception {
 //        // Call the rule service with the provided data
-//        this.roomService.addRules(request.getRoomId(), request.getUserId(), request.getRules());
+//        this.roomServiceOld.addRules(request.getRoomId(), request.getUserId(), request.getRules());
 //
 //        return new ResponseEntity<>("Room created successfully", HttpStatus.CREATED);
 //    }
-//
 //}
