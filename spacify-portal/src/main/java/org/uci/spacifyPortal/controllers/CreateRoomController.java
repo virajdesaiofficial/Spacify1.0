@@ -18,7 +18,7 @@ import java.util.List;
 @CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping("/api/v1/room")
-public class RoomController {
+public class CreateRoomController {
 
     @Autowired
     private CreateRoomService createRoomService;
