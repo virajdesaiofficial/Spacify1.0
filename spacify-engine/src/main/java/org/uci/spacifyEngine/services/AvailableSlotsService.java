@@ -41,8 +41,8 @@ public class AvailableSlotsService {
         Time available_slots_time_to = AvailableSlotsEntityList.get(0).getTimeTo();
 
         List<RoomEntity> RoomEntityList;
-        RoomEntityList = (List<RoomEntity>) roomRepository.findByroomType(room_type);  //find all rooms with room_type="study"
-
+//        RoomEntityList = (List<RoomEntity>) roomRepository.findByroomType(room_type);  //find all rooms with room_type="study"
+        RoomEntityList = (List<RoomEntity>) roomRepository.findByroomType(room_type);
         List<Long> r_id = new ArrayList<>();
 
         for(RoomEntity roomEntity : RoomEntityList) {           //get room ids from the room table for room type "study"

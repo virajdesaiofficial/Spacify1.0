@@ -3,7 +3,7 @@ package org.uci.spacifyPortal.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.uci.spacifyLib.entity.SubscriberEntity;
-import org.uci.spacifyLib.repsitory.SubscriberRepository;
+import org.uci.spacifyLib.repository.SubscriberRepository;
 
 import java.util.List;
 

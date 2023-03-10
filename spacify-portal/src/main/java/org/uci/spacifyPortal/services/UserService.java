@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.uci.spacifyLib.entity.AccessLevel;
 import org.uci.spacifyLib.entity.UserEntity;
-import org.uci.spacifyLib.repsitory.UserRepository;
+import org.uci.spacifyLib.repository.UserRepository;
 
 import java.util.Arrays;
 import java.util.List;

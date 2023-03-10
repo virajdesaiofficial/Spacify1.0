@@ -36,7 +36,7 @@ public class SpacifyEngine {
 
     @GetMapping("/all")
     public List<ReservationEntity> getAllReservations() {
-        return this.reservationService.getAllReservations();
+        return this.reservationService.getAllReservatons();
     }
 
     @Autowired
