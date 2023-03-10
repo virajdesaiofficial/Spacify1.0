@@ -20,4 +20,8 @@ public class SubscriberEntity {
 
     public SubscriberEntity() {
     }
+
+    public SubscriberEntity(UserRoomPK userRoomPK) {
+        this.userRoomPK = userRoomPK;
+    }
 }

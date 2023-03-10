@@ -4,7 +4,10 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 import static org.uci.spacifyLib.utilities.Constants.SCHEMA_NAME;
@@ -28,7 +31,7 @@ public class IncentiveEntity {
 
     @Column(name="user_id")
     @NotNull
-    private String user_id;
+    private String userId;
 
     public IncentiveEntity() {
     }

@@ -7,11 +7,11 @@ import lombok.Setter;
 import java.util.List;
 @Getter
 @Setter
-public class CreateRoom {
+public class RulesRequest {
 
-    private String roomId;
-    private String owner;
-    private List<UiRules> rules;
+    private Long roomId;
+    private String userId;
+    private List<Rule> rules;
 
 }
 

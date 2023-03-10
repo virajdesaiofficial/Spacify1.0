@@ -7,16 +7,21 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-@Embeddable
 @Getter
 @Setter
+@Embeddable
 public class UserRoomPK implements Serializable {
     @Column(name = "user_id")
-    private String user_id;
+    private String userId;
 
     @Column(name = "room_id")
-    private Long room_id;
+    private Long roomId;
 
     public UserRoomPK() {
+    }
+
+    public UserRoomPK(String userId, Long roomId) {
+        this.userId = userId;
+        this.roomId = roomId;
     }
 }

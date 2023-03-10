@@ -9,7 +9,5 @@ import java.util.List;
 
 @Repository
 public interface OwnerRepository extends JpaRepository<OwnerEntity, UserRoomPK> {
-
-        public List<OwnerEntity> findAllByUserRoomPK_UserId(String user_id);
-
+    public List<OwnerEntity> findAllByUserRoomPK_UserId(String user_id);
 }

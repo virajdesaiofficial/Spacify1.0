@@ -6,14 +6,14 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class UiRules extends Rules {
+public class Rule extends Rules {
 
     private Map<String, String> params;
 
-    public UiRules(Map<String, String> params) {
+    public Rule(Map<String, String> params) {
         this.params = params;
     }
 
-    public  UiRules(){}
+    public Rule(){}
 }
 

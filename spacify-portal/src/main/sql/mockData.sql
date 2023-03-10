@@ -12,6 +12,10 @@ INSERT INTO corespacify.user VALUES('chinmank', 'student', 'chinmank@uci.edu', '
 INSERT INTO corespacify.user VALUES('dmohanku', 'student', 'dmohanku@uci.edu', 'DJ', 'Kumar');
 INSERT INTO corespacify.user VALUES('sharad', 'faculty', 'sharad@ics.uci.edu', 'Sharad', 'Mehrotra');
 
+UPDATE corespacify.user SET access_level='STUDENT' WHERE access_level='student';
+UPDATE corespacify.user SET access_level='ADMIN' WHERE access_level='admin';
+UPDATE corespacify.user SET access_level='FACULTY' WHERE access_level='faculty';
+
 -- room table entries
 
 INSERT INTO corespacify.room VALUES(1, 'something', 'study', 12);
@@ -24,6 +28,23 @@ INSERT INTO corespacify.room VALUES(7, '', 'study', 20);
 INSERT INTO corespacify.room VALUES(8, 'no more than 10 people', 'conference', 24);
 INSERT INTO corespacify.room VALUES(9, 'blah blah blah', 'study', 23);
 INSERT INTO corespacify.room VALUES(10, null, 'study', 17);
+
+ALTER TABLE corespacify.room ADD COLUMN description VARCHAR(255);
+UPDATE corespacify.room SET description = 'C110 VP' WHERE room_id=1;
+UPDATE corespacify.room SET description = 'B100 VP' WHERE room_id=2;
+UPDATE corespacify.room SET description = 'A100 VP' WHERE room_id=3;
+UPDATE corespacify.room SET description = 'CC102' WHERE room_id=4;
+UPDATE corespacify.room SET description = 'CC104' WHERE room_id=5;
+UPDATE corespacify.room SET description = 'CC Reception' WHERE room_id=6;
+UPDATE corespacify.room SET description = 'C111 VP' WHERE room_id=7;
+UPDATE corespacify.room SET description = 'CC20' WHERE room_id=8;
+UPDATE corespacify.room SET description = 'B101 VP' WHERE room_id=9;
+UPDATE corespacify.room SET description = 'D100 VP' WHERE room_id=10;
+
+UPDATE corespacify.room SET room_type = 'STUDY' WHERE room_type='study';
+UPDATE corespacify.room SET room_type = 'CONFERENCE' WHERE room_type='conference';
+UPDATE corespacify.room SET room_type = 'OFFICE' WHERE room_type='office';
+UPDATE corespacify.room SET room_type = 'COMMON_SPACE' WHERE room_type='common space';
 
 -- owner table entries
 
