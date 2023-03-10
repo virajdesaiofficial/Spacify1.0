@@ -1,4 +1,4 @@
-package org.uci.spacifyLib.repository;
+package org.uci.spacifyLib.repsitory;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

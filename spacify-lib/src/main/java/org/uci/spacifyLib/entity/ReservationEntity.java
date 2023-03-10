@@ -36,7 +36,7 @@ public class ReservationEntity {
     @NotNull
     private String user_id;
 
-    @Column(name = "fk_room_id")
+    @Column(name = "reserved_room")
     @NotNull
     private Long roomId;
 

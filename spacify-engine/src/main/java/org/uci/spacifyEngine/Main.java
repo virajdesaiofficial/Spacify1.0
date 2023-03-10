@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 //@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
 @EntityScan(basePackages = {"org.uci.spacifyLib.entity"})
-@EnableJpaRepositories(basePackages = {"org.uci.spacifyLib.repository"})
+@EnableJpaRepositories(basePackages = {"org.uci.spacifyLib.repsitory"})
 public class Main {
     public static void main(String[] args) {
 
