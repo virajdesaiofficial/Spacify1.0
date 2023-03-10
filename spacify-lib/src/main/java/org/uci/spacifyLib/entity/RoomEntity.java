@@ -4,10 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import static org.uci.spacifyLib.utilities.Constants.SCHEMA_NAME;
 
@@ -25,17 +22,22 @@ public class RoomEntity {
     private Integer tippersSpaceId;
 
     @Column(name = "room_type")
-    private String roomType;
+    @Enumerated(EnumType.STRING)
+    private RoomType roomType;
 
     @Column(name = "room_rules")
     private String roomRules;
 
+    @Column(name="description")
+    private String roomName;
+
     public RoomEntity() {
     }
 
-    public RoomEntity(Integer tippersSpaceId, String roomType, String roomRules) {
+    public RoomEntity(Integer tippersSpaceId, RoomType roomType, String roomRules, String roomName) {
         this.tippersSpaceId = tippersSpaceId;
         this.roomType = roomType;
         this.roomRules = roomRules;
+        this.roomName = roomName;
     }
 }

@@ -9,11 +9,10 @@ import java.util.List;
 
 @Service
 public class SubscriberService {
-
     @Autowired
     private SubscriberRepository subscriberRepository;
 
-    public List<SubscriberEntity> getAll() {
-        return this.subscriberRepository.findAll();
+    public List<SubscriberEntity> getAllSubscribedRooms(String userId) {
+        return this.subscriberRepository.findAllByUserRoomPK_UserId(userId);
     }
 }

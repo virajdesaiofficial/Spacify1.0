@@ -9,11 +9,10 @@ import java.util.List;
 
 @Service
 public class IncentiveService {
-
     @Autowired
     private IncentiveRepository incentiveRepository;
 
-    public List<IncentiveEntity> getAll() {
-        return this.incentiveRepository.findAll();
+    public List<IncentiveEntity> getIncentivesForUser(String userId) {
+        return this.incentiveRepository.findAllByUserId(userId);
     }
 }
