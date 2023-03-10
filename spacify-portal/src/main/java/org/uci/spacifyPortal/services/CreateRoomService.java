@@ -34,8 +34,8 @@ public class CreateRoomService {
         room.setRoomRules(SpacifyUtility.serializeListOfRules(rules));
 
         UserRoomPK userRoomPK = new UserRoomPK();
-        userRoomPK.setRoom_id(Long.valueOf(roomId));
-        userRoomPK.setUser_id(owner);
+        userRoomPK.setRoomId(Long.valueOf(roomId));
+        userRoomPK.setUserId(owner);
         OwnerEntity ownerEntity = new OwnerEntity();
         ownerEntity.setUserRoomPK(userRoomPK);
 
@@ -78,5 +78,9 @@ public class CreateRoomService {
             return true;
         }
         return false;
+    }
+
+    public List<RoomEntity> getRoomsBasedOnIds(List<Long> roomIds) {
+        return this.roomRepository.findByRoomIdIn(roomIds);
     }
 }
