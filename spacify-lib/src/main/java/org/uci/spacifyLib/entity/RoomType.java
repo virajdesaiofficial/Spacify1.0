@@ -1,7 +1,7 @@
 package org.uci.spacifyLib.entity;
 
 public enum RoomType {
-    STUDY("Study"),
+    STUDY("STUDY"),
     OFFICE("Office"),
     COMMON_SPACE("Common Space"),
     CONFERENCE("Conference");

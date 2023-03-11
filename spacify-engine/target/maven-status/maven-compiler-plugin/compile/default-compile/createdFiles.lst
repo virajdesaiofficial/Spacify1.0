@@ -1,0 +1,7 @@
+org\uci\spacifyEngine\controllers\SpacifyEngine.class
+org\uci\spacifyEngine\configuration\DatabaseConfiguration.class
+org\uci\spacifyEngine\services\AvailableSlotsService.class
+org\uci\spacifyEngine\Main.class
+org\uci\spacifyEngine\services\RulesFilter.class
+org\uci\spacifyEngine\configuration\DroolsConfiguration.class
+org\uci\spacifyEngine\services\ReservationService.class

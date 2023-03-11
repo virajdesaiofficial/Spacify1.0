@@ -6,7 +6,7 @@
       <env name="server-port" value="8081" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="org.uci.spacifyPortal.Main" />
-    <module name="spacify-portal" />
+    <module name="spacify-java" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
