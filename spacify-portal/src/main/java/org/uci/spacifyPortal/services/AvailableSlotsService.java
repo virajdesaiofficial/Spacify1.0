@@ -34,7 +34,7 @@ public class AvailableSlotsService {
 
         List<BigInteger> room_ID = new ArrayList<>();
         List<AvailableSlotsEntity> AvailableSlotsEntityList;
-        AvailableSlotsEntityList = (List<AvailableSlotsEntity>) availableSlotsRepository.findByroomType(room_type);
+        AvailableSlotsEntityList = (List<AvailableSlotsEntity>) availableSlotsRepository.findByroomType(RoomType.valueOf(room_type));
 
         Time available_slots_time_from = AvailableSlotsEntityList.get(0).getTimeFrom();
         Time available_slots_time_to = AvailableSlotsEntityList.get(0).getTimeTo();

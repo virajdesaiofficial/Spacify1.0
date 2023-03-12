@@ -4,10 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import java.sql.Time;
 
@@ -29,8 +26,9 @@ public class AvailableSlotsEntity {
     @Column(name = "time_to")
     private Time timeTo;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "room_type")
-    private String roomType;
+    private RoomType roomType;
 
     public AvailableSlotsEntity() {
     }

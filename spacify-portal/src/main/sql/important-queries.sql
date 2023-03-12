@@ -47,13 +47,12 @@ WHEN (NEW.room_id = -1)
 EXECUTE FUNCTION setDefaultRoomId();
 
 -- create corespacify.available_slots table
-
 CREATE TABLE IF NOT EXISTS corespacify.available_slots
 (
     available_slots_id bigint NOT NULL,
     time_from time without time zone,
     time_to time without time zone,
-    room_type character varying(255) COLLATE pg_catalog."default",
+    room_type text COLLATE pg_catalog."default",
     CONSTRAINT available_slots_pkey PRIMARY KEY (available_slots_id)
 )
 
