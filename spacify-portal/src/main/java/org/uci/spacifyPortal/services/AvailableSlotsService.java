@@ -1,6 +1,5 @@
-package org.uci.spacifyEngine.services;
+package org.uci.spacifyPortal.services;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.uci.spacifyLib.entity.AvailableSlotsEntity;

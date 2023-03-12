@@ -86,4 +86,11 @@ INSERT INTO corespacify.incentive VALUES(6, 15, '2023-02-04 02:00:00', 'msrahma2
 INSERT INTO corespacify.incentive VALUES(7, 15, '2023-02-19 02:00:00', 'desaivh');
 
 -- monitoring table entries
+
+
+-- available slots entries
+INSERT INTO corespacify.available_slots(available_slots_id, time_from, time_to, room_type) VALUES (1, '08:00:00', '00:00:00', 'STUDY');
+INSERT INTO corespacify.available_slots(available_slots_id, time_from, time_to, room_type) VALUES (2, '10:00:00', '12:00:00', 'OFFICE');
+INSERT INTO corespacify.available_slots(available_slots_id, time_from, time_to, room_type) VALUES (3, '10:00:00', '20:00:00', 'COMMON_SPACE');
+
 -- TODO: finalize the table's structure based on the final API contract.
