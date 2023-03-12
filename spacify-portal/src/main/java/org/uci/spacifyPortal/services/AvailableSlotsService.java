@@ -32,7 +32,7 @@ public class AvailableSlotsService {
         LocalDateTime from_date_time = LocalDateTime.parse("2023-02-20T13:00");     //to take from UI
         LocalDateTime to_date_time = LocalDateTime.parse("2023-02-20T15:00");       //to take from UI
 
-        List<BigInteger> room_ID = new ArrayList<>();
+        List<Long> room_ID = new ArrayList<>();
         List<AvailableSlotsEntity> AvailableSlotsEntityList;
         AvailableSlotsEntityList = (List<AvailableSlotsEntity>) availableSlotsRepository.findByroomType(RoomType.valueOf(room_type));
 
