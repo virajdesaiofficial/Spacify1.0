@@ -12,5 +12,5 @@ public class RulesTBDeleted {
     private int calculatedValue2;
     private int thresholdValue2;
     private int totalCredits = 0;
-
+    private int incentive;
 }
