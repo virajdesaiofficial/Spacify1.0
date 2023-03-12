@@ -35,4 +35,11 @@ public class IncentiveEntity {
 
     public IncentiveEntity() {
     }
+
+    public IncentiveEntity(Long incentiveId, Long incentivePoints, LocalDateTime timestamp, String userId) {
+        this.incentiveId = incentiveId;
+        this.incentivePoints = incentivePoints;
+        this.timestamp = timestamp;
+        this.userId = userId;
+    }
 }

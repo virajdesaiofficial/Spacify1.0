@@ -80,8 +80,6 @@ public class CreateRoomController {
         // Call the rule service with the provided data
         this.createRoomService.addRules(request.getRoomId(), request.getUserId(), request.getRules());
 
-        return new ResponseEntity<>("Room created successfully", HttpStatus.CREATED);
+        return new ResponseEntity<>("Rules added successfully", HttpStatus.CREATED);
     }
-
-
 }

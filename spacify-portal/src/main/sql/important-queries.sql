@@ -61,3 +61,34 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS corespacify.available_slots
     OWNER to app;
 
+
+-- Adding calculated flag column in Reservation table
+ALTER TABLE corespacify.reservation ADD COLUMN calculated_flag BOOLEAN NOT NULL DEFAULT FALSE;
+
+-- Adding total incentive column in User table
+ALTER TABLE corespacify.user ADD COLUMN total_incentives int8 DEFAULT 0;
+
+-- Run the below queries for auto generating incentiveId
+SELECT MAX(incentive_id) + 1 FROM corespacify.incentive;
+CREATE SEQUENCE incentive_id_sequence START WITH 8; -- replace '8' with max above
+ALTER TABLE corespacify.room ALTER COLUMN room_id SET DEFAULT nextval('room_id_sequence'::regclass);
+ALTER SEQUENCE incentive_id_sequence OWNER TO app;
+
+-- ALTER SEQUENCE incentive_id_sequence RESTART WITH 8;
+
+CREATE OR REPLACE FUNCTION setDefaultIncentiveId()
+RETURNS Trigger AS
+$$
+BEGIN
+NEW.incentive_id := nextval('incentive_id_sequence'::regclass);
+RETURN NEW;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+CREATE TRIGGER setDefaultIncentive
+BEFORE INSERT ON corespacify.incentive
+FOR EACH ROW
+WHEN (NEW.incentive_id = -1)
+EXECUTE FUNCTION setDefaultIncentiveId();
+

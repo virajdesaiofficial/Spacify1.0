@@ -22,6 +22,7 @@ public class ReservationEntity {
     private Long reservation_id;
 
     @Column(name = "guests")
+    @NotNull
     private Integer guests;
 
     @Column(name = "time_from")
@@ -39,6 +40,10 @@ public class ReservationEntity {
     @Column(name = "reserved_room")
     @NotNull
     private Long roomId;
+
+    @Column(name = "calculated_flag")
+    @NotNull
+    private boolean calculated;
 
     public ReservationEntity() {
     }

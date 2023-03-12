@@ -9,9 +9,10 @@ import lombok.Setter;
 public abstract class Rules{
 
     private String ruleId;
-    private double incentive;
-    private double threshold;
-    private double calculatedResult;
+    private Long incentive;
+    private double thresholdValue;
+    private double calculatedValue;
     private double creditForRule;
+    private boolean isFired;
 
 }
