@@ -71,7 +71,7 @@ public class CreateRoomService {
 
     public boolean addRules(Long roomId, String owner, List<Rule> rules) throws JsonProcessingException {
         Optional<RoomEntity> room = this.roomRepository.findById(roomId);
-
+        rules.forEach(rule -> rule.setFired(false));
         if (room.isPresent()) {
             room.get().setRoomRules(SpacifyUtility.serializeListOfRules(rules));
             this.roomRepository.save(room.get());

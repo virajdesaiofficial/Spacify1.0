@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Long> {
+    public List<ReservationEntity> findAllByCalculatedIs(boolean isCalculated);
+
     List<ReservationEntity> findByroomIdIn(List<Long> roomId);
 }
