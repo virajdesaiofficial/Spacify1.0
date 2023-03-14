@@ -18,16 +18,16 @@ UPDATE corespacify.user SET access_level='FACULTY' WHERE access_level='faculty';
 
 -- room table entries
 
-INSERT INTO corespacify.room VALUES(1, 'something', 'study', 12);
-INSERT INTO corespacify.room VALUES(2, '', 'study', 55);
-INSERT INTO corespacify.room VALUES(3, 'something else', 'study', 5);
-INSERT INTO corespacify.room VALUES(4, null, 'office', 9);
-INSERT INTO corespacify.room VALUES(5, null, 'office', 80);
-INSERT INTO corespacify.room VALUES(6, null, 'common space', 70);
-INSERT INTO corespacify.room VALUES(7, '', 'study', 20);
-INSERT INTO corespacify.room VALUES(8, 'no more than 10 people', 'conference', 24);
-INSERT INTO corespacify.room VALUES(9, 'blah blah blah', 'study', 23);
-INSERT INTO corespacify.room VALUES(10, null, 'study', 17);
+INSERT INTO corespacify.room VALUES(1, 'something', 'STUDY', 12);
+INSERT INTO corespacify.room VALUES(2, '', 'STUDY', 55);
+INSERT INTO corespacify.room VALUES(3, 'something else', 'STUDY', 5);
+INSERT INTO corespacify.room VALUES(4, null, 'OFFICE', 9);
+INSERT INTO corespacify.room VALUES(5, null, 'OFFICE', 80);
+INSERT INTO corespacify.room VALUES(6, null, 'COMMON SPACE', 70);
+INSERT INTO corespacify.room VALUES(7, '', 'STUDY', 20);
+INSERT INTO corespacify.room VALUES(8, 'no more than 10 people', 'CONFERENCE', 24);
+INSERT INTO corespacify.room VALUES(9, 'blah blah blah', 'STUDY', 23);
+INSERT INTO corespacify.room VALUES(10, null, 'STUDY', 17);
 
 ALTER TABLE corespacify.room ADD COLUMN description VARCHAR(255);
 UPDATE corespacify.room SET description = 'C110 VP' WHERE room_id=1;

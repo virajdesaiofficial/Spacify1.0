@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.uci.spacifyLib.dto.MacAdressesOfARoom;
 import org.uci.spacifyLib.dto.OccupancyOfaRoom;
+import org.uci.spacifyLib.dto.RoomDetail;
 import org.uci.spacifyLib.entity.TippersDbSpaceEntity;
 import org.uci.spacifyLib.repsitory.TippersDbSpacesRepository;
 import org.slf4j.Logger;
@@ -43,18 +44,28 @@ public class TippersConnectivityService {
 
     private static final Logger LOG = LoggerFactory.getLogger(TippersConnectivityService.class);
 
-    public Map<String, Integer> getListOfBuildings() {
+    public List<RoomDetail> getListOfBuildings() {
 
         List<TippersDbSpaceEntity> entityList = tippersDbSpacesRepository.findDistinctByspaceType("building");
         LOG.info("Query for buildings ran successfully returning data back");
-        return entityList.stream().collect(Collectors.toMap(TippersDbSpaceEntity::getSpaceName, TippersDbSpaceEntity::getSpaceId));
+        return entityList.stream().map(t -> {
+            RoomDetail r = new RoomDetail();
+            r.setRoomId(Long.valueOf(t.getSpaceId()));
+            r.setRoomDescription(t.getSpaceName());
+            return  r;
+        }).collect(Collectors.toList());
     }
 
-    public Map<String, Integer> getSpaceIdAndRoomName(Integer buildingId) {
+    public List<RoomDetail> getSpaceIdAndRoomName(Integer buildingId) {
 
         List<TippersDbSpaceEntity> entityList = tippersDbSpacesRepository.findByBuildingIdAndSpaceTypeNotIn(buildingId, Arrays.asList("building", "floor"));
         LOG.info("Query for spaceId and roomName ran successfully returning data back");
-        return entityList.stream().collect(Collectors.toMap(TippersDbSpaceEntity::getSpaceName, TippersDbSpaceEntity::getSpaceId));
+        return entityList.stream().map(t -> {
+            RoomDetail r = new RoomDetail();
+            r.setRoomId(Long.valueOf(t.getSpaceId()));
+            r.setRoomDescription(t.getSpaceName());
+            return  r;
+        }).collect(Collectors.toList());
 
     }
 

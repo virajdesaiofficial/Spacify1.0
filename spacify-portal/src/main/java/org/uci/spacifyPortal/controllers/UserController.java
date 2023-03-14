@@ -9,7 +9,7 @@ import org.uci.spacifyLib.entity.OwnerEntity;
 import org.uci.spacifyLib.entity.SubscriberEntity;
 import org.uci.spacifyLib.entity.UserEntity;
 import org.uci.spacifyPortal.services.*;
-import org.uci.spacifyPortal.utilities.RoomDetail;
+import org.uci.spacifyLib.dto.RoomDetail;
 import org.uci.spacifyPortal.utilities.UserDetail;
 
 import java.util.ArrayList;

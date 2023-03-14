@@ -2,14 +2,16 @@ import React, {useEffect, useState} from 'react';
 import './create.css';
 import {Button} from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
-import buildings from "./buildings";
-import {ALL_ROOMS_API, CREATE_ROOM_API, ELIGIBLE_OWNERS_API} from "../../endpoints";
+// import buildings from "./buildings";
+import {ALL_BUILDINGS_API, ALL_ROOMS_API, CREATE_ROOM_API, ELIGIBLE_OWNERS_API} from "../../endpoints";
 
 // import Alert from 'react-bootstrap/Alert';
 
 function Create(props) {
     const [rooms, setRooms] = useState([]);
     const [users, setUsers] = useState([]);
+    const [buildings, setBuildings] = useState([]);
+
 
     const [tippersSpaceId, setTippersSpaceId] = useState('');
     const [userId, setUserId] = useState('');
@@ -33,6 +35,17 @@ function Create(props) {
                 }
             });
         setShow(true);
+
+
+    }
+
+    function getRoomsFromBuildingSpaceId(buildingSpaceId) {
+        const url = ALL_ROOMS_API + buildingSpaceId;
+        fetch(url).then((res) => res.json())
+                    .then((data) => {
+                          setRooms(data);
+                    });
+
     }
 
     useEffect(() => {
@@ -41,11 +54,11 @@ function Create(props) {
             .then((data) => {
                 setUsers(data);
             });
-        fetch(ALL_ROOMS_API)
-            .then((res) => res.json())
-            .then((data) => {
-                setRooms(data);
-            });
+         fetch(ALL_BUILDINGS_API)
+              .then((res) => res.json())
+              .then((data) => {
+                    setBuildings(data);
+                    });
     }, []);
 
     return (
@@ -62,11 +75,11 @@ function Create(props) {
                         );
                     })}
                 </Form.Select>
-                <Form.Select aria-label="Default select example" onChange={(e) => setUserId(e.target.value)} >
+                <Form.Select aria-label="Default select example" onChange={(e) => getRoomsFromBuildingSpaceId(e.target.value)} >
                     <option value=''>Select Building</option>
                     {buildings.map((item, index) => {
                         return (
-                            <option key={index} value={item.buildingId}>{item.name}</option>
+                            <option key={index} value={item.roomId}>{item.roomDescription}</option>
                         );
                     })}
                 </Form.Select>
@@ -74,7 +87,7 @@ function Create(props) {
                     <option value=''>Select Room</option>
                     {rooms.map((item, index) => {
                         return (
-                            <option key={index} value={item.tippersSpaceId}>{item.name}</option>
+                            <option key={index} value={item.roomId}>{item.roomDescription}</option>
                         );
                     })}
                 </Form.Select>

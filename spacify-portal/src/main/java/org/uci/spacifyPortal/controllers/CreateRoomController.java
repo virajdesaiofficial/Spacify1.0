@@ -5,13 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 //import org.uci.spacifyLib.dto.CreateRoom;
-import org.uci.spacifyLib.dto.MacAdressesOfARoom;
-import org.uci.spacifyLib.dto.OccupancyOfaRoom;
+import org.uci.spacifyLib.dto.*;
 //import org.uci.spacifyLib.dto.UiRules;
 import org.uci.spacifyLib.services.TippersConnectivityService;
 import org.springframework.web.bind.annotation.*;
-import org.uci.spacifyLib.dto.Rule;
-import org.uci.spacifyLib.dto.RulesRequest;
 import org.uci.spacifyLib.entity.RoomEntity;
 import org.uci.spacifyPortal.services.CreateRoomService;
 import org.uci.spacifyPortal.services.OwnerService;
@@ -103,7 +100,19 @@ public class CreateRoomController {
         // Call the rule service with the provided data
         this.createRoomService.addRules(request.getRoomId(), request.getUserId(), request.getRules());
 
-        return new ResponseEntity<>("Room created successfully", HttpStatus.CREATED);
+        return new ResponseEntity<>("Rules created successfully", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/buildings")
+    public List<RoomDetail> getBuildings(){
+
+        return tippersConnectivityService.getListOfBuildings();
+    }
+
+    @GetMapping("/rooms/{spaceId}")
+    public List<RoomDetail> getRoomsFromBuildingSpaceId(@PathVariable String spaceId){
+
+        return tippersConnectivityService.getSpaceIdAndRoomName(Integer.parseInt(spaceId));
     }
 
 
