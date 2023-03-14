@@ -1,18 +1,51 @@
-.incentive-points-container {
+.incentives-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
+  padding: 20px;
 }
 
-.incentive-points-heading {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.incentive-points-number {
+.incentives-header {
   font-size: 32px;
-  font-weight: bold;
-  color: #4CAF50;
+  margin-bottom: 20px;
+}
+
+.incentives-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 600px;
+}
+
+.incentives-list-item {
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.incentives-list-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.incentives-list-item h3 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.incentives-list-item p {
+  font-size: 16px;
+  margin: 0;
+}
+
+@media only screen and (max-width: 600px) {
+  .incentives-list {
+    max-width: 100%;
+  }
 }
