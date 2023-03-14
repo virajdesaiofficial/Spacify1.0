@@ -33,12 +33,16 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private AccessLevel accessLevel;
 
-    public UserEntity(String userId, String email, String firstName, String lastName, AccessLevel accessLevel) {
+    @Column(name = "total_incentives")
+    private Long totalIncentives;
+
+    public UserEntity(String userId, String email, String firstName, String lastName, AccessLevel accessLevel, Long totalIncentives) {
         this.userId = userId;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.accessLevel = accessLevel;
+        this.totalIncentives = totalIncentives;
     }
 
     public UserEntity() {

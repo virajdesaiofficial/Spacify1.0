@@ -34,8 +34,8 @@ public class RoomService {
         room.setRoomRules(SpacifyUtility.serializeListOfRules(rules));
 
         UserRoomPK userRoomPK = new UserRoomPK();
-        userRoomPK.setRoom_id(Long.valueOf(roomId));
-        userRoomPK.setUser_id(owner);
+        userRoomPK.setRoomId(Long.valueOf(roomId));
+        userRoomPK.setUserId(owner);
         OwnerEntity ownerEntity = new OwnerEntity();
         ownerEntity.setUserRoomPK(userRoomPK);
 
@@ -71,12 +71,16 @@ public class RoomService {
 
     public boolean addRules(Long roomId, String owner, List<Rule> rules) throws JsonProcessingException {
         Optional<RoomEntity> room = this.roomRepository.findById(roomId);
-
+        rules.forEach(rule -> rule.setFired(false));
         if (room.isPresent()) {
             room.get().setRoomRules(SpacifyUtility.serializeListOfRules(rules));
             this.roomRepository.save(room.get());
             return true;
         }
         return false;
+    }
+
+    public List<RoomEntity> getRoomsBasedOnIds(List<Long> roomIds) {
+        return this.roomRepository.findByRoomIdIn(roomIds);
     }
 }
