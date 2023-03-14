@@ -6,13 +6,23 @@ import org.uci.spacifyLib.entity.ReservationEntity;
 import org.uci.spacifyLib.repsitory.ReservationRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
 
-    public List<ReservationEntity> getAllReservatons() {
+    public List<ReservationEntity> getAllReservations() {
         return this.reservationRepository.findAll();
+    }
+
+    public List<ReservationEntity> getUnCalculatedReservations() {
+        return this.reservationRepository.findAllByCalculatedIs(false);
+    }
+
+    public void markReservationsAsCalculated(List<ReservationEntity> reservationEntityList) {
+        if (Objects.nonNull(reservationEntityList) && !reservationEntityList.isEmpty())
+            this.reservationRepository.saveAll(reservationEntityList);
     }
 }

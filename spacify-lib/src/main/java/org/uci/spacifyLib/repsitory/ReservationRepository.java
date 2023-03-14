@@ -9,6 +9,8 @@ import java.util.List;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Long> {
+    public List<ReservationEntity> findAllByCalculatedIs(boolean isCalculated);
+
     List<ReservationEntity> findByroomIdIn(List<Long> roomId);
 //    ReservationEntity findBytimeFromStartingWith(String booking_slot_date);
 //    ReservationEntity findBytimeFromBetween(LocalDateTime booking_slot_date_start_time, LocalDateTime booking_slot_date_end_time);
