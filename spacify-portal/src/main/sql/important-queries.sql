@@ -14,7 +14,7 @@ ALTER TABLE corespacify.room OWNER TO app;
 -- All the tables in database
 SELECT * FROM corespacify.user;
 SELECT * FROM corespacify.mac_address;
-SELECT * FROM corespacify.incentive;/
+SELECT * FROM corespacify.incentive;
 SELECT * FROM corespacify.monitoring;
 SELECT * FROM corespacify.owner;
 SELECT * FROM corespacify.subscriber;
@@ -45,3 +45,19 @@ BEFORE INSERT ON corespacify.room
 FOR EACH ROW
 WHEN (NEW.room_id = -1)
 EXECUTE FUNCTION setDefaultRoomId();
+
+-- create corespacify.available_slots table
+CREATE TABLE IF NOT EXISTS corespacify.available_slots
+(
+    available_slots_id bigint NOT NULL,
+    time_from time without time zone,
+    time_to time without time zone,
+    room_type text COLLATE pg_catalog."default",
+    CONSTRAINT available_slots_pkey PRIMARY KEY (available_slots_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS corespacify.available_slots
+    OWNER to app;
+

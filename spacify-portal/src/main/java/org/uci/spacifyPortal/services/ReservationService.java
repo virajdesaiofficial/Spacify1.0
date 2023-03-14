@@ -12,7 +12,7 @@ public class ReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
 
-    public List<ReservationEntity> getAllReservatons() {
+    public List<ReservationEntity> getAllReservations() {
         return this.reservationRepository.findAll();
     }
 }

@@ -17,6 +17,6 @@ public class ReservationController {
 
     @GetMapping("/all")
     public List<ReservationEntity> getAllReservations() {
-        return this.reservationService.getAllReservatons();
+        return this.reservationService.getAllReservations();
     }
 }
