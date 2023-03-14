@@ -9,9 +9,8 @@ import org.uci.spacifyLib.entity.RoomType;
 import org.uci.spacifyLib.repsitory.AvailableSlotsRepository;
 import org.uci.spacifyLib.repsitory.ReservationRepository;
 import org.uci.spacifyLib.repsitory.RoomRepository;
-
-import java.math.BigInteger;
-import java.sql.Time;
+import org.uci.spacifyPortal.utilities.ReservationSlot;
+import org.uci.spacifyPortal.utilities.TimeBound;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -27,53 +26,108 @@ public class AvailableSlotsService {
     @Autowired
     private AvailableSlotsRepository availableSlotsRepository;
 
-    public List<ReservationEntity> getAllAvailableSlots() {
-        String room_type = "STUDY";                                                     //to take from UI
-        LocalDateTime from_date_time = LocalDateTime.parse("2023-02-20T13:00");     //to take from UI
-        LocalDateTime to_date_time = LocalDateTime.parse("2023-02-20T15:00");       //to take from UI
+    public List<ReservationSlot> getAllAvailableSlots(String room_type) {
+//        String room_type = "STUDY";                                                     //to take from UI
+        LocalDateTime from_date_time = LocalDateTime.parse("2023-02-22T13:00:00");     //to take from UI
+        LocalDateTime to_date_time = LocalDateTime.parse("2023-02-22T15:00:00");       //to take from UI
 
-        List<Long> room_ID = new ArrayList<>();
+
         List<AvailableSlotsEntity> AvailableSlotsEntityList;
         AvailableSlotsEntityList = (List<AvailableSlotsEntity>) availableSlotsRepository.findByroomType(RoomType.valueOf(room_type));
 
-        Time available_slots_time_from = AvailableSlotsEntityList.get(0).getTimeFrom();
-        Time available_slots_time_to = AvailableSlotsEntityList.get(0).getTimeTo();
-
+        LocalDateTime availableSlotsTimeFrom = LocalDateTime.parse(from_date_time.toLocalDate() + "T" + AvailableSlotsEntityList.get(0).getTimeFrom());
+        LocalDateTime availableSlotsTimeTo = LocalDateTime.parse(to_date_time.toLocalDate() + "T" + AvailableSlotsEntityList.get(0).getTimeTo());
         List<RoomEntity> RoomEntityList;
-        RoomEntityList = roomRepository.findByroomType(RoomType.STUDY);                //HARDCODE VALUE OF ROOM TYPE
-        List<Long> r_id = new ArrayList<>();
+        RoomEntityList = roomRepository.findByroomType(RoomType.STUDY);                     //HARDCODE VALUE OF ROOM TYPE
+        List<Long> room_ids = new ArrayList<>();
 
 
-        for(RoomEntity roomEntity : RoomEntityList) {                                  //get room ids from the room table for room type "study"
-            r_id.add(roomEntity.getRoomId());
+        for(RoomEntity roomEntity : RoomEntityList) {                                       //get room ids from the room table for room type "study"
+            room_ids.add(roomEntity.getRoomId());
         }
 
-        List<ReservationEntity> ReservationEntityList;
-        List<ReservationEntity> arr = reservationRepository.findByroomIdIn(r_id);       //find room ids in the reservation table to get time_to, etc
+        List<ReservationEntity> arr = reservationRepository.findByroomIdIn(room_ids);       //find room ids in the reservation table to get time_to, etc
         List<LocalDateTime> time_to = new ArrayList<>();
         List<LocalDateTime> time_from = new ArrayList<>();
-        HashMap<String, String> map = new HashMap<>();
+
 
         for(int i=0; i<arr.size(); i++) {
             time_from.add(arr.get(i).getTimeFrom());
             time_to.add(arr.get(i).getTimeTo());
         }
 
-//        System.out.println("list is " + (reservationRepository.findByroomIdIn(r_id)));
-//        for(int i = 0; i< r_id.size(); i++) {
-//            System.out.println("list is " + (reservationRepository.findByroomId(r_id.get(i))).get(i).getTimeTo());
-//        }
-//        System.out.println("findby room id " + (reservationRepository.findByroomId(7L)).get(0));
+        LocalDateTime slot_date_start = LocalDateTime.parse(from_date_time.toString().split("T")[0] + "T00:00:00");             //splitting date time into date
+        LocalDateTime slot_date_end  = LocalDateTime.parse(from_date_time.toString().split("T")[0] + "T23:59:00");
+        List<ReservationEntity> booked_slot_time = new ArrayList<>();
 
-//        for(int i=0; i<r_id.size(); i++) {
-//            ReservationEntityList.add(reservationRepository.findByroomId(Collections.singletonList(r_id.get(i))));
-//        }
+        booked_slot_time =  reservationRepository.findBytimeFromBetweenAndRoomIdIn(slot_date_start, slot_date_end, room_ids);
 
+        Map<Long, TimeReserved>  slots_reserved = new HashMap<>();
 
-//        for(ReservationEntity reservationEntity : ReservationEntityList) {
-//            System.out.println("time from " + reservationEntity.getTimeFrom() + "time to " + reservationEntity.getTimeTo());
-//        }
+        for(int i=0; i<booked_slot_time.size(); i++) {
+            slots_reserved.put(booked_slot_time.get(i).getRoomId(), new TimeReserved(booked_slot_time.get(i).getTimeFrom(), booked_slot_time.get(i).getTimeTo()));
+        }
 
-        return arr;
+        Map<Long, ArrayList<ArrayList<LocalDateTime> >> slots_available = new HashMap<>();
+
+        for(Map.Entry<Long, TimeReserved> entry : slots_reserved.entrySet()) {
+            LocalDateTime end_time = (entry.getValue().fromTime);
+
+            ArrayList<ArrayList<LocalDateTime> > all_slots = new ArrayList<>();
+            LocalDateTime i = availableSlotsTimeFrom;
+            while(i.isBefore(end_time) || i.isEqual(end_time)) {
+
+                ArrayList<LocalDateTime> one_slot = new ArrayList<>();
+                one_slot.add(0, i);
+                i = i.plusHours(1);
+                one_slot.add(1, i);
+                all_slots.add(new ArrayList<LocalDateTime>(one_slot));
+            }
+            slots_available.put(entry.getKey(), new ArrayList<>(all_slots));
+        }
+
+        for(Map.Entry<Long, TimeReserved> entry : slots_reserved.entrySet()) {
+            LocalDateTime start_time = (entry.getValue().toTime);
+            ArrayList<ArrayList<LocalDateTime> > all_slots = new ArrayList<>();
+            LocalDateTime i = start_time;
+            while((i.isAfter(start_time) || i.isEqual(start_time)) && i.isBefore(availableSlotsTimeTo)) {
+
+                System.out.println("slots times are " + i);
+                ArrayList<LocalDateTime> one_slot = new ArrayList<>();
+                one_slot.add(0, i);
+                i = i.plusHours(1);
+                one_slot.add(1, i);
+                all_slots.add(new ArrayList<LocalDateTime>(one_slot));
+            }
+            slots_available.get(entry.getKey()).addAll(new ArrayList<>(all_slots));
+        }
+
+        System.out.println(slots_available);
+
+        List<ReservationSlot> result = new ArrayList<>();
+        for (Map.Entry<Long, ArrayList<ArrayList<LocalDateTime>>> entry: slots_available.entrySet()) {
+            List<TimeBound> timeBounds = new ArrayList<>();
+            entry.getValue().stream().forEach(e-> {
+                timeBounds.add(new TimeBound(e.get(0), e.get(1)));
+            });
+            result.add(new ReservationSlot(entry.getKey(), new ArrayList<TimeBound>(timeBounds)));
+        }
+        return result;
     }
+
+    class TimeReserved {
+        LocalDateTime fromTime;
+        LocalDateTime toTime;
+
+        public TimeReserved(LocalDateTime fromTime, LocalDateTime toTime) {
+            this.fromTime = fromTime;
+            this.toTime = toTime;
+        }
+
+
+
+
+    }
+
 }
+
