@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface IncentiveRepository extends JpaRepository<IncentiveEntity, Long> {
     public List<IncentiveEntity> findAllByUserId(String userId);
+
+    public List<IncentiveEntity> findAllByAdded(Boolean added);
 }

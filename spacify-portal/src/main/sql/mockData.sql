@@ -85,7 +85,6 @@ INSERT INTO corespacify.incentive VALUES(5, 10, '2023-01-29 02:00:00', 'sdharank
 INSERT INTO corespacify.incentive VALUES(6, 15, '2023-02-04 02:00:00', 'msrahma2');
 INSERT INTO corespacify.incentive VALUES(7, 15, '2023-02-19 02:00:00', 'desaivh');
 
--- monitoring table entries
 
 
 -- available slots entries
@@ -93,4 +92,30 @@ INSERT INTO corespacify.available_slots(available_slots_id, time_from, time_to, 
 INSERT INTO corespacify.available_slots(available_slots_id, time_from, time_to, room_type) VALUES (2, '10:00:00', '12:00:00', 'OFFICE');
 INSERT INTO corespacify.available_slots(available_slots_id, time_from, time_to, room_type) VALUES (3, '10:00:00', '20:00:00', 'COMMON_SPACE');
 
--- TODO: finalize the table's structure based on the final API contract.
+-- mac address table entries
+
+INSERT INTO corespacify.mac_address VALUES('12.13.14.15', 'desaivh');
+INSERT INTO corespacify.mac_address VALUES('10.12.12.12', 'desaivh');
+INSERT INTO corespacify.mac_address VALUES('AA.1B.F4.15', 'desaivh');
+INSERT INTO corespacify.mac_address VALUES('12.16.17.AB', 'sanchg4');
+INSERT INTO corespacify.mac_address VALUES('13.13.14.13', 'sanchg4');
+INSERT INTO corespacify.mac_address VALUES('AD.13.19.03', 'dmohanku');
+INSERT INTO corespacify.mac_address VALUES('09.22.16.13', 'sdharank');
+INSERT INTO corespacify.mac_address VALUES('FF.10.AF.13', 'sdharank');
+INSERT INTO corespacify.mac_address VALUES('18.19.A4.13', 'hthallam');
+INSERT INTO corespacify.mac_address VALUES('17.13.14.EE', 'hthallam');
+INSERT INTO corespacify.mac_address VALUES('18.9A.14.EF', 'msrahma2');
+
+-- monitoring table entries
+
+INSERT INTO corespacify.monitoring VALUES(1, 5, '2023-02-18 10:00:00', 24, '10.12.12.12', '2023-02-18 10:03:00');
+INSERT INTO corespacify.monitoring VALUES(2, 6, '2023-02-18 10:03:00', 24, '10.12.12.12', '2023-02-18 12:00:00');
+INSERT INTO corespacify.monitoring VALUES(3, 6, '2023-02-18 12:00:00', 24, '10.12.12.12', '2023-02-18 12:30:00');
+INSERT INTO corespacify.monitoring VALUES(4, 6, '2023-02-18 12:40:00', 24, '10.12.12.12', '2023-02-18 1:00:00');
+INSERT INTO corespacify.monitoring VALUES(5, 6, '2023-02-18 1:00:00', 24, '10.12.12.12', '2023-02-18 14:00:00');
+INSERT INTO corespacify.monitoring VALUES(6, 5, '2023-02-18 14:00:00', 24, '10.12.12.12', '2023-02-18 14:15:00');
+INSERT INTO corespacify.monitoring VALUES(7, 7, '2023-02-22 00:00:00', 12, 'AD.13.19.03', '2023-02-22 00:10:00');
+INSERT INTO corespacify.monitoring VALUES(8, 7, '2023-02-22 00:10:00', 12, 'AD.13.19.03', '2023-02-22 00:30:00');
+INSERT INTO corespacify.monitoring VALUES(9, 7, '2023-02-22 00:35:00', 12, 'AD.13.19.03', '2023-02-22 01:00:00');
+INSERT INTO corespacify.monitoring VALUES(10, 7, '2023-02-22 01:00:00', 12, 'AD.13.19.03', '2023-02-22 01:45:00');
+INSERT INTO corespacify.monitoring VALUES(11, 19, '2023-02-20 19:00:00', 12, '18.9A.14.EF', '2023-02-20 20:15:00');
