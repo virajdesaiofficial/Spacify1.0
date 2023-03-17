@@ -4,7 +4,7 @@ import org.uci.spacifyLib.dto.Rule;
 import org.uci.spacifyLib.entity.ReservationEntity;
 
 public class OccupancyRuleCalculator implements RuleCalculator{
-    private ReservationEntity reservationEntity;
+    private final ReservationEntity reservationEntity;
 
     public OccupancyRuleCalculator(ReservationEntity reservationEntity) {
         this.reservationEntity = reservationEntity;
@@ -25,6 +25,5 @@ public class OccupancyRuleCalculator implements RuleCalculator{
 
         rule.setCalculatedValue(actualOccupancy);
         rule.setThresholdValue(thresholdOccupancy);
-
     }
 }
