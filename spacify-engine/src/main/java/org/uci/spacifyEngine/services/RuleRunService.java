@@ -19,7 +19,6 @@ import org.uci.spacifyLib.repsitory.IncentiveRepository;
 import org.uci.spacifyLib.repsitory.RoomRepository;
 import org.uci.spacifyLib.repsitory.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,6 +43,9 @@ public class RuleRunService {
     @Autowired
     private IncentiveRepository incentiveRepository;
 
+    @Autowired
+    private MonitoringService monitoringService;
+
     private void calculateRule(Rule rule, ReservationEntity reservationEntity) {
         RuleIdEum ruleId = getRoomIdEnum(rule.getRuleId());
         RuleCalculator ruleCalculator = null;
@@ -53,7 +55,7 @@ public class RuleRunService {
                 ruleCalculator = new OccupancyRuleCalculator(reservationEntity);
             }
             case DURATION_RULE -> {
-                ruleCalculator = new DurationRuleCalculator(reservationEntity);
+                ruleCalculator = new DurationRuleCalculator(reservationEntity, this.monitoringService);
             }
             default -> {
             }
@@ -114,18 +116,20 @@ public class RuleRunService {
             ReservationEntity reservationEntity = pair.getKey();
             RoomEntity roomEntity = pair.getValue();
 
-            try {
-                List<Rule> rules = deserializeListOfRules(roomEntity.getRoomRules());
-                rules.forEach(rule -> {
-                    calculateRule(rule, reservationEntity);
-                });
-                rulesFiredForUser.addAll(rules);
+            if (Objects.nonNull(roomEntity.getRoomRules())) {
+                try {
+                    List<Rule> rules = deserializeListOfRules(roomEntity.getRoomRules());
+                    rules.forEach(rule -> {
+                        calculateRule(rule, reservationEntity);
+                    });
+                    rulesFiredForUser.addAll(rules);
 
-                reservationEntity.setCalculated(true);
-                reservationEntityList.add(reservationEntity);
-            } catch (JsonProcessingException e) {
-                System.out.println("Error while getting rules for roomId: "+ roomEntity.getRoomId());
-                System.out.println(e.getMessage());
+                    reservationEntity.setCalculated(true);
+                    reservationEntityList.add(reservationEntity);
+                } catch (JsonProcessingException e) {
+                    System.out.println("Error while getting rules for roomId: "+ roomEntity.getRoomId());
+                    System.out.println(e.getMessage());
+                }
             }
         }
 
@@ -143,11 +147,11 @@ public class RuleRunService {
             rulesFiredForUser = new ArrayList<Rule>();
 
             List<ReservationEntity> reservationEntityList = calculateRulesForUser(entry.getValue(), rulesFiredForUser);
-            this.reservationService.markReservationsAsCalculated(reservationEntityList);
 
             fireRulesForUser(userId, rulesFiredForUser);
 
             userToRulesMap.put(userId, rulesFiredForUser);
+            this.reservationService.markReservationsAsCalculated(reservationEntityList);
         }
 
         return userToRulesMap;
@@ -175,16 +179,20 @@ public class RuleRunService {
         kieSession.destroy();
 
 
+        List<IncentiveEntity> allIncentives = new ArrayList<IncentiveEntity>();
+
         Long currentTotalIncentives = userEntity.get().getTotalIncentives();;
+
 
         for (Rule rule: rules) {
             if (rule.isFired()) {
                 currentTotalIncentives += rule.getIncentive();
-                IncentiveEntity incentiveEntity = new IncentiveEntity(-1L, rule.getIncentive(), LocalDateTime.now(), userId);
-                this.incentiveRepository.save(incentiveEntity);
+                // TODO: fix this insert in incentive table, gives an error whenever we try to insert.
+//                this.incentiveRepository.save(new IncentiveEntity(-1L, rule.getIncentive(), LocalDateTime.now(), userId, true));
             }
         }
 
+//        this.incentiveRepository.saveAll(allIncentives);
         userEntity.get().setTotalIncentives(currentTotalIncentives);
         this.userRepository.save(userEntity.get());
     }

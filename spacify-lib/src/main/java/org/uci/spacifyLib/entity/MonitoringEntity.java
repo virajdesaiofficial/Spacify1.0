@@ -33,18 +33,23 @@ public class MonitoringEntity {
     @NotNull
     private Integer roomOccupancy;
 
-    @Column(name = "timestamp")
+    @Column(name = "timestamp_from")
     @NotNull
-    private LocalDateTime timestamp;
+    private LocalDateTime timestampFrom;
+
+    @Column(name = "timestamp_to")
+    @NotNull
+    private LocalDateTime timestampTo;
 
     public MonitoringEntity() {
     }
 
-    public MonitoringEntity(Long monitoring_id, Integer tippersSpaceId, String macAddress, Integer roomOccupancy, LocalDateTime timestamp) {
+    public MonitoringEntity(Long monitoring_id, Integer tippersSpaceId, String macAddress, Integer roomOccupancy, LocalDateTime timestampFrom, LocalDateTime timestampTo) {
         this.monitoring_id = monitoring_id;
         this.tippersSpaceId = tippersSpaceId;
         this.macAddress = macAddress;
         this.roomOccupancy = roomOccupancy;
-        this.timestamp = timestamp;
+        this.timestampFrom = timestampFrom;
+        this.timestampTo = timestampTo;
     }
 }

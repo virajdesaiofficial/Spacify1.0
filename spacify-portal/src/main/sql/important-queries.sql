@@ -71,7 +71,7 @@ ALTER TABLE corespacify.user ADD COLUMN total_incentives int8 DEFAULT 0;
 -- Run the below queries for auto generating incentiveId
 SELECT MAX(incentive_id) + 1 FROM corespacify.incentive;
 CREATE SEQUENCE incentive_id_sequence START WITH 8; -- replace '8' with max above
-ALTER TABLE corespacify.room ALTER COLUMN room_id SET DEFAULT nextval('room_id_sequence'::regclass);
+ALTER TABLE corespacify.incentive ALTER COLUMN incentive_id SET DEFAULT nextval('room_id_sequence'::regclass);
 ALTER SEQUENCE incentive_id_sequence OWNER TO app;
 
 -- ALTER SEQUENCE incentive_id_sequence RESTART WITH 8;
@@ -92,3 +92,16 @@ FOR EACH ROW
 WHEN (NEW.incentive_id = -1)
 EXECUTE FUNCTION setDefaultIncentiveId();
 
+-- altering monitoring table
+ALTER TABLE corespacify.monitoring RENAME COLUMN timestamp TO timestamp_from;
+
+ALTER TABLE corespacify.monitoring ADD COLUMN timestamp_to timestamp NOT NULL;
+
+-- altering the room_rules column type to allow larger json. May have to use json type for better usage.
+-- ALTER TABLE corespacify.room ALTER COLUMN room_rules TYPE json USING room_rules::json;
+
+ALTER TABLE corespacify.room ALTER COLUMN room_rules TYPE text;
+
+-- alter incentive timestamp column
+alter table corespacify.incentive alter column timestamp type TIMESTAMP without time zone;
+ALTER TABLE corespacify.incentive ALTER COLUMN timestamp SET NOT NULL;

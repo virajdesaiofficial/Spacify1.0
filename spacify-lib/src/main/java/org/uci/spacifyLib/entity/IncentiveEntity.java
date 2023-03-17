@@ -33,13 +33,17 @@ public class IncentiveEntity {
     @NotNull
     private String userId;
 
+    @Column(name = "added")
+    private boolean added;
+
     public IncentiveEntity() {
     }
 
-    public IncentiveEntity(Long incentiveId, Long incentivePoints, LocalDateTime timestamp, String userId) {
+    public IncentiveEntity(Long incentiveId, Long incentivePoints, LocalDateTime timestamp, String userId, boolean added) {
         this.incentiveId = incentiveId;
         this.incentivePoints = incentivePoints;
         this.timestamp = timestamp;
         this.userId = userId;
+        this.added = added;
     }
 }
