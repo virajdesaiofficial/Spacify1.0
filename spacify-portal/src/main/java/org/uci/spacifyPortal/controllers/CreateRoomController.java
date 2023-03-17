@@ -8,16 +8,14 @@ import org.springframework.web.bind.annotation.*;
 import org.uci.spacifyLib.dto.*;
 //import org.uci.spacifyLib.dto.UiRules;
 import org.uci.spacifyLib.services.TippersConnectivityService;
-import org.springframework.web.bind.annotation.*;
 import org.uci.spacifyLib.entity.RoomEntity;
 import org.uci.spacifyPortal.services.CreateRoomService;
 import org.uci.spacifyPortal.services.OwnerService;
-import org.uci.spacifyPortal.utilities.CreateRequest;
+import org.uci.spacifyLib.dto.CreateRequest;
 import org.uci.spacifyPortal.utilities.TipperSpace;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(maxAge = 3600)
 @RestController

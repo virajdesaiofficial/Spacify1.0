@@ -11,7 +11,7 @@ const Incentives = () => {
       //.then(res => setIncentives(res.data))
       //.catch(err => console.log(err));
      setIncentives([
-       { id: 1, name: "Current Incentives", credit: "150", date: "2022-01-01" }
+       { id: 1, name: "Current Incentives", credit: "150", date: "2023-03-14" }
      ]);
    }, []);
 

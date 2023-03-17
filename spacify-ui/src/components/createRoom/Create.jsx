@@ -23,7 +23,7 @@ function Create(props) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             // TODO: Use the actual roomType, description etc when available
-            body: JSON.stringify({ userId: userId, tippersSpaceId: tippersSpaceId, roomType: 'STUDY', roomName: 'mock name' })
+            body: JSON.stringify({ userId: userId, tippersSpaceId: tippersSpaceId, roomType: 'STUDY', roomName: rooms.roomDescription })
         };
         fetch(CREATE_ROOM_API, requestHeader)
             .then((res) => res.json())

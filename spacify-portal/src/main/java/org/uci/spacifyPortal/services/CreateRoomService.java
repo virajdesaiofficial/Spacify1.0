@@ -11,7 +11,7 @@ import org.uci.spacifyLib.entity.UserRoomPK;
 import org.uci.spacifyLib.repsitory.OwnerRepository;
 import org.uci.spacifyLib.repsitory.RoomRepository;
 import org.uci.spacifyLib.utilities.SpacifyUtility;
-import org.uci.spacifyPortal.utilities.CreateRequest;
+import org.uci.spacifyLib.dto.CreateRequest;
 
 import java.util.ArrayList;
 import java.util.List;

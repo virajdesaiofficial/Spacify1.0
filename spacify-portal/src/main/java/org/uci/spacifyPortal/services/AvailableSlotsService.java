@@ -41,7 +41,6 @@ public class AvailableSlotsService {
         RoomEntityList = roomRepository.findByroomType(RoomType.STUDY);                     //HARDCODE VALUE OF ROOM TYPE
         List<Long> room_ids = new ArrayList<>();
 
-
         for(RoomEntity roomEntity : RoomEntityList) {                                       //get room ids from the room table for room type "study"
             room_ids.add(roomEntity.getRoomId());
         }
