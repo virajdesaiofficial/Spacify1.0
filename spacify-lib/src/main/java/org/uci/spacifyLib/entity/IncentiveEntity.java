@@ -4,10 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 import static org.uci.spacifyLib.utilities.Constants.SCHEMA_NAME;
@@ -19,9 +16,10 @@ import static org.uci.spacifyLib.utilities.Constants.SCHEMA_NAME;
 public class IncentiveEntity {
     @Id
     @Column(name = "incentive_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long incentiveId;
 
-    @Column(name = "incentive_points")
+    @Column(name = "")
     @NotNull
     private Long incentivePoints;
 
@@ -34,13 +32,13 @@ public class IncentiveEntity {
     private String userId;
 
     @Column(name = "added")
+    @NotNull
     private boolean added;
 
     public IncentiveEntity() {
     }
 
-    public IncentiveEntity(Long incentiveId, Long incentivePoints, LocalDateTime timestamp, String userId, boolean added) {
-        this.incentiveId = incentiveId;
+    public IncentiveEntity(Long incentivePoints, LocalDateTime timestamp, String userId, boolean added) {
         this.incentivePoints = incentivePoints;
         this.timestamp = timestamp;
         this.userId = userId;

@@ -85,15 +85,7 @@ public class UserController {
             userDetail.setIncentives(incentiveEntities);
             userDetail.setOwnedRooms(getOwnedRoomDetails(userId));
             userDetail.setSubscribedRooms(getSubscribedRoomDetails(userId));
-            // TODO: Discuss and convert this logic in a trigger based system. Also, when user uses points,
-            // we should save them in the Incentive table. It should be more like an audit table.
-            // Will need to create totalIncentive column in User table.
-            // Trigger one is also good, just need to take care not to set incentive in user table directly.
-            int totalIncentive = 0;
-            for (IncentiveEntity incentiveEntity : incentiveEntities) {
-                totalIncentive += incentiveEntity.getIncentivePoints();
-            }
-            userDetail.setTotalIncentive(totalIncentive);
+            userDetail.setTotalIncentive(userDetail.getTotalIncentive());
             return new ResponseEntity<>(userDetail, HttpStatus.OK);
         }
 

@@ -13,9 +13,7 @@ function Create(props) {
 
     const [tippersSpaceId, setTippersSpaceId] = useState('');
     const [userId, setUserId] = useState('');
-    const [response, setResponse] = useState('');
-    const [wasSuccess, setWasSuccess] = useState(false);
-    const [show, setShow] = useState(false);
+    const [response, setResponse] = useState({wasSuccess: false, show: false, responseMessage: ""});
 
     function createRoomOwnership() {
         const requestHeader = {
@@ -27,9 +25,7 @@ function Create(props) {
         fetch(CREATE_ROOM_API, requestHeader)
             .then((res) => res.json())
             .then((data) => {
-                setWasSuccess(data.success);
-                setResponse(data.message);
-                setShow(true);
+                setResponse({wasSuccess: data.success, show: true, responseMessage: data.message});
             });
     }
 
@@ -48,8 +44,10 @@ function Create(props) {
 
     return (
         <section className="createRoom">
-            <Alert show={show} variant={wasSuccess ? 'success' : 'danger'} onClose={() => setShow(false)} dismissible>
-                {response}
+            <Alert show={response.show} variant={response.wasSuccess ? 'success' : 'danger'}
+                   onClose={() => setResponse({...response, show: false})}
+                   dismissible>
+                {response.responseMessage}
             </Alert>
             <div id="createRoomTitle">
                 <h2>Create your room!</h2>
