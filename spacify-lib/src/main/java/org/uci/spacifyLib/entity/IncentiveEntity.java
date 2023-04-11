@@ -19,7 +19,7 @@ public class IncentiveEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long incentiveId;
 
-    @Column(name = "")
+    @Column(name = "incentive_points")
     @NotNull
     private Long incentivePoints;
 
