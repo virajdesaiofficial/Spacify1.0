@@ -76,14 +76,15 @@ INSERT INTO corespacify.reservation VALUES(7, null, '2023-02-22 00:00:00', '2023
 INSERT INTO corespacify.reservation VALUES(8, null, '2023-02-18 10:00:00', '2023-02-20 14:00:00', 8, 'desaivh');
 
 -- incentive table entries
+-- updated queries without setting primary key
 
-INSERT INTO corespacify.incentive VALUES(1, 10, '2023-02-23 02:00:00', 'sanchg4');
-INSERT INTO corespacify.incentive VALUES(2, 10, '2023-02-23 02:00:02', 'desaivh');
-INSERT INTO corespacify.incentive VALUES(3, 15, '2023-02-23 02:00:20', 'dmohanku');
-INSERT INTO corespacify.incentive VALUES(4, 5, '2023-02-21 02:00:00', 'hthallam');
-INSERT INTO corespacify.incentive VALUES(5, 10, '2023-01-29 02:00:00', 'sdharank');
-INSERT INTO corespacify.incentive VALUES(6, 15, '2023-02-04 02:00:00', 'msrahma2');
-INSERT INTO corespacify.incentive VALUES(7, 15, '2023-02-19 02:00:00', 'desaivh');
+INSERT INTO corespacify.incentive(incentive_points, timestamp, user_id, added) VALUES(10, '2023-02-23 02:00:00', 'sanchg4', false);
+INSERT INTO corespacify.incentive(incentive_points, timestamp, user_id, added) VALUES(10, '2023-02-23 02:00:02', 'desaivh', false);
+INSERT INTO corespacify.incentive(incentive_points, timestamp, user_id, added) VALUES(15, '2023-02-23 02:00:20', 'dmohanku',false);
+INSERT INTO corespacify.incentive(incentive_points, timestamp, user_id, added) VALUES(5, '2023-02-21 02:00:00', 'hthallam', false);
+INSERT INTO corespacify.incentive(incentive_points, timestamp, user_id, added) VALUES(10, '2023-01-29 02:00:00', 'sdharank', false);
+INSERT INTO corespacify.incentive(incentive_points, timestamp, user_id, added) VALUES(15, '2023-02-04 02:00:00', 'msrahma2', false);
+INSERT INTO corespacify.incentive(incentive_points, timestamp, user_id, added) VALUES(15, '2023-02-19 02:00:00', 'desaivh', false);
 
 
 

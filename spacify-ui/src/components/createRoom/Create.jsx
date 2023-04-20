@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import buildings from "./buildings";
 import {ALL_ROOMS_API, CREATE_ROOM_API, ELIGIBLE_OWNERS_API} from "../../endpoints";
 
-// import Alert from 'react-bootstrap/Alert';
+import Alert from 'react-bootstrap/Alert';
 
 function Create(props) {
     const [rooms, setRooms] = useState([]);
@@ -13,8 +13,7 @@ function Create(props) {
 
     const [tippersSpaceId, setTippersSpaceId] = useState('');
     const [userId, setUserId] = useState('');
-    const [response, setResponse] = useState('');
-    const [show, setShow] = useState(false);
+    const [response, setResponse] = useState({wasSuccess: false, show: false, responseMessage: ""});
 
     function createRoomOwnership() {
         const requestHeader = {
@@ -26,13 +25,8 @@ function Create(props) {
         fetch(CREATE_ROOM_API, requestHeader)
             .then((res) => res.json())
             .then((data) => {
-                if (data === "Successful") {
-                    setResponse("Successfully claimed ownership");
-                } else {
-                    setResponse("Not able to claim ownership! Try again later.");
-                }
+                setResponse({wasSuccess: data.success, show: true, responseMessage: data.message});
             });
-        setShow(true);
     }
 
     useEffect(() => {
@@ -50,6 +44,11 @@ function Create(props) {
 
     return (
         <section className="createRoom">
+            <Alert show={response.show} variant={response.wasSuccess ? 'success' : 'danger'}
+                   onClose={() => setResponse({...response, show: false})}
+                   dismissible>
+                {response.responseMessage}
+            </Alert>
             <div id="createRoomTitle">
                 <h2>Create your room!</h2>
             </div>
@@ -62,7 +61,7 @@ function Create(props) {
                         );
                     })}
                 </Form.Select>
-                <Form.Select aria-label="Default select example" onChange={(e) => setUserId(e.target.value)} >
+                <Form.Select aria-label="Default select example" >
                     <option value=''>Select Building</option>
                     {buildings.map((item, index) => {
                         return (
@@ -82,9 +81,6 @@ function Create(props) {
             <div id="createButton">
                 <Button variant="primary" size="lg" onClick={createRoomOwnership} disabled={userId === '' || tippersSpaceId === ''} >Create!</Button>
             </div>
-            {/*<Alert show={show} variant={response==="Successfully claimed ownership" ? 'success' : 'danger'} onClose={() => setShow(false)} dismissible>*/}
-            {/*    {response}*/}
-            {/*</Alert>*/}
         </section>
     );
 }
