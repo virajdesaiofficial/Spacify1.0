@@ -80,3 +80,9 @@ button:disabled {
   color: white;
   cursor: not-allowed;
 }
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}

@@ -1,10 +1,7 @@
 package org.uci.spacifyPortal.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.uci.spacifyPortal.services.AvailableSlotsService;
 import org.uci.spacifyPortal.services.ReservationService;
 import org.uci.spacifyPortal.utilities.ReservationSlot;
@@ -12,6 +9,7 @@ import java.util.List;
 
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/availableSlots")
 public class AvailableServiceController {
 

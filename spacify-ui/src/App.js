@@ -12,6 +12,13 @@ import UserProfile from "./components/userProfile/UserProfile";
 import Reservation from "./components/reservation/Reservation";
 import Rooms from "./components/rooms/Rooms";
 import Incentives from "./components/incentives/Incentives";
+import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+    QueryClient,
+    QueryClientProvider,
+} from '@tanstack/react-query'
 
 const router = createBrowserRouter([
     {
@@ -61,10 +68,14 @@ const router = createBrowserRouter([
     }
     ]);
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
       <section className="app_container">
+        <QueryClientProvider client={queryClient}>
           <RouterProvider router={router}/>
+          </QueryClientProvider>
       </section>
   );
 }

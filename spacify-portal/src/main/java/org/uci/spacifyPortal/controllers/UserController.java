@@ -26,7 +26,7 @@ public class UserController {
     private OwnerService ownerService;
 
     @Autowired
-    private CreateRoomService roomService;
+    private RoomService roomService;
 
     @Autowired
     private UserService userService;
