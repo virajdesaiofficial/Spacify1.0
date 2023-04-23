@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.uci.spacifyLib.entity.IncentiveEntity;
-import org.uci.spacifyLib.entity.OwnerEntity;
-import org.uci.spacifyLib.entity.SubscriberEntity;
-import org.uci.spacifyLib.entity.UserEntity;
+import org.uci.spacifyLib.entity.*;
 import org.uci.spacifyPortal.services.*;
+import org.uci.spacifyPortal.utilities.MessageResponse;
+import org.uci.spacifyPortal.utilities.RegisterUserRequest;
 import org.uci.spacifyPortal.utilities.RoomDetail;
 import org.uci.spacifyPortal.utilities.UserDetail;
 
@@ -90,5 +89,48 @@ public class UserController {
         }
 
         return new ResponseEntity<>(userDetail, HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<MessageResponse> registerNewUser(@RequestBody RegisterUserRequest registerUserRequest) {
+        String userId = registerUserRequest.getUserId();
+        Optional<UserEntity> userEntity = this.userService.getUser(userId);
+        if (userEntity.isPresent()) {
+            MessageResponse messageResponse = new MessageResponse("User name already exists, please choose another user name.", false);
+            return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
+        }
+        boolean userCreated = this.userService.createAndSaveNewUser(registerUserRequest.getUserId(),
+                registerUserRequest.getEmailId(),
+                registerUserRequest.getPassword(),
+                registerUserRequest.getFirstName(),
+                registerUserRequest.getLastName(),
+                registerUserRequest.getMacAddress());
+
+        if (userCreated) {
+            MessageResponse messageResponse = new MessageResponse("User successfully registered! Please sign in.", true);
+            return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+        }
+
+        MessageResponse messageResponse = new MessageResponse("Unable to Register. Please try again later.", false);
+        return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<MessageResponse> userSignIn(@RequestBody RegisterUserRequest registerUserRequest) {
+        String userId = registerUserRequest.getUserId();
+        Optional<AuthenticationEntity> authenticationEntity = this.userService.getAuthentication(userId);
+        if (authenticationEntity.isPresent()) {
+            boolean signInAllowed = this.userService.verifyUserSignIn(authenticationEntity.get(), registerUserRequest.getPassword());
+            if (signInAllowed) {
+                MessageResponse messageResponse = new MessageResponse("Successfully signed in!", true);
+                return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+            } else {
+                MessageResponse messageResponse = new MessageResponse("Invalid credentials. Please try again.", false);
+                return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        MessageResponse messageResponse = new MessageResponse("User name does not exist. Please register if you are a new user.", false);
+        return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
     }
 }
