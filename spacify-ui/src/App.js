@@ -10,6 +10,7 @@ import SignIn from "./components/signin/SignIn";
 import SignUp from "./components/signup/SignUp";
 import UserProfile from "./components/userProfile/UserProfile";
 import Reservation from "./components/reservation/Reservation";
+import {USER_NAME_KEY} from "./endpoints";
 
 const router = createBrowserRouter([
     {
@@ -52,11 +53,19 @@ const router = createBrowserRouter([
     ]);
 
 function App() {
-  return (
-      <section className="app_container">
-          <RouterProvider router={router}/>
-      </section>
-  );
+    // check whether session logged on or remember me was present, if remember me then we copy log info into session
+    let loggedUserName = global.sessionStorage.getItem(USER_NAME_KEY);
+    if (!loggedUserName && global.localStorage) {
+        loggedUserName = global.localStorage.getItem(USER_NAME_KEY);
+        if (loggedUserName)
+            global.sessionStorage.setItem(USER_NAME_KEY, loggedUserName);
+    }
+
+    return (
+        <section className="app_container">
+            <RouterProvider router={router}/>
+        </section>
+    );
 }
 
 export default App;
