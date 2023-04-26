@@ -44,12 +44,12 @@ public class CreateRoomController {
     }
 
 
-    // to be deleted
+    // only for testing
     @GetMapping("/tippers")
     @ResponseBody
-    public List<OccupancyOfaRoom> getAllBuildings() {
+    public void getAllBuildings() {
 
-        return tippersConnectivityService.getOccupancyStatusForSpaceId("1606", "2023-03-06 21:00:51.506", "2023-03-06 21:25:51.506").get();
+        tippersConnectivityService.getOccupancyStatusForSpaceId("1606", "2023-03-06 21:00:51.506", "2023-03-06 21:25:51.506");
 //        return tippersConnectivityService.getMacAddressesForSpaceId("1606", "2023-03-06 21:00:51.506", "2023-03-06 21:25:51.506").get();
 //        return tippersConnectivityService.getListOfBuildings();
 //        return tippersConnectivityService.getSpaceIdAndRoomName(1605);

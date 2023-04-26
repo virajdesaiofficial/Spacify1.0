@@ -105,3 +105,29 @@ ALTER TABLE corespacify.room ALTER COLUMN room_rules TYPE text;
 -- alter incentive timestamp column
 alter table corespacify.incentive alter column timestamp type TIMESTAMP without time zone;
 ALTER TABLE corespacify.incentive ALTER COLUMN timestamp SET NOT NULL;
+
+
+ALTER TABLE corespacify.user ADD COLUMN total_incentives int8 DEFAULT 0;
+
+
+
+SELECT MAX(monitoring_id) + 1 FROM corespacify.monitoring;
+CREATE SEQUENCE monitoring_id_sequence START WITH 12;
+ALTER TABLE corespacify.monitoring ALTER COLUMN monitoring_id SET DEFAULT nextval('monitoring_id_sequence'::regclass);
+ALTER SEQUENCE monitoring_id_sequence OWNER TO app;
+
+CREATE OR REPLACE FUNCTION setDefaultMonitoringId()
+RETURNS Trigger AS
+$$
+BEGIN
+NEW.monitoring_id := nextval('monitoring_id_sequence'::regclass);
+RETURN NEW;
+END;
+$$
+LANGUAGE PLPGSQL;
+
+CREATE TRIGGER setDefaultMonitoring
+BEFORE INSERT ON corespacify.monitoring
+FOR EACH ROW
+WHEN (NEW.monitoring_id = -1)
+EXECUTE FUNCTION setDefaultMonitoringId();

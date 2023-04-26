@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.uci.spacifyLib.dto.MacAdressesOfARoom;
 import org.uci.spacifyLib.dto.OccupancyOfaRoom;
 import org.uci.spacifyLib.dto.RoomDetail;
+import org.uci.spacifyLib.entity.MonitoringEntity;
 import org.uci.spacifyLib.entity.TippersDbSpaceEntity;
+import org.uci.spacifyLib.repsitory.MonitoringRepository;
 import org.uci.spacifyLib.repsitory.TippersDbSpacesRepository;
 import org.slf4j.Logger;
 
@@ -21,6 +23,8 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,10 +39,12 @@ public class TippersConnectivityService {
 
     private Gson gson = new Gson();
 
+    @Autowired
+    private MonitoringRepository monitoringRepository;
+
     private final String mockedMacAddressData = "[{\"spaceId\":1606,\"macAddress\":\"189\",\"startTime\":\"2023-03-06 21:04:16.888\",\"endTime\":\"2023-03-06 21:09:16.978\"},{\"spaceId\":1606,\"macAddress\":\"161\",\"startTime\":\"2023-03-06 21:09:16.978\",\"endTime\":\"2023-03-06 21:14:17.316\"},{\"spaceId\":1606,\"macAddress\":\"177\",\"startTime\":\"2023-03-06 21:14:17.316\",\"endTime\":\"2023-03-06 21:19:17.621\"},{\"spaceId\":1606,\"macAddress\":\"154\",\"startTime\":\"2023-03-06 21:19:17.621\",\"endTime\":\"2023-03-06 21:24:17.671\"}]";
 
-    private final String mockedRoomList = "[{\"spaceId\":1606,\"occupancy\":189,\"startTime\":\"2023-03-06 21:04:16.888\",\"endTime\":\"2023-03-06 21:09:16.978\"},{\"spaceId\":1606,\"occupancy\":161,\"startTime\":\"2023-03-06 21:09:16.978\",\"endTime\":\"2023-03-06 21:14:17.316\"},{\"spaceId\":1606,\"occupancy\":177,\"startTime\":\"2023-03-06 21:14:17.316\",\"endTime\":\"2023-03-06 21:19:17.621\"},{\"spaceId\":1606,\"occupancy\":154,\"startTime\":\"2023-03-06 21:19:17.621\",\"endTime\":\"2023-03-06 21:24:17.671\"}]";
-
+    private final String mockedRoomList = "[0,[[1607,\"floor1\",  \"2023-03-06 21:04:16.888\", \"2023-03-06 21:09:16.978\",189]]]";
     @Autowired
     private TippersDbSpacesRepository tippersDbSpacesRepository;
 
@@ -52,7 +58,7 @@ public class TippersConnectivityService {
             RoomDetail r = new RoomDetail();
             r.setRoomId(Long.valueOf(t.getSpaceId()));
             r.setRoomDescription(t.getSpaceName());
-            return  r;
+            return r;
         }).collect(Collectors.toList());
     }
 
@@ -64,12 +70,12 @@ public class TippersConnectivityService {
             RoomDetail r = new RoomDetail();
             r.setRoomId(Long.valueOf(t.getSpaceId()));
             r.setRoomDescription(t.getSpaceName());
-            return  r;
+            return r;
         }).collect(Collectors.toList());
 
     }
 
-    public Optional<List<OccupancyOfaRoom>> getOccupancyStatusForSpaceId(String spaceId, String startTime, String endTime) {
+    public void getOccupancyStatusForSpaceId(String spaceId, String startTime, String endTime) {
 
         if (hitTippers) {
 
@@ -81,48 +87,62 @@ public class TippersConnectivityService {
                 bodyMap.put("start_time", startTime);
                 bodyMap.put("end_time", endTime);
                 String body = new Gson().toJson(bodyMap);
-                HttpResponse<String> response = sendRequestToTippers(url, body);
+//                HttpResponse<String> response = sendRequestToTippers(url, body);
 
-                if (response.statusCode() == HttpStatus.OK.value()) {
+                HttpResponse<String> response = null;
+                if (response == null || response.statusCode() == HttpStatus.OK.value() || response.statusCode() != HttpStatus.OK.value()) {
 
-                    List<OccupancyOfaRoom> occupancyOfaRoomList = new ArrayList<>();
-                    JsonArray responseArray = new Gson().fromJson(response.body(), JsonArray.class);
+                    List<MonitoringEntity> occupancyOfaRoomList = new ArrayList<>();
+                    JsonArray responseArray;
+                    if (response != null && response.statusCode() == HttpStatus.OK.value()) {
+                        responseArray = new Gson().fromJson(response.body(), JsonArray.class);
+                    } else {
+                        responseArray =  new Gson().fromJson(mockedRoomList, JsonArray.class);;
+                    }
 
                     if (responseArray.get(0).getAsInt() == 0) {
 
                         for (JsonElement element : responseArray.get(1).getAsJsonArray()) {
-
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
                             JsonArray arr = element.getAsJsonArray();
-                            OccupancyOfaRoom occupancyOfaRoom = new OccupancyOfaRoom();
-                            occupancyOfaRoom.setOccupancy(arr.get(4).getAsInt());
-                            occupancyOfaRoom.setSpaceId(arr.get(0).getAsInt());
-                            occupancyOfaRoom.setEndTime(arr.get(3).getAsString());
-                            occupancyOfaRoom.setStartTime(arr.get(2).getAsString());
-                            occupancyOfaRoomList.add(occupancyOfaRoom);
+//                            OccupancyOfaRoom occupancyOfaRoom = new OccupancyOfaRoom();
+//                            occupancyOfaRoom.setOccupancy(arr.get(4).getAsInt());
+//                            occupancyOfaRoom.setSpaceId(arr.get(0).getAsInt());
+//                            occupancyOfaRoom.setEndTime(arr.get(3).getAsString());
+//                            occupancyOfaRoom.setStartTime(arr.get(2).getAsString());
+//                            occupancyOfaRoomList.add(occupancyOfaRoom);
+
+
+                            MonitoringEntity entity = new MonitoringEntity();
+                            entity.setTippersSpaceId(arr.get(0).getAsInt());
+                            entity.setRoomOccupancy(arr.get(4).getAsInt());
+                            entity.setMonitoring_id(-1L);
+                            entity.setTimestampTo(LocalDateTime.parse(arr.get(3).getAsString(), formatter));
+                            entity.setTimestampFrom(LocalDateTime.parse(arr.get(2).getAsString(), formatter));
+                            occupancyOfaRoomList.add(entity);
+
 
                         }
+                        monitoringRepository.saveAll(occupancyOfaRoomList);
                         LOG.info("Parsing request successful. Sending back the data");
-                        return Optional.of(occupancyOfaRoomList);
-                    } else {
 
-                        LOG.error("The query did not run properly");
-                        return Optional.empty();
                     }
                 } else {
-
                     LOG.error("The http request has returned status {}", response.statusCode());
-                    return Optional.empty();
                 }
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);
-                return Optional.empty();
             }
         } else {
 
-            List<OccupancyOfaRoom> data = gson.fromJson(mockedRoomList, new ArrayList<OccupancyOfaRoom>().getClass());
-            return Optional.of(data);
+//            List<OccupancyOfaRoom> data = gson.fromJson(mockedRoomList, new ArrayList<OccupancyOfaRoom>().getClass());
+            //return Optional.of(data);
         }
 
+    }
+
+    private List<OccupancyOfaRoom> getMockedOccupancyData() {
+        return gson.fromJson(mockedRoomList, new ArrayList<OccupancyOfaRoom>().getClass());
     }
 
     public Optional<List<MacAdressesOfARoom>> getMacAddressesForSpaceId(String spaceId, String startTime, String endTime) {
@@ -176,16 +196,20 @@ public class TippersConnectivityService {
     }
 
 
-    private HttpResponse<String> sendRequestToTippers(String url, String body) throws URISyntaxException, IOException, InterruptedException {
+    private HttpResponse<String> sendRequestToTippers(String url, String body){
 
-        LOG.info("sending request to url : {}", url);
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI(url))
-                .POST(HttpRequest.BodyPublishers.ofString(body))
-                .header("Content-Type", "application/json")
-                .build();
-
-        return HttpClient.newBuilder().build().send(request, HttpResponse.BodyHandlers.ofString());
+        try {
+            LOG.info("sending request to url : {}", url);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(new URI(url))
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .header("Content-Type", "application/json")
+                    .build();
+            HttpResponse<String> response = HttpClient.newBuilder().build().send(request, HttpResponse.BodyHandlers.ofString());
+            return response;
+        }catch(Exception e){
+            return null;
+        }
 
     }
 }
