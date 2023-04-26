@@ -131,3 +131,21 @@ BEFORE INSERT ON corespacify.monitoring
 FOR EACH ROW
 WHEN (NEW.monitoring_id = -1)
 EXECUTE FUNCTION setDefaultMonitoringId();
+
+
+---------------------------------------------------------------------
+-- IMPORTANT UPDATE. drop the current incentive table and create using these queries. To enable auto generating ids. The trigger was creating issues.
+CREATE table corespacify.incentive(
+                                      incentive_id bigserial primary key,
+                                      incentive_points int8 not null,
+                                      timestamp TIMESTAMP without time zone not null,
+                                      user_id VARCHAR(255) not null,
+                                      added boolean not null
+)
+
+alter table corespacify.incentive
+    add constraint FK9skh2obacjst0hyea8hm8hfq1
+        foreign key (user_id)
+            references corespacify.user
+
+-- Now insert mock data into this using the Insert queries in mock-data.sql. You do not need to specify primary key in inserts. DB will handle that.

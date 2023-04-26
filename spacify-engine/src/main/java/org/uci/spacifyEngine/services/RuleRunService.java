@@ -19,6 +19,7 @@ import org.uci.spacifyLib.repsitory.IncentiveRepository;
 import org.uci.spacifyLib.repsitory.RoomRepository;
 import org.uci.spacifyLib.repsitory.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,7 +53,7 @@ public class RuleRunService {
 
         switch (ruleId) {
             case OCCUPANCY_RULE -> {
-                ruleCalculator = new OccupancyRuleCalculator(reservationEntity);
+                ruleCalculator = new OccupancyRuleCalculator(reservationEntity, this.monitoringService);
             }
             case DURATION_RULE -> {
                 ruleCalculator = new DurationRuleCalculator(reservationEntity, this.monitoringService);
@@ -183,16 +184,14 @@ public class RuleRunService {
 
         Long currentTotalIncentives = userEntity.get().getTotalIncentives();;
 
-
         for (Rule rule: rules) {
             if (rule.isFired()) {
+                allIncentives.add(new IncentiveEntity(rule.getIncentive(), LocalDateTime.now(), userId, true));
                 currentTotalIncentives += rule.getIncentive();
-                // TODO: fix this insert in incentive table, gives an error whenever we try to insert.
-//                this.incentiveRepository.save(new IncentiveEntity(-1L, rule.getIncentive(), LocalDateTime.now(), userId, true));
             }
         }
 
-//        this.incentiveRepository.saveAll(allIncentives);
+        this.incentiveRepository.saveAll(allIncentives);
         userEntity.get().setTotalIncentives(currentTotalIncentives);
         this.userRepository.save(userEntity.get());
     }

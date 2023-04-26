@@ -11,7 +11,8 @@ import org.uci.spacifyLib.services.TippersConnectivityService;
 import org.uci.spacifyLib.entity.RoomEntity;
 import org.uci.spacifyPortal.services.CreateRoomService;
 import org.uci.spacifyPortal.services.OwnerService;
-import org.uci.spacifyLib.dto.CreateRequest;
+import org.uci.spacifyPortal.utilities.CreateRequest;
+import org.uci.spacifyPortal.utilities.MessageResponse;
 import org.uci.spacifyPortal.utilities.TipperSpace;
 
 import java.util.ArrayList;
@@ -60,17 +61,17 @@ public class CreateRoomController {
    POST API for adding new room and owner
    */
     @PostMapping("/create")
-    public ResponseEntity<String>  createRoom(@RequestBody CreateRequest createRequest) {
+    public ResponseEntity<MessageResponse>  createRoom(@RequestBody CreateRequest createRequest) {
         try {
             boolean roomExists = this.createRoomService.doesRoomExist(createRequest.getTippersSpaceId());
             if (roomExists) {
-                return new ResponseEntity<>("Room is already owned. Please reach out to owner for access.", HttpStatus.IM_USED);
+                return new ResponseEntity<>(new MessageResponse("Room is already owned. Please reach out to owner for access.", false), HttpStatus.IM_USED);
             }
             RoomEntity roomEntity = this.createRoomService.createRoom(createRequest);
             this.ownerService.createOwner(createRequest.getUserId(), roomEntity.getRoomId());
-            return new ResponseEntity<>("Successful", HttpStatus.OK);
+            return new ResponseEntity<>(new MessageResponse("Your room was successfully created!", true), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Failure", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new MessageResponse("Not able to create room. Try again later.", false), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -84,11 +85,11 @@ public class CreateRoomController {
     @GetMapping("/tippers/all")
     public List<TipperSpace> getAll() {
         List<TipperSpace> list = new ArrayList<TipperSpace>();
-        list.add(new TipperSpace("B501", 344));
-        list.add(new TipperSpace("A102", 234));
-        list.add(new TipperSpace("E100", 222));
-        list.add(new TipperSpace("E200", 345));
-        list.add(new TipperSpace("B301", 233));
+        list.add(new TipperSpace("B501", 400));
+        list.add(new TipperSpace("A102", 49));
+        list.add(new TipperSpace("E100", 46));
+        list.add(new TipperSpace("E200", 44));
+        list.add(new TipperSpace("B301", 43));
 
         return list;
     }
