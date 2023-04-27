@@ -8,11 +8,12 @@ function UserProfile(props) {
         <div className="userProfileContainer">
             <div className="settingsPane">
                 <ul>
-                    <li>Profile</li>
+                    <li><Link to="/profile" className="profile-link">Profile</Link></li>
                     <li>Password</li>
                     <li>Email</li>
                     <li><Link to="/rooms" className="rooms-link">My Rooms</Link></li>
                     <li><Link to="/incentives" className="rewards-link">Rewards</Link></li>
+
                     <li>Redeem</li>
                     <li>Notifications</li>
                 </ul>

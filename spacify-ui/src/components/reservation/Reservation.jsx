@@ -1,24 +1,14 @@
-import { useState } from "react";
+import React, {useEffect, useState} from 'react';
 import './reservation.css';
 import { Link } from 'react-router-dom';
 import axios from "axios";
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
-
 import { format } from 'date-fns';
 
 const getSlots = async (roomType, date) => {
   if (!roomType || !date) return [];
-  //TODO add date here
   let data = await fetch(`http://localhost:8083/api/v1/availableSlots/${roomType.toUpperCase()}`);
   return await data.json();
 }
-
 
 const formatDate = (date) => {
   console.log(date);
@@ -43,34 +33,39 @@ const Room = ({ roomId, timeBound }) => {
   )
 }
 
-
 const ReservationPage = () => {
   const [roomType, setRoomType] = useState("");
   const [date, setDate] = useState("");
+  const [slots, setSlots] = useState([]);
   const isButtonDisabled = !roomType || !date;
 
-  // Queries
-  const query = useQuery({ queryKey: ['slots', roomType, date], queryFn: () => getSlots(roomType, date) });
+  useEffect(() => {
+      const fetchSlots = async () => {
+        const data = await getSlots(roomType, date);
+        setSlots(data);
+      };
+      if (roomType && date) {
+        fetchSlots();
+      }
+    }, [roomType, date]);
 
-  const handleRoomTypeChange = (event) => {
-    setRoomType(event.target.value);
-    // Reset date and time when room type changes
-    setDate("");
-  };
+    const handleRoomTypeChange = (event) => {
+      setRoomType(event.target.value);
+      setDate("");
+    };
 
-  const handleDateChange = (event) => {
-    setDate(event.target.value);
-  };
+    const handleDateChange = (event) => {
+      setDate(event.target.value);
+    };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // TODO: Handle form submission and reservation
-    // save selected information to the local storage or API
-    // example code for saving data to local storage
-    //const reservation = { roomType, date, time, availableRooms };
-    //localStorage.setItem("reservation", JSON.stringify(reservation));
-  };
-  if (query.isLoading) return <span>Loading</span>;
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      // TODO: Handle form submission and reservation
+      // save selected information to the local storage or API
+      // example code for saving data to local storage
+      //const reservation = { roomType, date, time, availableRooms };
+      //localStorage.setItem("reservation", JSON.stringify(reservation));
+    };
 
   return (
     <div className="reservation-container">
@@ -82,7 +77,7 @@ const ReservationPage = () => {
             <option value="">Select Room Type</option>
             <option value="study">Study</option>
             <option value="office">Office</option>
-            <option value="common">Common Space</option>
+            <option value="common_space">Common Space</option>
           </select>
         </div>
         {roomType && (
@@ -93,14 +88,24 @@ const ReservationPage = () => {
             </div>
             {date && (
               <div className="form-group">
+                {slots.map((data) => (
+                  data.timeBound.length > 0 && (
+                    <div key={data.roomId}>
+                      <h3>{data.roomId}</h3>
+                      <div className="flex-row">
+                        {data.timeBound.map((bound) => (
+                          <button type="button" className="btn" style={{ backgroundColor: "gainsboro" }}>
+                            {format(new Date(bound.timeFrom), 'HH:mm')} - {format(new Date(bound.timeTo), 'HH:mm')}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                ))}
               </div>
             )}
           </>
         )}
-        {query.data.map(data => {
-          return data.timeBound.length > 0 ?
-          <Room roomId={data.roomId} timeBound={data.timeBound}></Room>: <></>;
-        })}
         <Link to="/user" className="user-link">
           <button type="submit" onSubmit={handleSubmit} disabled={isButtonDisabled}>Reserve</button>
         </Link>
@@ -108,5 +113,5 @@ const ReservationPage = () => {
     </div>
   );
 };
-
 export default ReservationPage;
+

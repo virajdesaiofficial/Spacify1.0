@@ -1,3 +1,8 @@
+.form-group {
+  margin-bottom: 20px;
+  flex-direction: column;
+}
+
 .reservation-container {
   width: 100%;
   max-width: 500px;
@@ -14,11 +19,8 @@ h2 {
   font-size: 2rem;
 }
 
-.form-group {
-  margin-bottom: 20px;
-}
-
 label {
+    text-align: center;
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
@@ -83,6 +85,6 @@ button:disabled {
 
 .flex-row {
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
 }
+
