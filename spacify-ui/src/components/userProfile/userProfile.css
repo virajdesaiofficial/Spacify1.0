@@ -1,0 +1,43 @@
+.userProfileContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.settingsPane {
+  float: left;
+  width: 200px;
+  background-color: #f0f0f0;
+  padding: 20px;
+  margin-right: 20px;
+  height: 100vh;
+}
+
+.settingsPane ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.settingsPane li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.settingsPane li:hover {
+  background-color: #e0e0e0;
+}
+
+.contentPane {
+  flex: 1;
+  padding: 20px;
+}
+
+.rewards-link {
+  text-decoration: none;
+  color: black;
+}
+
+.rooms-link {
+  text-decoration: none;
+  color: black;
+}
