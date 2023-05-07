@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './reservation.css';
-import { Link } from 'react-router-dom';
-import axios from "axios";
-import { format } from 'date-fns';
+import {Link} from 'react-router-dom';
+import {format} from 'date-fns';
 
 const getSlots = async (roomType, date) => {
   if (!roomType || !date) return [];
