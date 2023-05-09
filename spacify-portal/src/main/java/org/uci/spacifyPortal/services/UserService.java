@@ -1,5 +1,8 @@
 package org.uci.spacifyPortal.services;
 
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
+import org.passay.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.uci.spacifyLib.entity.*;
@@ -33,6 +36,10 @@ public class UserService {
         return this.userRepository.findByAccessLevelIn(Arrays.asList(AccessLevel.ADMIN, AccessLevel.FACULTY));
     }
 
+    public void saveUserEntity(UserEntity userEntity) {
+        this.userRepository.save(userEntity);
+    }
+
     public Optional<UserEntity> getUser(String userId) {
         return this.userRepository.findById(userId);
     }
@@ -54,6 +61,17 @@ public class UserService {
         return hashedPassword;
     }
 
+    public String generateRandomCode() {
+        List<CharacterRule> rules = List.of(new CharacterRule(EnglishCharacterData.Alphabetical, 20));
+
+        PasswordGenerator generator = new PasswordGenerator();
+        return generator.generatePassword(20, rules);
+    }
+
+    public void saveNewPassword(AuthenticationEntity authenticationEntity) {
+        this.authenticationRepository.save(authenticationEntity);
+    }
+
     @Transactional(rollbackOn = { SQLException.class })
     protected void saveRecords(UserEntity userEntity, MacAddressEntity macAddressEntity, AuthenticationEntity authenticationEntity) throws SQLException {
         this.userRepository.save(userEntity);
@@ -61,12 +79,13 @@ public class UserService {
         this.authenticationRepository.save(authenticationEntity);
     }
 
-    public boolean createAndSaveNewUser(String userId, String emailId, String password, String firstName, String lastName, String macAddress) {
+    public String createAndSaveNewUser(String userId, String emailId, String password, String firstName, String lastName, String macAddress) {
         String hashedPassword = this.hashPassword(password);
         if (Objects.isNull(hashedPassword)) {
-            return false;
+            return null;
         }
-        UserEntity userEntity = new UserEntity(userId, emailId, firstName, lastName, AccessLevel.STUDENT, 0L);
+        String verificationCode = this.generateRandomCode();
+        UserEntity userEntity = new UserEntity(userId, emailId, firstName, lastName, AccessLevel.STUDENT, 0L, verificationCode, false);
         MacAddressPK macAddressPK = new MacAddressPK();
         macAddressPK.setMacAddress(macAddress);
         macAddressPK.setUserId(userId);
@@ -75,9 +94,9 @@ public class UserService {
             this.saveRecords(userEntity, new MacAddressEntity(macAddressPK), new AuthenticationEntity(userId, hashedPassword));
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
-        return true;
+        return verificationCode;
     }
 
     public Optional<AuthenticationEntity> getAuthentication(String userId) {

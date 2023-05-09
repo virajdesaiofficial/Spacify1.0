@@ -32,7 +32,7 @@ function SignUp(props) {
             userId: state.userId,
             firstName: state.firstName,
             lastName: state.lastName,
-            macAddress: state.macAddress
+            macAddress: state.macAddress.toLowerCase()
         };
 
         const requestHeader = {
@@ -56,7 +56,12 @@ function SignUp(props) {
         console.log("google sign up");
     };
 
-    const disabled = state.userId === "" || state.password === "" || state.firstName === "" || state.emailId === "" || state.macAddress === "" ||
+    // mac address validation
+    const regex1 = /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/;
+    const regex2 = /^([0-9a-f]{2}[:-]){5}([0-9a-f]{2})$/;
+    const macAddressValid = regex1.test(state.macAddress) || regex2.test(state.macAddress);
+
+    const disabled = state.userId === "" || state.password === "" || state.firstName === "" || state.emailId === "" || !macAddressValid ||
         !state.agreedTC || !state.agreedPD || state.password !== state.verifyPassword;
 
     let message = "";
@@ -66,6 +71,8 @@ function SignUp(props) {
         message = "Please read and agree the Terms and Conditions of use.";
     } else if (!state.agreedPD) {
         message = "Please read and agree to the Privacy Disclaimer.";
+    } else if (!macAddressValid) {
+        message = "Please enter valid Mac Address.";
     } else {
         message = "Please fill all the mandatory fields.";
     }

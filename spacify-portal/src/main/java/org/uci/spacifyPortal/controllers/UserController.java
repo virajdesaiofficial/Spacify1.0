@@ -13,6 +13,7 @@ import org.uci.spacifyPortal.utilities.UserDetail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,9 @@ public class UserController {
 
     @Autowired
     private SubscriberService subscriberService;
+
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("/eligibleOwners")
     public List<UserEntity> getAllEligibleOwners() {
@@ -99,20 +103,21 @@ public class UserController {
             MessageResponse messageResponse = new MessageResponse("User name already exists, please choose another user name.", false);
             return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
         }
-        boolean userCreated = this.userService.createAndSaveNewUser(registerUserRequest.getUserId(),
+        String verificationCode = this.userService.createAndSaveNewUser(registerUserRequest.getUserId(),
                 registerUserRequest.getEmailId(),
                 registerUserRequest.getPassword(),
                 registerUserRequest.getFirstName(),
                 registerUserRequest.getLastName(),
                 registerUserRequest.getMacAddress());
 
-        if (userCreated) {
-            MessageResponse messageResponse = new MessageResponse("User successfully registered! Please sign in.", true);
-            return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+        if (Objects.isNull(verificationCode)) {
+            MessageResponse messageResponse = new MessageResponse("Unable to Register. Please try again later.", false);
+            return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
         }
 
-        MessageResponse messageResponse = new MessageResponse("Unable to Register. Please try again later.", false);
-        return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
+        this.emailService.sendSimpleMessageForVerification(registerUserRequest.getEmailId(), registerUserRequest.getUserId(), verificationCode);
+        MessageResponse messageResponse = new MessageResponse("User successfully registered! Please sign in.", true);
+        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
     }
 
     @PostMapping("/signin")
@@ -120,17 +125,91 @@ public class UserController {
         String userId = registerUserRequest.getUserId();
         Optional<AuthenticationEntity> authenticationEntity = this.userService.getAuthentication(userId);
         if (authenticationEntity.isPresent()) {
-            boolean signInAllowed = this.userService.verifyUserSignIn(authenticationEntity.get(), registerUserRequest.getPassword());
-            if (signInAllowed) {
-                MessageResponse messageResponse = new MessageResponse("Successfully signed in!", true);
-                return new ResponseEntity<>(messageResponse, HttpStatus.OK);
-            } else {
-                MessageResponse messageResponse = new MessageResponse("Invalid credentials. Please try again.", false);
-                return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
+            Optional<UserEntity> userEntity = this.userService.getUser(userId);
+            if (userEntity.isPresent() && userEntity.get().getVerified()) {
+                boolean signInAllowed = this.userService.verifyUserSignIn(authenticationEntity.get(), registerUserRequest.getPassword());
+                if (signInAllowed) {
+                    MessageResponse messageResponse = new MessageResponse("Successfully signed in!", true);
+                    return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+                } else {
+                    MessageResponse messageResponse = new MessageResponse("Invalid credentials. Please try again.", false);
+                    return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
+                }
             }
+            MessageResponse messageResponse = new MessageResponse("User not verified. Please verify yourself by clicking the verification link in your inbox, or click Send Verification button for a new link. ", false);
+            return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
         }
 
         MessageResponse messageResponse = new MessageResponse("User name does not exist. Please register if you are a new user.", false);
+        return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/verification/{userId}/{code}")
+    public String verifyUser(@PathVariable String userId, @PathVariable String code) {
+        Optional<UserEntity> userEntity = this.userService.getUser(userId);
+        if (userEntity.isPresent()) {
+            UserEntity user = userEntity.get();
+            if (user.getVerified()) {
+                return "Your email has already been verified! Please Sign In.";
+            }
+
+            if (Objects.equals(user.getVerificationCode(), code)) {
+                user.setVerified(true);
+                this.userService.saveUserEntity(user);
+                return "Yay! Your email has been verified. You can now Sign In and use Spacify!";
+            }
+
+            return "Oops! You have an invalid verification link. Contact support.";
+        }
+
+        return "Invalid user. Please Sign Up to use Spacify!";
+    }
+
+    @GetMapping("/sendVerification/{userId}")
+    public ResponseEntity<MessageResponse> resendVerificationLink(@PathVariable String userId) {
+        Optional<UserEntity> userEntity = this.userService.getUser(userId);
+        if (userEntity.isPresent()) {
+            UserEntity user = userEntity.get();
+            if (user.getVerified()) {
+                MessageResponse messageResponse = new MessageResponse("Your email has already been verified! Please Sign In.", true);
+                return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+            }
+
+            if (Objects.isNull(user.getVerificationCode())) {
+                user.setVerificationCode(this.userService.generateRandomCode());
+                this.userService.saveUserEntity(user);
+            }
+            this.emailService.sendSimpleMessageForVerification(user.getEmail(), user.getUserId(), user.getVerificationCode());
+            MessageResponse messageResponse = new MessageResponse("Verification email sent!", true);
+            return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+        }
+
+        MessageResponse messageResponse = new MessageResponse("Invalid user. Please Sign Up to use Spacify!", false);
+        return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/forgotPassword/{userId}")
+    public ResponseEntity<MessageResponse> forgotPasswordMail(@PathVariable String userId) {
+        Optional<UserEntity> userEntity = this.userService.getUser(userId);
+        if (userEntity.isPresent()) {
+            UserEntity user = userEntity.get();
+            String newPassword = this.userService.generateRandomCode();
+
+            Optional<AuthenticationEntity> authenticationEntity = this.userService.getAuthentication(userId);
+            // this helps in back filling the users which were created before this feature.
+            if (authenticationEntity.isPresent()) {
+                authenticationEntity.get().setHashedPassword(this.userService.hashPassword(newPassword));
+                this.userService.saveNewPassword(authenticationEntity.get());
+            } else {
+                this.userService.saveNewPassword(new AuthenticationEntity(userId, this.userService.hashPassword(newPassword)));
+            }
+
+            this.emailService.sendNewPassword(user.getEmail(), user.getFirstName(), newPassword);
+            MessageResponse messageResponse = new MessageResponse("We have sent the new password to your verified email!", true);
+            return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+        }
+
+        MessageResponse messageResponse = new MessageResponse("Invalid user. Please Sign Up to use Spacify!", false);
         return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
     }
 }

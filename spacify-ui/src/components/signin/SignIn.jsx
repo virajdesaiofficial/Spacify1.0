@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import './signin.css';
 import {IoLogoGoogle} from "react-icons/all";
-import {SIGNIN_USER_API, USER_NAME_KEY} from "../../endpoints";
+import {FORGOT_PASSWORD_API, SEND_VERIFICATION_API, SIGNIN_USER_API, USER_NAME_KEY} from "../../endpoints";
 import Alert from "react-bootstrap/Alert";
 
 function SignIn(props) {
@@ -16,24 +16,18 @@ function SignIn(props) {
         responseMessage: "",
     };
     const [state, setState] = useState(initialState);
-    // const [passwordError, setPasswordError] = useState("");
-    // const [userNameError, setUserNameError] = useState("");
 
-    // const handlePasswordValidation = (event) => {
-    //     let isValid = false;
-    //     if (!password.match(/^[a-zA-Z]{8,22}$/)) {
-    //         isValid = false;
-    //         setPasswordError(
-    //             "Only Letters and length must best min 8 Characters and Max 22 Characters"
-    //         );
-    //         return false;
-    //     } else {
-    //         setPasswordError("");
-    //         isValid = true;
-    //     }
-    //
-    //     return isValid;
-    // };
+    const handleFetch = (url) => {
+        if (state.userName) {
+            fetch(url)
+                .then((res) => res.json())
+                .then((data) => {
+                    setState({...state, wasSuccess: data.success, show: true, responseMessage: data.message});
+                });
+        } else {
+            setState({...state, wasSuccess: false, show: true, responseMessage: "Please enter user name!"});
+        }
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -58,6 +52,18 @@ function SignIn(props) {
                 }
                 setState({...state, wasSuccess: data.success, show: true, responseMessage: data.message});
             });
+    }
+
+    const handleSendVerification = (e) => {
+        e.preventDefault();
+        const url = SEND_VERIFICATION_API + state.userName;
+        handleFetch(url);
+    }
+
+    const handleForgetPassword = (e) => {
+        e.preventDefault();
+        const url = FORGOT_PASSWORD_API + state.userName;
+        handleFetch(url);
     }
 
     const handleLogout = (e) => {
@@ -117,6 +123,8 @@ function SignIn(props) {
                     </Form>
                 </div>
                 <p>Not a member? <a href="signUp">Register</a></p>
+                <p>Trouble signing in? <a href="" onClick={(e) => handleForgetPassword(e)}>Forgot Password</a></p>
+                <p><a href="" onClick={(e) => handleSendVerification(e)}>Send Verification Link</a></p>
             </section>
         );
     }

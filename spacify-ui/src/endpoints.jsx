@@ -7,3 +7,6 @@ export const REGISTER_USER_API = "http://127.0.0.1:8083/api/v1/user/signup";
 export const SIGNIN_USER_API = "http://127.0.0.1:8083/api/v1/user/signin/";
 
 export const USER_NAME_KEY = "userName";
+
+export const SEND_VERIFICATION_API = "http://127.0.0.1:8083/api/v1/user/sendVerification/";
+export const FORGOT_PASSWORD_API = "http://127.0.0.1:8083/api/v1/user/forgotPassword/";

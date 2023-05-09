@@ -131,3 +131,10 @@ CREATE table corespacify.authentication(
                                            constraint auth_user foreign key (user_id) references corespacify.user(user_id)
 );
 
+-- adding columns for verification email and codes! We also want to make email unique so that each email is linked to only one account
+ALTER TABLE corespacify.user ADD COLUMN verified boolean DEFAULT false;
+
+ALTER TABLE corespacify.user ADD COLUMN verification_code text;
+
+ALTER TABLE corespacify.user ADD UNIQUE(email);
+
