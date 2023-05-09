@@ -116,7 +116,7 @@ public class UserController {
         }
 
         this.emailService.sendSimpleMessageForVerification(registerUserRequest.getEmailId(), registerUserRequest.getUserId(), verificationCode);
-        MessageResponse messageResponse = new MessageResponse("User successfully registered! Please sign in.", true);
+        MessageResponse messageResponse = new MessageResponse("User successfully registered! Please click the verification link sent to your email.", true);
         return new ResponseEntity<>(messageResponse, HttpStatus.OK);
     }
 
