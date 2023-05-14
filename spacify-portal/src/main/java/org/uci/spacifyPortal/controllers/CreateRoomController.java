@@ -4,14 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-//import org.uci.spacifyLib.dto.CreateRoom;
-import org.uci.spacifyLib.dto.*;
-//import org.uci.spacifyLib.dto.UiRules;
-import org.uci.spacifyLib.services.TippersConnectivityService;
+import org.uci.spacifyLib.dto.CreateRequest;
+import org.uci.spacifyLib.dto.RoomDetail;
+import org.uci.spacifyLib.dto.Rule;
+import org.uci.spacifyLib.dto.RulesRequest;
 import org.uci.spacifyLib.entity.RoomEntity;
+import org.uci.spacifyLib.services.TippersConnectivityService;
 import org.uci.spacifyPortal.services.CreateRoomService;
 import org.uci.spacifyPortal.services.OwnerService;
-import org.uci.spacifyPortal.utilities.CreateRequest;
 import org.uci.spacifyPortal.utilities.MessageResponse;
 import org.uci.spacifyPortal.utilities.TipperSpace;
 
@@ -46,22 +46,36 @@ public class CreateRoomController {
 
 
     // only for testing
-    @GetMapping("/tippers")
+    @PostMapping("/test")
     @ResponseBody
-    public void getAllBuildings() {
+    public String getAllBuildings(@RequestBody String hubVerifyToken ) {
 
-        tippersConnectivityService.getOccupancyStatusForSpaceId("1606", "2023-03-06 21:00:51.506", "2023-03-06 21:25:51.506");
+        if(hubVerifyToken.contains("button_reply")){
+            System.out.println(hubVerifyToken);
+        }
+//        tippersConnectivityService.getOccupancyStatusForSpaceId("1606", "2023-03-06 21:00:51.506", "2023-03-06 21:25:51.506");
 //        return tippersConnectivityService.getMacAddressesForSpaceId("1606", "2023-03-06 21:00:51.506", "2023-03-06 21:25:51.506").get();
 //        return tippersConnectivityService.getListOfBuildings();
 //        return tippersConnectivityService.getSpaceIdAndRoomName(1605);
 
-//        return data;
+        return hubVerifyToken;
     }
+
+    //only for testing
+    @GetMapping("/verifyWebhook")
+    @ResponseBody
+    public String verifyWhatsappWebhook(@RequestParam("hub.mode") String hubMode, @RequestParam("hub.challenge") String hubChallenge, @RequestParam("hub.verify_token") String hubVerifyToken ) {
+
+        System.out.println(hubVerifyToken);
+
+        return hubChallenge;
+    }
+
     /*
    POST API for adding new room and owner
    */
     @PostMapping("/create")
-    public ResponseEntity<MessageResponse>  createRoom(@RequestBody CreateRequest createRequest) {
+    public ResponseEntity<MessageResponse> createRoom(@RequestBody CreateRequest createRequest) {
         try {
             boolean roomExists = this.createRoomService.doesRoomExist(createRequest.getTippersSpaceId());
             if (roomExists) {
@@ -77,7 +91,7 @@ public class CreateRoomController {
 
     @GetMapping("/all")
     public List<RoomEntity> getAllRooms() {
-        return  this.createRoomService.getAllRooms();
+        return this.createRoomService.getAllRooms();
     }
 
 
@@ -103,13 +117,13 @@ public class CreateRoomController {
     }
 
     @GetMapping("/buildings")
-    public List<RoomDetail> getBuildings(){
+    public List<RoomDetail> getBuildings() {
 
         return tippersConnectivityService.getListOfBuildings();
     }
 
     @GetMapping("/rooms/{spaceId}")
-    public List<RoomDetail> getRoomsFromBuildingSpaceId(@PathVariable String spaceId){
+    public List<RoomDetail> getRoomsFromBuildingSpaceId(@PathVariable String spaceId) {
 
         return tippersConnectivityService.getSpaceIdAndRoomName(Integer.parseInt(spaceId));
     }
