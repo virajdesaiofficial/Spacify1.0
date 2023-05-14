@@ -87,9 +87,7 @@ public class TippersConnectivityService {
                 bodyMap.put("start_time", startTime);
                 bodyMap.put("end_time", endTime);
                 String body = new Gson().toJson(bodyMap);
-//                HttpResponse<String> response = sendRequestToTippers(url, body);
-
-                HttpResponse<String> response = null;
+                HttpResponse<String> response = sendRequestToTippers(url, body);
                 if (response == null || response.statusCode() == HttpStatus.OK.value() || response.statusCode() != HttpStatus.OK.value()) {
 
                     List<MonitoringEntity> occupancyOfaRoomList = new ArrayList<>();
@@ -105,13 +103,6 @@ public class TippersConnectivityService {
                         for (JsonElement element : responseArray.get(1).getAsJsonArray()) {
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
                             JsonArray arr = element.getAsJsonArray();
-//                            OccupancyOfaRoom occupancyOfaRoom = new OccupancyOfaRoom();
-//                            occupancyOfaRoom.setOccupancy(arr.get(4).getAsInt());
-//                            occupancyOfaRoom.setSpaceId(arr.get(0).getAsInt());
-//                            occupancyOfaRoom.setEndTime(arr.get(3).getAsString());
-//                            occupancyOfaRoom.setStartTime(arr.get(2).getAsString());
-//                            occupancyOfaRoomList.add(occupancyOfaRoom);
-
 
                             MonitoringEntity entity = new MonitoringEntity();
                             entity.setTippersSpaceId(arr.get(0).getAsInt());
@@ -133,10 +124,6 @@ public class TippersConnectivityService {
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);
             }
-        } else {
-
-//            List<OccupancyOfaRoom> data = gson.fromJson(mockedRoomList, new ArrayList<OccupancyOfaRoom>().getClass());
-            //return Optional.of(data);
         }
 
     }
