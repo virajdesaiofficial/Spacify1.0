@@ -3,7 +3,7 @@
     <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../../../../../Program Files/Java/jdk-19" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <envs>
-      <env name="server.port" value="8082" />
+      <env name="server.port" value="8083" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="org.uci.spacifyEngine.Main" />
     <module name="spacify-engine" />
