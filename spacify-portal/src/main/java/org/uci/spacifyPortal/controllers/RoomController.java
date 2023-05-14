@@ -9,8 +9,8 @@ import org.uci.spacifyLib.dto.RoomDetail;
 import org.uci.spacifyLib.dto.Rule;
 import org.uci.spacifyLib.dto.RulesRequest;
 import org.uci.spacifyLib.entity.RoomEntity;
+import org.uci.spacifyPortal.services.RoomService;
 import org.uci.spacifyLib.services.TippersConnectivityService;
-import org.uci.spacifyPortal.services.CreateRoomService;
 import org.uci.spacifyPortal.services.OwnerService;
 import org.uci.spacifyPortal.utilities.MessageResponse;
 import org.uci.spacifyPortal.utilities.TipperSpace;
@@ -21,10 +21,10 @@ import java.util.List;
 @CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping("/api/v1/room")
-public class CreateRoomController {
+public class RoomController {
 
     @Autowired
-    private CreateRoomService createRoomService;
+    private RoomService roomService;
 
     @Autowired
     private TippersConnectivityService tippersConnectivityService;
@@ -39,7 +39,7 @@ public class CreateRoomController {
         List<Rule> rules = request.getRules();
 
         // Call the create room service with the provided data
-        createRoomService.createRoom(roomId, owner, rules);
+        roomService.createRoom(roomId, owner, rules);
 
         return new ResponseEntity<>("Room created successfully", HttpStatus.CREATED);
     }
@@ -77,11 +77,11 @@ public class CreateRoomController {
     @PostMapping("/create")
     public ResponseEntity<MessageResponse> createRoom(@RequestBody CreateRequest createRequest) {
         try {
-            boolean roomExists = this.createRoomService.doesRoomExist(createRequest.getTippersSpaceId());
+            boolean roomExists = this.roomService.doesRoomExist(createRequest.getTippersSpaceId());
             if (roomExists) {
                 return new ResponseEntity<>(new MessageResponse("Room is already owned. Please reach out to owner for access.", false), HttpStatus.IM_USED);
             }
-            RoomEntity roomEntity = this.createRoomService.createRoom(createRequest);
+            RoomEntity roomEntity = this.roomService.createRoom(createRequest);
             this.ownerService.createOwner(createRequest.getUserId(), roomEntity.getRoomId());
             return new ResponseEntity<>(new MessageResponse("Your room was successfully created!", true), HttpStatus.OK);
         } catch (Exception e) {
@@ -91,7 +91,7 @@ public class CreateRoomController {
 
     @GetMapping("/all")
     public List<RoomEntity> getAllRooms() {
-        return this.createRoomService.getAllRooms();
+        return  this.roomService.getAllRooms();
     }
 
 
@@ -111,7 +111,7 @@ public class CreateRoomController {
     @PostMapping("/addRules")
     public ResponseEntity<String> addRules(@RequestBody RulesRequest request) throws Exception {
         // Call the rule service with the provided data
-        this.createRoomService.addRules(request.getRoomId(), request.getUserId(), request.getRules());
+        this.roomService.addRules(request.getRoomId(), request.getUserId(), request.getRules());
 
         return new ResponseEntity<>("Rules created successfully", HttpStatus.CREATED);
     }

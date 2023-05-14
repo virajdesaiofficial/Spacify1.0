@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class CreateRoomService {
+public class RoomService {
 
     @Autowired
     private OwnerRepository ownerRepository;

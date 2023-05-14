@@ -12,6 +12,10 @@ import UserProfile from "./components/userProfile/UserProfile";
 import Reservation from "./components/reservation/Reservation";
 import Rooms from "./components/rooms/Rooms";
 import Incentives from "./components/incentives/Incentives";
+import Rooms from "./components/rooms/Rooms";
+import Incentives from "./components/incentives/Incentives";
+import Profile from "./components/profile/Profile";
+import {USER_NAME_KEY} from "./endpoints";
 
 const router = createBrowserRouter([
     {
@@ -56,17 +60,29 @@ const router = createBrowserRouter([
             {
                 path: "/incentives",
                 element: <Incentives />
+            },
+            {
+                path: "/profile",
+                element: <Profile />
             }
         ]
     }
     ]);
 
 function App() {
-  return (
-      <section className="app_container">
-          <RouterProvider router={router}/>
-      </section>
-  );
+    // check whether session logged on or remember me was present, if remember me then we copy log info into session
+    let loggedUserName = global.sessionStorage.getItem(USER_NAME_KEY);
+    if (!loggedUserName && global.localStorage) {
+        loggedUserName = global.localStorage.getItem(USER_NAME_KEY);
+        if (loggedUserName)
+            global.sessionStorage.setItem(USER_NAME_KEY, loggedUserName);
+    }
+
+    return (
+        <section className="app_container">
+            <RouterProvider router={router}/>
+        </section>
+    );
 }
 
 export default App;

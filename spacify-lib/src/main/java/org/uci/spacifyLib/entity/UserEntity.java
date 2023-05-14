@@ -18,7 +18,7 @@ public class UserEntity {
     @Column(name="user_id")
     private String userId;
 
-    @Column(name="email")
+    @Column(name="email", unique = true)
     @NonNull
     private String email;
 
@@ -36,13 +36,22 @@ public class UserEntity {
     @Column(name = "total_incentives")
     private Long totalIncentives;
 
-    public UserEntity(String userId, String email, String firstName, String lastName, AccessLevel accessLevel, Long totalIncentives) {
+    @Column(name = "verification_code")
+    private String verificationCode;
+
+    @NotNull
+    @Column(name = "verified")
+    private Boolean verified;
+
+    public UserEntity(String userId, String email, String firstName, String lastName, AccessLevel accessLevel, Long totalIncentives, String verificationCode, boolean verified) {
         this.userId = userId;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.accessLevel = accessLevel;
         this.totalIncentives = totalIncentives;
+        this.verificationCode = verificationCode;
+        this.verified = verified;
     }
 
     public UserEntity() {

@@ -149,3 +149,18 @@ alter table corespacify.incentive
             references corespacify.user
 
 -- Now insert mock data into this using the Insert queries in mock-data.sql. You do not need to specify primary key in inserts. DB will handle that.
+
+-- authentication table for storing user passwords
+CREATE table corespacify.authentication(
+                                           user_id VARCHAR(255) primary key,
+                                           hashed_password VARCHAR(128) not null,
+                                           constraint auth_user foreign key (user_id) references corespacify.user(user_id)
+);
+
+-- adding columns for verification email and codes! We also want to make email unique so that each email is linked to only one account
+ALTER TABLE corespacify.user ADD COLUMN verified boolean DEFAULT false;
+
+ALTER TABLE corespacify.user ADD COLUMN verification_code text;
+
+ALTER TABLE corespacify.user ADD UNIQUE(email);
+
