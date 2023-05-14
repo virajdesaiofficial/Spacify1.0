@@ -5,11 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.uci.spacifyLib.dto.ReservationRequest;
-import org.uci.spacifyLib.entity.RoomEntity;
-import org.uci.spacifyLib.repsitory.ReservationRepository;
+import org.uci.spacifyLib.repository.ReservationRepository;
 import org.uci.spacifyPortal.services.ReservationService;
 import org.uci.spacifyLib.entity.ReservationEntity;
-import org.uci.spacifyLib.dto.CreateRequest;
 
 import java.util.List;
 

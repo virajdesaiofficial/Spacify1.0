@@ -13,13 +13,11 @@ import org.uci.spacifyLib.dto.OccupancyOfaRoom;
 import org.uci.spacifyLib.dto.RoomDetail;
 import org.uci.spacifyLib.entity.MonitoringEntity;
 import org.uci.spacifyLib.entity.TippersDbSpaceEntity;
-import org.uci.spacifyLib.repsitory.MonitoringRepository;
-import org.uci.spacifyLib.repsitory.TippersDbSpacesRepository;
+import org.uci.spacifyLib.repository.MonitoringRepository;
+import org.uci.spacifyLib.repository.TippersDbSpacesRepository;
 import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;

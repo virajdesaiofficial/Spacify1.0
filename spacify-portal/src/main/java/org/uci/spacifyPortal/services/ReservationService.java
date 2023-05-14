@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.uci.spacifyLib.dto.ReservationRequest;
 import org.uci.spacifyLib.entity.ReservationEntity;
-import org.uci.spacifyLib.repsitory.ReservationRepository;
+import org.uci.spacifyLib.repository.ReservationRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
