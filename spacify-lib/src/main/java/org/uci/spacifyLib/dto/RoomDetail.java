@@ -1,4 +1,4 @@
-package org.uci.spacifyPortal.utilities;
+package org.uci.spacifyLib.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;

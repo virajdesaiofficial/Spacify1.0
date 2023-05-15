@@ -7,9 +7,9 @@ import org.uci.spacifyLib.entity.MacAddressEntity;
 import org.uci.spacifyLib.entity.MonitoringEntity;
 import org.uci.spacifyLib.entity.ReservationEntity;
 import org.uci.spacifyLib.entity.RoomEntity;
-import org.uci.spacifyLib.repsitory.MacAddressRepository;
-import org.uci.spacifyLib.repsitory.MonitoringRepository;
-import org.uci.spacifyLib.repsitory.RoomRepository;
+import org.uci.spacifyLib.repository.MacAddressRepository;
+import org.uci.spacifyLib.repository.MonitoringRepository;
+import org.uci.spacifyLib.repository.RoomRepository;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;

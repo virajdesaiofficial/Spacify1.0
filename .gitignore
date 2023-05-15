@@ -8,3 +8,5 @@
 spacify-java/target/
 /.idea/libraries/
 /.idea/
+/spacify-ui/node_modules/
+/spacify-ui/node_modules_bkp/

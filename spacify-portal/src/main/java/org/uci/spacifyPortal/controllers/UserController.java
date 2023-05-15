@@ -6,9 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.uci.spacifyLib.entity.*;
 import org.uci.spacifyPortal.services.*;
+import org.uci.spacifyLib.dto.RoomDetail;
 import org.uci.spacifyPortal.utilities.MessageResponse;
 import org.uci.spacifyPortal.utilities.RegisterUserRequest;
-import org.uci.spacifyPortal.utilities.RoomDetail;
+import org.uci.spacifyLib.dto.RoomDetail;
 import org.uci.spacifyPortal.utilities.UserDetail;
 
 import java.util.ArrayList;

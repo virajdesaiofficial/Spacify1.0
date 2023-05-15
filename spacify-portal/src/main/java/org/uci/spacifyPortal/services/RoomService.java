@@ -8,10 +8,10 @@ import org.uci.spacifyLib.entity.OwnerEntity;
 import org.uci.spacifyLib.entity.RoomEntity;
 import org.uci.spacifyLib.entity.RoomType;
 import org.uci.spacifyLib.entity.UserRoomPK;
-import org.uci.spacifyLib.repsitory.OwnerRepository;
-import org.uci.spacifyLib.repsitory.RoomRepository;
+import org.uci.spacifyLib.repository.OwnerRepository;
+import org.uci.spacifyLib.repository.RoomRepository;
 import org.uci.spacifyLib.utilities.SpacifyUtility;
-import org.uci.spacifyPortal.utilities.CreateRequest;
+import org.uci.spacifyLib.dto.CreateRequest;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,9 +6,9 @@ import org.passay.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.uci.spacifyLib.entity.*;
-import org.uci.spacifyLib.repsitory.AuthenticationRepository;
-import org.uci.spacifyLib.repsitory.MacAddressRepository;
-import org.uci.spacifyLib.repsitory.UserRepository;
+import org.uci.spacifyLib.repository.AuthenticationRepository;
+import org.uci.spacifyLib.repository.MacAddressRepository;
+import org.uci.spacifyLib.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;

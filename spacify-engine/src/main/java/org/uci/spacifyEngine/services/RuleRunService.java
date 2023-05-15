@@ -15,9 +15,9 @@ import org.uci.spacifyLib.entity.IncentiveEntity;
 import org.uci.spacifyLib.entity.ReservationEntity;
 import org.uci.spacifyLib.entity.RoomEntity;
 import org.uci.spacifyLib.entity.UserEntity;
-import org.uci.spacifyLib.repsitory.IncentiveRepository;
-import org.uci.spacifyLib.repsitory.RoomRepository;
-import org.uci.spacifyLib.repsitory.UserRepository;
+import org.uci.spacifyLib.repository.IncentiveRepository;
+import org.uci.spacifyLib.repository.RoomRepository;
+import org.uci.spacifyLib.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.*;
