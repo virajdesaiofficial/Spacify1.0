@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import './userProfile.css';
+import {Link} from 'react-router-dom';
+import './userprofile.css';
 
 function UserProfile(props) {
 
@@ -8,14 +8,13 @@ function UserProfile(props) {
         <div className="userProfileContainer">
             <div className="settingsPane">
                 <ul>
-                    <li><Link to="/profile" className="profile-link">Profile</Link></li>
-                    <li>Password</li>
-                    <li>Email</li>
-                    <li><Link to="/rooms" className="rooms-link">My Rooms</Link></li>
-                    <li><Link to="/incentives" className="rewards-link">Rewards</Link></li>
-
-                    <li>Redeem</li>
-                    <li>Notifications</li>
+                    <li><Link to="/profile" className="pane-link">Profile</Link></li>
+                    <li><Link to="/" className="pane-link">Password</Link></li>
+                    <li><Link to="/" className="pane-link">Email</Link></li>
+                    <li><Link to="/rooms" className="pane-link">My Rooms</Link></li>
+                    <li><Link to="/incentives" className="pane-link">Rewards</Link></li>
+                    <li><Link to="/" className="pane-link">Redeem</Link></li>
+                    <li><Link to="/" className="pane-link">Notifications</Link></li>
                 </ul>
             </div>
             <div className="contentPane">

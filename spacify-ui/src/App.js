@@ -12,8 +12,6 @@ import UserProfile from "./components/userProfile/UserProfile";
 import Reservation from "./components/reservation/Reservation";
 import Rooms from "./components/rooms/Rooms";
 import Incentives from "./components/incentives/Incentives";
-import Rooms from "./components/rooms/Rooms";
-import Incentives from "./components/incentives/Incentives";
 import Profile from "./components/profile/Profile";
 import {USER_NAME_KEY} from "./endpoints";
 

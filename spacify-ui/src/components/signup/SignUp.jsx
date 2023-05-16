@@ -95,7 +95,7 @@ function SignUp(props) {
                 {state.responseMessage}
             </Alert>
 
-            <Modal show={state.showModal}>
+            <Modal show={state.showModal} className="sign-up-modal">
                 <Modal.Header>
                     <Modal.Title>Privacy Disclosure</Modal.Title>
                 </Modal.Header>
@@ -115,7 +115,7 @@ function SignUp(props) {
                 </Modal.Footer>
             </Modal>
 
-            <Modal show={state.showModal1}>
+            <Modal show={state.showModal1} className="sign-up-modal">
                 <Modal.Header>
                     <Modal.Title>Terms & Conditions</Modal.Title>
                 </Modal.Header>
