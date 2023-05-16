@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import './signin.css';
-import {IoLogoGoogle} from "react-icons/all";
 import {FORGOT_PASSWORD_API, SEND_VERIFICATION_API, SIGNIN_USER_API, USER_NAME_KEY} from "../../endpoints";
 import Alert from "react-bootstrap/Alert";
+import LoadingSpinner from "../utilities/LoadingSpinner";
 
 function SignIn(props) {
     const initialState = {
@@ -14,15 +14,17 @@ function SignIn(props) {
         wasSuccess: false,
         show: false,
         responseMessage: "",
+        loading: false,
     };
     const [state, setState] = useState(initialState);
 
     const handleFetch = (url) => {
         if (state.userName) {
+            setState({...state, loading: true})
             fetch(url)
                 .then((res) => res.json())
                 .then((data) => {
-                    setState({...state, wasSuccess: data.success, show: true, responseMessage: data.message});
+                    setState({...state, wasSuccess: data.success, show: true, responseMessage: data.message, loading: false});
                 });
         } else {
             setState({...state, wasSuccess: false, show: true, responseMessage: "Please enter user name!"});
@@ -31,6 +33,7 @@ function SignIn(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setState({...state, loading: true})
         const requestObj = {
             password: state.password,
             userId : state.userName
@@ -50,7 +53,7 @@ function SignIn(props) {
                         global.localStorage.setItem(USER_NAME_KEY, state.userName);
                     }
                 }
-                setState({...state, wasSuccess: data.success, show: true, responseMessage: data.message});
+                setState({...state, wasSuccess: data.success, show: true, responseMessage: data.message, loading: false});
             });
     }
 
@@ -74,10 +77,6 @@ function SignIn(props) {
         window.location.reload();
     }
 
-    const handleGoogleSignIn = () => {
-        console.log("google sign in");
-    }
-
     let loggedUserName = global.sessionStorage.getItem(USER_NAME_KEY);
 
     if (loggedUserName) {
@@ -90,16 +89,13 @@ function SignIn(props) {
     } else {
         return (
             <section className="sign-in">
+                <LoadingSpinner show={state.loading} />
                 <Alert show={state.show} variant={state.wasSuccess ? 'success' : 'danger'}
                        onClose={() => setState({...state, show: false})}
                        dismissible>
                     {state.responseMessage}
                 </Alert>
-                <div className="google-sign-in">
-                    <h2>Sign in with</h2>
-                    <IoLogoGoogle className="logo" onClick={handleGoogleSignIn}>Google</IoLogoGoogle>
-                    <h4 style={{paddingTop: "0.7rem"}}>or:</h4>
-                </div>
+                <h2 className="sign-in-header">Sign In!</h2>
                 <div className="sign-in-row">
                     <Form className="sign-in-form" onSubmit={e => handleSubmit(e)}>
                         <Form.Group className="mb-3" controlId="formBasicuserName">
