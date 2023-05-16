@@ -44,6 +44,16 @@ public class UserService {
         return this.userRepository.findById(userId);
     }
 
+    public Optional<UserEntity> checkIfUserExists(String userId, String email) {
+        if (Objects.isNull(userId) || Objects.isNull(email))
+            return Optional.empty();
+        Optional<UserEntity> userEntity = this.userRepository.findById(userId);
+        if (userEntity.isPresent())
+            return userEntity;
+        userEntity = this.userRepository.findByEmail(email);
+        return userEntity;
+    }
+
     public String hashPassword(String password) {
         String hashedPassword = null;
         try {

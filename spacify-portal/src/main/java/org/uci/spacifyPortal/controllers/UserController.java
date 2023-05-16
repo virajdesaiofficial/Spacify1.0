@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.uci.spacifyLib.dto.RoomDetail;
 import org.uci.spacifyLib.entity.*;
 import org.uci.spacifyPortal.services.*;
-import org.uci.spacifyLib.dto.RoomDetail;
 import org.uci.spacifyPortal.utilities.MessageResponse;
 import org.uci.spacifyPortal.utilities.RegisterUserRequest;
-import org.uci.spacifyLib.dto.RoomDetail;
 import org.uci.spacifyPortal.utilities.UserDetail;
 
 import java.util.ArrayList;
@@ -98,10 +97,13 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<MessageResponse> registerNewUser(@RequestBody RegisterUserRequest registerUserRequest) {
-        String userId = registerUserRequest.getUserId();
-        Optional<UserEntity> userEntity = this.userService.getUser(userId);
+        Optional<UserEntity> userEntity = this.userService.checkIfUserExists(registerUserRequest.getUserId(), registerUserRequest.getEmailId());
         if (userEntity.isPresent()) {
-            MessageResponse messageResponse = new MessageResponse("User name already exists, please choose another user name.", false);
+            String message = "Email already registered. Please Sign In.";
+            if (userEntity.get().getUserId().equals(registerUserRequest.getUserId())) {
+                message = "User name already exists, please choose another user name";
+            }
+            MessageResponse messageResponse = new MessageResponse(message, false);
             return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
         }
         String verificationCode = this.userService.createAndSaveNewUser(registerUserRequest.getUserId(),

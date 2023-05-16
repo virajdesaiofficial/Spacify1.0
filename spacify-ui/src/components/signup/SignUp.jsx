@@ -2,15 +2,13 @@ import React, {useState} from 'react';
 import './signup.css';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {IoLogoGoogle} from "react-icons/all";
+import Modal from "react-bootstrap/Modal";
 import {Col, Row} from "react-bootstrap";
 import {REGISTER_USER_API} from "../../endpoints";
 import Alert from "react-bootstrap/Alert";
-
-// import { useNavigate} from "react-router-dom";
+import LoadingSpinner from "../utilities/LoadingSpinner";
 
 function SignUp(props) {
-    // const navigate = useNavigate();
     const [state, setState] = useState({
         password: "",
         verifyPassword: "",
@@ -20,12 +18,18 @@ function SignUp(props) {
         macAddress: "",
         agreedTC: false,
         agreedPD: false,
-        userId: ""
+        userId: "",
+        showModal: false,
+        showModal1: false,
+        loading: false,
+        wasSuccess: false,
+        show: false,
+        responseMessage: ""
     });
-    const [response, setResponse] = useState({wasSuccess: false, show: false, responseMessage: ""});
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setState({...state, loading: true});
         const requestObj = {
             password: state.password,
             emailId: state.emailId,
@@ -43,18 +47,9 @@ function SignUp(props) {
         fetch(REGISTER_USER_API, requestHeader)
             .then((res) => res.json())
             .then((data) => {
-                setResponse({wasSuccess: data.success, show: true, responseMessage: data.message});
+                setState({...state, wasSuccess: data.success, show: true, responseMessage: data.message, loading: false});
             });
-        // figure out the redirect between screens
-        // if (response.wasSuccess) {
-        //     navigate("/signin");
-        // }
-        // console.log("submitted");
     }
-
-    const handleGoogleSignUp = () => {
-        console.log("google sign up");
-    };
 
     // mac address validation
     const regex1 = /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/;
@@ -68,27 +63,83 @@ function SignUp(props) {
     if (state.password !== state.verifyPassword) {
         message = "Passwords do not match!";
     } else if (!state.agreedTC) {
-        message = "Please read and agree the Terms and Conditions of use.";
+        message = "Please read and accept the Terms and Conditions.";
     } else if (!state.agreedPD) {
-        message = "Please read and agree to the Privacy Disclaimer.";
+        message = "Please read and accept the Privacy Disclaimer.";
     } else if (!macAddressValid) {
         message = "Please enter valid Mac Address.";
     } else {
         message = "Please fill all the mandatory fields.";
     }
 
+    const handlePrivacy = (e) => {
+        e.preventDefault();
+        setState({...state, showModal: true});
+    }
+
+    const handleTerms = (e) => {
+        e.preventDefault();
+        setState({...state, showModal1: true});
+    }
+
+    const privacyContent = "Using the UCI campus WiFi network generates logs about your device connecting to the WiFi infrastructure. " +
+        "OIT uses such data for operational and security purposes. OIT may further anonymize and share such data with research teams building campus level smart services. " +
+        "You may use this application to opt-out all or some of your devices from sharing the anonymized Wi-Fi connection information. Please visit the OIT WiFi Security Page (https://www.oit.uci.edu) for more information";
+
     return (
         <section className="sign-up">
-            <Alert show={response.show} variant={response.wasSuccess ? 'success' : 'danger'}
-                   onClose={() => setResponse({...response, show: false})}
+            <LoadingSpinner show={state.loading} />
+            <Alert show={state.show} variant={state.wasSuccess ? 'success' : 'danger'}
+                   onClose={() => setState({...state, show: false})}
                    dismissible>
-                {response.responseMessage}
+                {state.responseMessage}
             </Alert>
-            <div className="sign-up-header">
-                <h2>Sign up with</h2>
-                <IoLogoGoogle className="logo" onClick={handleGoogleSignUp}>Google</IoLogoGoogle>
-                <h4 style={{paddingTop: "0.7rem"}}>or:</h4>
-            </div>
+
+            <Modal show={state.showModal}>
+                <Modal.Header>
+                    <Modal.Title>Privacy Disclosure</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {privacyContent}
+                    <br />
+                    Your presence and location will be known to the application when you are connected to the UCI WiFi. This is necessary for you to benefit from Spacify and for us to provide you with Spacify's features.
+                    You can always decline this disclosure and stop the signing in process here.
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setState({...state, agreedPD: false, showModal: false})}>
+                        Decline
+                    </Button>
+                    <Button variant="primary" onClick={() => setState({...state, agreedPD: true, showModal: false})}>
+                        Accept
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={state.showModal1}>
+                <Modal.Header>
+                    <Modal.Title>Terms & Conditions</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <ul>
+                        <li>Each user can create one account using an unique email.</li>
+                        <li>Incentives and credit will be awarded on the sole discretion of Spacify.</li>
+                        <li>The incentive structure can be changed by Spacify without the need of providing prior notice to the user.</li>
+                        <li>The application is to be used as a standalone application. Any integration with other applications need written approval from Spacify.</li>
+                        <li>Users found violating Spacify's intended use will be banned from using the application.</li>
+                        <li>The Spacify team can be reached via email on <a href = "mailto: spacifycorp@gmail.com">spacifycorp@gmail.com</a> for any further information.</li>
+                    </ul>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setState({...state, agreedTC: false, showModal1: false})}>
+                        Decline
+                    </Button>
+                    <Button variant="primary" onClick={() => setState({...state, agreedTC: true, showModal1: false})}>
+                        Accept
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <h2 className="sign-up-header">Sign Up!</h2>
             <div className="sign-up-row">
                 <Form className="sign-up-form" onSubmit={e => handleSubmit(e)}>
                     <Row className="mb-3">
@@ -129,10 +180,10 @@ function SignUp(props) {
 
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formBasicCheckbox1">
-                            <Form.Check type="checkbox" label="Terms and Conditions" className="required-field" onChange={(e) => setState({...state, agreedTC: !state.agreedTC})} />
+                            <Form.Check type="checkbox" label="Terms and Conditions" checked={state.agreedTC} className="required-field" onClick={(e) => handleTerms(e)} />
                         </Form.Group>
                         <Form.Group as={Col} controlId="formBasicCheckbox2">
-                            <Form.Check type="checkbox" label="Privacy Disclosure" className="required-field" onChange={(e) => setState({...state, agreedPD: !state.agreedPD})}/>
+                            <Form.Check type="checkbox" label="Privacy Disclosure" checked={state.agreedPD} className="required-field" onClick={(e) => handlePrivacy(e)}/>
                         </Form.Group>
                     </Row>
 
