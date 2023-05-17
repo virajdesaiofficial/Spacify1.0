@@ -15,10 +15,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -42,6 +40,22 @@ public class UserService {
 
     public Optional<UserEntity> getUser(String userId) {
         return this.userRepository.findById(userId);
+    }
+
+    public List<String> getMacAddressesForUser(String userId) {
+        List<MacAddressEntity> macAddressEntityList = this.macAddressRepository.findAllByMacAddressPK_UserId(userId);
+        if (macAddressEntityList.isEmpty())
+            return new ArrayList<String>();
+
+        return macAddressEntityList.stream().map(MacAddressEntity::getMacAddressPK).map(MacAddressPK::getMacAddress).collect(Collectors.toList());
+    }
+
+    public void updateMacAddresses(String userId, List<String> macAddresses) {
+        this.macAddressRepository.deleteAll(this.macAddressRepository.findAllByMacAddressPK_UserId(userId));
+        // remove duplicate mac addresses
+        Set<String> uniqueMacAddresses = new HashSet<>(macAddresses);
+        List<MacAddressEntity> updatedMacAddress = uniqueMacAddresses.stream().map(macAddress -> new MacAddressPK(userId, macAddress)).map(MacAddressEntity::new).collect(Collectors.toList());
+        this.macAddressRepository.saveAll(updatedMacAddress);
     }
 
     public Optional<UserEntity> checkIfUserExists(String userId, String email) {
