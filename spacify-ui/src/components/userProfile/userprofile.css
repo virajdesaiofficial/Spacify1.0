@@ -6,7 +6,7 @@
 .settingsPane {
   float: left;
   width: 200px;
-  background-color: #f0f0f0;
+  color: white;
   padding: 20px;
   margin-right: 20px;
   height: 100vh;
@@ -25,6 +25,7 @@
 
 .settingsPane li:hover {
   background-color: #e0e0e0;
+  color: black;
 }
 
 .contentPane {
@@ -32,12 +33,7 @@
   padding: 20px;
 }
 
-.rewards-link {
+.pane-link {
   text-decoration: none;
-  color: black;
-}
-
-.rooms-link {
-  text-decoration: none;
-  color: black;
+  color: white;
 }

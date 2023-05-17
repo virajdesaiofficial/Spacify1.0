@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import './create.css';
 import {Button} from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
-// import buildings from "./buildings";
 import {ALL_BUILDINGS_API, ALL_ROOMS_API, CREATE_ROOM_API, ELIGIBLE_OWNERS_API} from "../../endpoints";
 
 import Alert from 'react-bootstrap/Alert';
@@ -29,9 +28,6 @@ function Create(props) {
             .then((data) => {
                 setResponse({wasSuccess: data.success, show: true, responseMessage: data.message});
             });
-        setShow(true);
-
-
     }
 
     function getRoomsFromBuildingSpaceId(buildingSpaceId) {
@@ -79,7 +75,7 @@ function Create(props) {
                     <option value=''>Select Building</option>
                     {buildings.map((item, index) => {
                         return (
-                            <option key={index} value={item.buildingId}>{item.name}</option>
+                            <option key={index} value={item.roomId}>{item.roomDescription}</option>
                         );
                     })}
                 </Form.Select>
