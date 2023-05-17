@@ -3,9 +3,6 @@ package org.uci.spacifyLib.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
@@ -20,5 +17,10 @@ public class MacAddressPK implements Serializable {
     private String macAddress;
 
     public MacAddressPK() {
+    }
+
+    public MacAddressPK(String userId, String macAddress) {
+        this.userId = userId;
+        this.macAddress = macAddress;
     }
 }

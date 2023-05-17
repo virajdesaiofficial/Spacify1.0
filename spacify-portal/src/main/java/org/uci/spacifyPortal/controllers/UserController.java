@@ -89,10 +89,39 @@ public class UserController {
             userDetail.setOwnedRooms(getOwnedRoomDetails(userId));
             userDetail.setSubscribedRooms(getSubscribedRoomDetails(userId));
             userDetail.setTotalIncentive(userDetail.getTotalIncentive());
+            userDetail.setMacAddresses(this.userService.getMacAddressesForUser(userId));
             return new ResponseEntity<>(userDetail, HttpStatus.OK);
         }
 
         return new ResponseEntity<>(userDetail, HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/updateUser")
+    public ResponseEntity<MessageResponse> updateUserProfile(@RequestBody UserDetail userDetail) {
+        if (Objects.isNull(userDetail.getUser()) || Objects.isNull(userDetail.getUser().getUserId())) {
+            MessageResponse messageResponse = new MessageResponse("Invalid request, please provide user name.", false);
+            return new ResponseEntity<MessageResponse>(messageResponse, HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<UserEntity> userEntityOptional = this.userService.getUser(userDetail.getUser().getUserId());
+        if (userEntityOptional.isPresent()) {
+            UserEntity userEntity = userEntityOptional.get();
+            if (Objects.nonNull(userDetail.getUser().getFirstName())) {
+                userEntity.setFirstName(userDetail.getUser().getFirstName());
+            }
+            if (Objects.nonNull(userDetail.getUser().getLastName())) {
+                userEntity.setLastName(userDetail.getUser().getLastName());
+            }
+            if (Objects.nonNull(userDetail.getMacAddresses()) && !userDetail.getMacAddresses().isEmpty()) {
+                this.userService.updateMacAddresses(userDetail.getUser().getUserId(), userDetail.getMacAddresses());
+            }
+            this.userService.saveUserEntity(userEntity);
+            MessageResponse messageResponse = new MessageResponse("Your profile has been successfully updated!", true);
+            return new ResponseEntity<MessageResponse>(messageResponse, HttpStatus.OK);
+        } else {
+            MessageResponse messageResponse = new MessageResponse("No such user exists.", false);
+            return new ResponseEntity<MessageResponse>(messageResponse, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/signup")
