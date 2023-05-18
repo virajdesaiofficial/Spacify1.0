@@ -86,12 +86,9 @@ public class UserService {
         }
         String verificationCode = this.generateRandomCode();
         UserEntity userEntity = new UserEntity(userId, emailId, firstName, lastName, AccessLevel.STUDENT, 0L, verificationCode, false);
-        MacAddressPK macAddressPK = new MacAddressPK();
-        macAddressPK.setMacAddress(macAddress);
-        macAddressPK.setUserId(userId);
 
         try {
-            this.saveRecords(userEntity, new MacAddressEntity(macAddressPK), new AuthenticationEntity(userId, hashedPassword));
+            this.saveRecords(userEntity, new MacAddressEntity(userId, macAddress), new AuthenticationEntity(userId, hashedPassword));
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
