@@ -5,8 +5,8 @@ import {Link, Outlet} from "react-router-dom";
 import React from "react";
 import './navigation.css';
 import logo from '../../assets/logo_final.png';
-
 function Navigation() {
+
     return (
         <div>
             <Navbar variant="dark">
@@ -16,6 +16,7 @@ function Navigation() {
                         <Nav.Link><Link to={"/create"} className="link">Create Room</Link></Nav.Link>
                         <Nav.Link><Link to={"/rules"} className="link">Rule</Link></Nav.Link>
                         <Nav.Link><Link to={"/reserve"} className="link">Reserve</Link></Nav.Link>
+                        <Nav.Link><Link to={"/subscribe"} className="link">Subscribe</Link></Nav.Link>
                         <Nav.Link><Link to={"/team"} className="link">Team</Link></Nav.Link>
                     </Nav>
                     <Nav>

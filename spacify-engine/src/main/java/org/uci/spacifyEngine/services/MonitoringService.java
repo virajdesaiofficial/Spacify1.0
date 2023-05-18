@@ -30,11 +30,11 @@ public class MonitoringService {
 
     private List<MonitoringEntity> getAllMonitoringEntitiesInTimeBound(RoomEntity roomEntity, ReservationEntity reservationEntity) {
         int tippersSpaceId = roomEntity.getTippersSpaceId();
-        List<MacAddressEntity> macAddressEntityList = this.macAddressRepository.findAllByMacAddressPK_UserId(reservationEntity.getUser_id());
+        List<MacAddressEntity> macAddressEntityList = this.macAddressRepository.findAllByUserId(reservationEntity.getUser_id());
         if (macAddressEntityList.isEmpty())
             return null;
 
-        List<String> macAddressList = macAddressEntityList.stream().map(macAddressEntity -> macAddressEntity.getMacAddressPK().getMacAddress()).toList();
+        List<String> macAddressList = macAddressEntityList.stream().map(macAddressEntity -> macAddressEntity.getMacAddress()).toList();
         List<MonitoringEntity> monitoringEntityList = this.monitoringRepository.findAllByTimestampFromAfterAndTippersSpaceIdAndMacAddressIn(reservationEntity.getTimeFrom(), tippersSpaceId, macAddressList);
 
         if (monitoringEntityList.isEmpty())

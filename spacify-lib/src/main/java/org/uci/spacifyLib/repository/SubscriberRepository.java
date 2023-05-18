@@ -6,8 +6,10 @@ import org.uci.spacifyLib.entity.SubscriberEntity;
 import org.uci.spacifyLib.entity.UserRoomPK;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SubscriberRepository extends JpaRepository<SubscriberEntity, UserRoomPK> {
     public List<SubscriberEntity> findAllByUserRoomPK_UserId(String user_id);
+    public Optional<SubscriberEntity> findAllByUserRoomPK(UserRoomPK userRoomPK);
 }
