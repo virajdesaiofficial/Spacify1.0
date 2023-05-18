@@ -7,6 +7,7 @@ import {Col, Row} from "react-bootstrap";
 import {REGISTER_USER_API} from "../../endpoints";
 import Alert from "react-bootstrap/Alert";
 import LoadingSpinner from "../utilities/LoadingSpinner";
+import {Link} from "react-router-dom";
 
 function SignUp(props) {
     const [state, setState] = useState({
@@ -193,7 +194,7 @@ function SignUp(props) {
                     {disabled ? <p>{message}</p> : <p/>}
                 </Form>
             </div>
-            <p>Already a member? <a href="signIn">Sign In</a></p>
+            <p>Already a member? <Link to={"/signIn"} >Sign In</Link></p>
         </section>
     );
 }
