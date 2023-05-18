@@ -5,11 +5,8 @@ import {Link, Outlet} from "react-router-dom";
 import React from "react";
 import './navigation.css';
 import logo from '../../assets/logo_final.png';
-import {USER_NAME_KEY} from "../../endpoints";
-
 function Navigation() {
 
- let userId = global.sessionStorage.getItem(USER_NAME_KEY) === undefined ? "Sign In" : global.sessionStorage.getItem(USER_NAME_KEY);
     return (
         <div>
             <Navbar variant="dark">
@@ -23,7 +20,7 @@ function Navigation() {
                         <Nav.Link><Link to={"/team"} className="link">Team</Link></Nav.Link>
                     </Nav>
                     <Nav>
-                        <Nav.Link><Link to={"/signIn"} className="link">{userId}</Link></Nav.Link>
+                        <Nav.Link><Link to={"/signIn"} className="link">Sign In</Link></Nav.Link>
                         <Nav.Link><Link to={"/user"} className="link">Profile</Link></Nav.Link>
                     </Nav>
                 </Container>
