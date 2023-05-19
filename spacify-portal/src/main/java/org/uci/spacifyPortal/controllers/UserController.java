@@ -113,7 +113,10 @@ public class UserController {
                 userEntity.setLastName(userDetail.getUser().getLastName());
             }
             if (Objects.nonNull(userDetail.getMacAddresses()) && !userDetail.getMacAddresses().isEmpty()) {
-                this.userService.updateMacAddresses(userDetail.getUser().getUserId(), userDetail.getMacAddresses());
+                if (!this.userService.updateMacAddresses(userDetail.getUser().getUserId(), userDetail.getMacAddresses())) {
+                    MessageResponse messageResponse = new MessageResponse("Mac Address registered to another user. Please enter your own device's Mac Address.", false);
+                    return new ResponseEntity<MessageResponse>(messageResponse, HttpStatus.OK);
+                }
             }
             this.userService.saveUserEntity(userEntity);
             MessageResponse messageResponse = new MessageResponse("Your profile has been successfully updated!", true);
