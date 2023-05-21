@@ -7,9 +7,9 @@ import org.uci.spacifyLib.entity.MacAddressEntity;
 import org.uci.spacifyLib.entity.MonitoringEntity;
 import org.uci.spacifyLib.entity.ReservationEntity;
 import org.uci.spacifyLib.entity.RoomEntity;
-import org.uci.spacifyLib.repsitory.MacAddressRepository;
-import org.uci.spacifyLib.repsitory.MonitoringRepository;
-import org.uci.spacifyLib.repsitory.RoomRepository;
+import org.uci.spacifyLib.repository.MacAddressRepository;
+import org.uci.spacifyLib.repository.MonitoringRepository;
+import org.uci.spacifyLib.repository.RoomRepository;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -30,11 +30,11 @@ public class MonitoringService {
 
     private List<MonitoringEntity> getAllMonitoringEntitiesInTimeBound(RoomEntity roomEntity, ReservationEntity reservationEntity) {
         int tippersSpaceId = roomEntity.getTippersSpaceId();
-        List<MacAddressEntity> macAddressEntityList = this.macAddressRepository.findAllByMacAddressPK_UserId(reservationEntity.getUser_id());
+        List<MacAddressEntity> macAddressEntityList = this.macAddressRepository.findAllByUserId(reservationEntity.getUser_id());
         if (macAddressEntityList.isEmpty())
             return null;
 
-        List<String> macAddressList = macAddressEntityList.stream().map(macAddressEntity -> macAddressEntity.getMacAddressPK().getMacAddress()).toList();
+        List<String> macAddressList = macAddressEntityList.stream().map(macAddressEntity -> macAddressEntity.getMacAddress()).toList();
         List<MonitoringEntity> monitoringEntityList = this.monitoringRepository.findAllByTimestampFromAfterAndTippersSpaceIdAndMacAddressIn(reservationEntity.getTimeFrom(), tippersSpaceId, macAddressList);
 
         if (monitoringEntityList.isEmpty())

@@ -1,22 +1,29 @@
 package org.uci.spacifyPortal.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.pebbletemplates.pebble.PebbleEngine;
+import io.pebbletemplates.pebble.template.PebbleTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.uci.spacifyLib.dto.RoomDetail;
 import org.uci.spacifyLib.dto.Rule;
-import org.uci.spacifyLib.entity.OwnerEntity;
-import org.uci.spacifyLib.entity.RoomEntity;
-import org.uci.spacifyLib.entity.RoomType;
-import org.uci.spacifyLib.entity.UserRoomPK;
-import org.uci.spacifyLib.repsitory.OwnerRepository;
-import org.uci.spacifyLib.repsitory.RoomRepository;
+import org.uci.spacifyLib.entity.*;
+import org.uci.spacifyLib.repository.AvailableSlotsRepository;
+import org.uci.spacifyLib.repository.OwnerRepository;
+import org.uci.spacifyLib.repository.RoomRepository;
+import org.uci.spacifyLib.repository.SubscriberRepository;
+import org.uci.spacifyLib.services.TippersConnectivityService;
 import org.uci.spacifyLib.utilities.SpacifyUtility;
-import org.uci.spacifyPortal.utilities.CreateRequest;
+import org.uci.spacifyLib.dto.CreateRequest;
+import org.uci.spacifyPortal.controllers.RoomController;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RoomService {
@@ -26,6 +33,17 @@ public class RoomService {
 
     @Autowired
     private RoomRepository roomRepository;
+
+    @Autowired
+    private TippersConnectivityService tippersConnectivityService;
+
+    @Autowired
+    private AvailableSlotsRepository availableSlotsRepository;
+
+    @Autowired
+    private SubscriberRepository subscriberRepository;
+
+    private static final Logger LOG = LoggerFactory.getLogger(RoomService.class);
 
     public void createRoom(Long roomId, String owner, List<Rule> rules) throws JsonProcessingException {
 
@@ -78,6 +96,65 @@ public class RoomService {
             return true;
         }
         return false;
+    }
+
+    public List<RoomDetail> getRoomsForSubscribtion(String buildingTipperSpaceId){
+        List<RoomDetail> buildingRooms =  tippersConnectivityService.getSpaceIdAndRoomName(Integer.parseInt(buildingTipperSpaceId));
+        List<Integer> roomTippersId = buildingRooms.stream().map(room -> room.getRoomId().intValue()).collect(Collectors.toList());
+        List<RoomEntity> spacifyRooms = roomRepository.findByroomTypeAndTippersSpaceIdIn(RoomType.COMMON_SPACE, roomTippersId);
+
+        LOG.info("Found spacify rooms available for subscribing and all tippers room. Finding for intersection now");
+
+        List<RoomDetail> roomsForSubscribtion = spacifyRooms.stream().map( room -> {
+                                                    RoomDetail r = new RoomDetail();
+                                                    r.setRoomDescription(room.getRoomName());
+                                                    r.setRoomId(room.getRoomId());
+                                                    return r;
+                                                }).collect(Collectors.toList());
+
+        return roomsForSubscribtion;
+    }
+
+    public List<String> getRoomRules(String spacifyRoomId) throws IOException {
+
+        PebbleEngine engine = new PebbleEngine.Builder().build();
+        PebbleTemplate compiledTemplate = engine.getTemplate("rulesTemplate");
+
+        RoomEntity room = roomRepository.findByRoomId(Long.parseLong(spacifyRoomId));
+        List<Rule> roomRules = SpacifyUtility.deserializeListOfRules(room.getRoomRules());
+
+        Map<String, Object> context = new HashMap<>();
+        context.put("rules", roomRules);
+
+        LOG.info("Pebble template read. Evaluating now");
+
+        Writer writer = new StringWriter();
+        compiledTemplate.evaluate(writer, context);
+
+        String output = writer.toString();
+
+        LOG.info("Pebble evaluation complete. Parsing result.");
+
+        List<String> listOfRules = Arrays.stream(output.split("\\r\\n"))
+                .map(String::trim).filter(str -> !str.isEmpty())
+                .collect(Collectors.toList());
+
+        return listOfRules;
+    }
+
+    public boolean subscribeToRoom(String userId, String spacifyRoomId){
+        UserRoomPK userRoomPK = new UserRoomPK(userId, Long.parseLong(spacifyRoomId));
+        Optional<SubscriberEntity> subscriberEntity = subscriberRepository.findAllByUserRoomPK(userRoomPK);
+        if(subscriberEntity.isPresent()){
+            LOG.info("User has already subscribed to the room");
+            return false;
+        }else{
+            SubscriberEntity subscriber = new SubscriberEntity(userRoomPK);
+            subscriberRepository.save(subscriber);
+            LOG.info("User has successfully subscribed to the room");
+            return true;
+        }
+
     }
 
     public List<RoomEntity> getRoomsBasedOnIds(List<Long> roomIds) {

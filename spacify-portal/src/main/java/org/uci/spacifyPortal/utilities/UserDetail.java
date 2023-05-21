@@ -3,6 +3,7 @@ package org.uci.spacifyPortal.utilities;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
+import org.uci.spacifyLib.dto.RoomDetail;
 import org.uci.spacifyLib.entity.IncentiveEntity;
 import org.uci.spacifyLib.entity.UserEntity;
 

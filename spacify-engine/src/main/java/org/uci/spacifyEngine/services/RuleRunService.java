@@ -9,21 +9,21 @@ import org.springframework.stereotype.Service;
 import org.uci.spacifyEngine.calculators.DurationRuleCalculator;
 import org.uci.spacifyEngine.calculators.OccupancyRuleCalculator;
 import org.uci.spacifyEngine.calculators.RuleCalculator;
-import org.uci.spacifyEngine.calculators.RuleIdEum;
+import org.uci.spacifyEngine.calculators.RuleIdEnum;
 import org.uci.spacifyLib.dto.Rule;
 import org.uci.spacifyLib.entity.IncentiveEntity;
 import org.uci.spacifyLib.entity.ReservationEntity;
 import org.uci.spacifyLib.entity.RoomEntity;
 import org.uci.spacifyLib.entity.UserEntity;
-import org.uci.spacifyLib.repsitory.IncentiveRepository;
-import org.uci.spacifyLib.repsitory.RoomRepository;
-import org.uci.spacifyLib.repsitory.UserRepository;
+import org.uci.spacifyLib.repository.IncentiveRepository;
+import org.uci.spacifyLib.repository.RoomRepository;
+import org.uci.spacifyLib.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.uci.spacifyEngine.calculators.RuleIdEum.getRoomIdEnum;
+import static org.uci.spacifyEngine.calculators.RuleIdEnum.getRoomIdEnum;
 import static org.uci.spacifyLib.utilities.SpacifyUtility.deserializeListOfRules;
 
 @Service
@@ -48,7 +48,7 @@ public class RuleRunService {
     private MonitoringService monitoringService;
 
     private void calculateRule(Rule rule, ReservationEntity reservationEntity) {
-        RuleIdEum ruleId = getRoomIdEnum(rule.getRuleId());
+        RuleIdEnum ruleId = getRoomIdEnum(rule.getRuleId());
         RuleCalculator ruleCalculator = null;
 
         switch (ruleId) {
@@ -159,7 +159,7 @@ public class RuleRunService {
     }
 
     private void fireRule(Rule rule, KieSession kieSession) {
-        RuleIdEum ruleIdEum = getRoomIdEnum(rule.getRuleId());
+        RuleIdEnum ruleIdEum = getRoomIdEnum(rule.getRuleId());
         kieSession.insert(rule);
         kieSession.setGlobal("ruleObj", rule);
         kieSession.fireAllRules(new RulesFilter(Collections.singletonList(ruleIdEum.getDroolName())));

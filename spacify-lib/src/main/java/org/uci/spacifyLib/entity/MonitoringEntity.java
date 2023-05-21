@@ -26,7 +26,6 @@ public class MonitoringEntity {
     private Integer tippersSpaceId;
 
     @Column(name = "mac_address")
-    @NotNull
     private String macAddress;
 
     @Column(name = "occupancy")

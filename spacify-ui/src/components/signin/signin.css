@@ -1,0 +1,34 @@
+.sign-in {
+    align-items: center;
+    text-align: center;
+}
+
+.sign-in-header {
+    padding-top: 2rem;
+}
+
+.logo:hover {
+    background: lightgray;
+}
+
+.sign-in-row {
+    display: flex;
+    justify-content: center;
+}
+
+.sign-in-form {
+    padding: 2rem;
+    width: 50%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.form-check {
+    display: inline-block !important;
+}
+
+#sign-in-button {
+    width: 100%;
+    max-width: 500px;
+}
+

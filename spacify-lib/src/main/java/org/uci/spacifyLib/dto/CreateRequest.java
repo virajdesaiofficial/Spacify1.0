@@ -1,4 +1,4 @@
-package org.uci.spacifyPortal.utilities;
+package org.uci.spacifyLib.dto;
 
 import lombok.Getter;
 import lombok.Setter;

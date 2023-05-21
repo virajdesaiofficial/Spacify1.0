@@ -6,9 +6,9 @@ import org.uci.spacifyLib.entity.AvailableSlotsEntity;
 import org.uci.spacifyLib.entity.ReservationEntity;
 import org.uci.spacifyLib.entity.RoomEntity;
 import org.uci.spacifyLib.entity.RoomType;
-import org.uci.spacifyLib.repsitory.AvailableSlotsRepository;
-import org.uci.spacifyLib.repsitory.ReservationRepository;
-import org.uci.spacifyLib.repsitory.RoomRepository;
+import org.uci.spacifyLib.repository.AvailableSlotsRepository;
+import org.uci.spacifyLib.repository.ReservationRepository;
+import org.uci.spacifyLib.repository.RoomRepository;
 import org.uci.spacifyPortal.utilities.ReservationSlot;
 import org.uci.spacifyPortal.utilities.TimeBound;
 import java.time.LocalDateTime;
@@ -40,7 +40,6 @@ public class AvailableSlotsService {
         List<RoomEntity> RoomEntityList;
         RoomEntityList = roomRepository.findByroomType(RoomType.STUDY);                     //HARDCODE VALUE OF ROOM TYPE
         List<Long> room_ids = new ArrayList<>();
-
 
         for(RoomEntity roomEntity : RoomEntityList) {                                       //get room ids from the room table for room type "study"
             room_ids.add(roomEntity.getRoomId());

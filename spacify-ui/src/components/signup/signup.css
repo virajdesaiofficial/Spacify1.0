@@ -1,0 +1,38 @@
+.sign-up {
+    align-items: center;
+    text-align: center;
+}
+
+.sign-up-header {
+    padding-top: 2rem;
+}
+
+.sign-up-row {
+    display: flex;
+    justify-content: center;
+}
+
+.sign-up-form {
+    padding: 2rem;
+    width: 50%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.form-check {
+    display: inline-block !important;
+}
+
+#sign-up-button {
+    width: 100%;
+    max-width: 500px;
+}
+
+.required-field::after {
+    content: "*";
+    color: red;
+}
+
+.sign-up-modal {
+    color: black !important;
+}

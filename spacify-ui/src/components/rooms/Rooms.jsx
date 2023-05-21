@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, {useEffect, useState} from "react";
 import "./rooms.css";
 
 const Rooms = () => {
