@@ -149,7 +149,7 @@ public class RoomService {
             LOG.info("User has already subscribed to the room");
             return false;
         }else{
-            SubscriberEntity subscriber = new SubscriberEntity(userRoomPK);
+            SubscriberEntity subscriber = new SubscriberEntity(userRoomPK, false);
             subscriberRepository.save(subscriber);
             LOG.info("User has successfully subscribed to the room");
             return true;

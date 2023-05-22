@@ -3,11 +3,14 @@ package org.uci.spacifyPortal.services;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.uci.spacifyLib.entity.*;
 import org.uci.spacifyLib.repository.AuthenticationRepository;
 import org.uci.spacifyLib.repository.MacAddressRepository;
+import org.uci.spacifyLib.repository.SubscriberRepository;
 import org.uci.spacifyLib.repository.UserRepository;
 
 import javax.transaction.Transactional;
@@ -31,6 +34,11 @@ public class UserService {
 
     @Autowired
     private AuthenticationRepository authenticationRepository;
+
+    @Autowired
+    private SubscriberRepository subscriberRepository;
+
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     public List<UserEntity> getAllEligibleOwners() {
         return this.userRepository.findByAccessLevelIn(Arrays.asList(AccessLevel.ADMIN, AccessLevel.FACULTY));
@@ -82,7 +90,7 @@ public class UserService {
         this.authenticationRepository.save(authenticationEntity);
     }
 
-    @Transactional(rollbackOn = { SQLException.class })
+    @Transactional(rollbackOn = {SQLException.class})
     protected void saveRecords(UserEntity userEntity, MacAddressEntity macAddressEntity, AuthenticationEntity authenticationEntity) throws SQLException {
         this.userRepository.save(userEntity);
         this.macAddressRepository.save(macAddressEntity);
@@ -95,7 +103,7 @@ public class UserService {
             return null;
         }
         String verificationCode = this.generateRandomCode();
-        UserEntity userEntity = new UserEntity(userId, emailId, firstName, lastName, AccessLevel.STUDENT, 0L, verificationCode, false);
+        UserEntity userEntity = new UserEntity(userId, emailId, firstName, lastName, AccessLevel.STUDENT, 0L, verificationCode, false, null);
 
         try {
             this.saveRecords(userEntity, new MacAddressEntity(userId, macAddress), new AuthenticationEntity(userId, hashedPassword));
@@ -116,6 +124,26 @@ public class UserService {
             return false;
         }
         return Objects.equals(authenticationEntity.getHashedPassword(), hashedPassword);
+    }
+
+    public void updateUserProfForWhatsappSub(String userId, String phoneNumber, String roomId) {
+
+        Optional<UserEntity> profile = userRepository.findById(userId);
+        profile.ifPresent(userEntity -> {
+            userEntity.setPhoneNumber(phoneNumber);
+            userRepository.save(profile.get());
+        });
+
+
+        UserRoomPK pk = new UserRoomPK(userId, Long.parseLong(roomId));
+        Optional<SubscriberEntity> subscriberEntity = subscriberRepository.findAllByUserRoomPK(pk);
+
+        profile.ifPresent(subUser -> {
+            subscriberEntity.get().setSubscribed(true);
+            subscriberRepository.save(subscriberEntity.get());
+        });
+
+
     }
 
 }

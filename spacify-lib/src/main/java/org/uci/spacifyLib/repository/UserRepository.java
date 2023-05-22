@@ -13,4 +13,5 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     public List<UserEntity> findByAccessLevelIn(List<AccessLevel> accessLevelList);
 
     public Optional<UserEntity> findByEmail(String email);
+    public Optional<UserEntity> findById(String userId);
 }

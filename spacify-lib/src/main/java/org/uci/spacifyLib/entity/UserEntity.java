@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -43,7 +44,11 @@ public class UserEntity {
     @Column(name = "verified")
     private Boolean verified;
 
-    public UserEntity(String userId, String email, String firstName, String lastName, AccessLevel accessLevel, Long totalIncentives, String verificationCode, boolean verified) {
+    @Nullable
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    public UserEntity(String userId, String email, String firstName, String lastName, AccessLevel accessLevel, Long totalIncentives, String verificationCode, boolean verified, String phoneNumber) {
         this.userId = userId;
         this.email = email;
         this.firstName = firstName;
@@ -52,6 +57,7 @@ public class UserEntity {
         this.totalIncentives = totalIncentives;
         this.verificationCode = verificationCode;
         this.verified = verified;
+        this.phoneNumber = phoneNumber;
     }
 
     public UserEntity() {
