@@ -135,7 +135,7 @@ public class RoomService {
 
         LOG.info("Pebble evaluation complete. Parsing result.");
 
-        List<String> listOfRules = Arrays.stream(output.split("\\r\\n"))
+        List<String> listOfRules = Arrays.stream(output.split("\n"))
                 .map(String::trim).filter(str -> !str.isEmpty())
                 .collect(Collectors.toList());
 

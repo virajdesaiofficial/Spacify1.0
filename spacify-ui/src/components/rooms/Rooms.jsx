@@ -17,9 +17,9 @@ const Rooms = () => {
 
   useEffect(() => {
 
-//     let userId = global.sessionStorage.getItem(USER_NAME_KEY);
-    let url = ALL_SUBSCRIBED_ROOMS_API + "kshatris";        //HARDCODED change later
-    console.log(url);
+    let userId = global.sessionStorage.getItem(USER_NAME_KEY);
+    let url = ALL_SUBSCRIBED_ROOMS_API + userId;        //HARDCODED change later
+//     console.log(url);
      fetch(url)
               .then((res) => res.json())
               .then((data) => {
@@ -60,8 +60,8 @@ const Rooms = () => {
 
     console.log("Saved phone number:", savedPhoneNo);
     console.log("Saved room ID:", savedRoomId);
-//    let userId = global.sessionStorage.getItem(USER_NAME_KEY);
-          let userId = "kshatris";              //hardcoded change later
+   let userId = global.sessionStorage.getItem(USER_NAME_KEY);
+//           let userId = "kshatris";              //hardcoded change later
           const requestHeader = {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
