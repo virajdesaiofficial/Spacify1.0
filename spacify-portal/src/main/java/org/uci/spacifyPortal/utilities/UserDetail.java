@@ -23,14 +23,17 @@ public class UserDetail {
 
     private List<RoomDetail> subscribedRooms;
 
+    private List<String> macAddresses;
+
     public UserDetail() {
     }
 
-    public UserDetail(UserEntity user, List<RoomDetail> ownedRooms, List<IncentiveEntity> incentives, Integer totalIncentive, List<RoomDetail> subscribedRooms) {
+    public UserDetail(UserEntity user, List<RoomDetail> ownedRooms, List<IncentiveEntity> incentives, Integer totalIncentive, List<RoomDetail> subscribedRooms, List<String> macAddresses) {
         this.user = user;
         this.ownedRooms = ownedRooms;
         this.incentives = incentives;
         this.totalIncentive = totalIncentive;
         this.subscribedRooms = subscribedRooms;
+        this.macAddresses = macAddresses;
     }
 }
