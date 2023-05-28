@@ -146,7 +146,12 @@
   position: relative;
 }
 
-
+.subscription-status-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
 
 
 /* Add any additional styles as needed */

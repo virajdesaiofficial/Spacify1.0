@@ -11,6 +11,7 @@ import org.uci.spacifyLib.entity.RoomEntity;
 import org.uci.spacifyLib.services.TippersConnectivityService;
 import org.uci.spacifyPortal.services.OwnerService;
 import org.uci.spacifyPortal.services.RoomService;
+import org.uci.spacifyPortal.services.SubscriberService;
 import org.uci.spacifyPortal.utilities.MessageResponse;
 import org.uci.spacifyPortal.utilities.TipperSpace;
 
@@ -31,6 +32,9 @@ public class RoomController {
 
     @Autowired
     private OwnerService ownerService;
+
+    @Autowired
+    private SubscriberService subscriberService;
 
     private static final Logger LOG = LoggerFactory.getLogger(RoomController.class);
 
@@ -156,6 +160,28 @@ public class RoomController {
             LOG.error("Error while subscribing with error message: {}", e.getMessage(), e);
             return new ResponseEntity<>(new MessageResponse("Error while subscribing. Please contact the admin.", false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/updateSubscriberStatus")
+    public ResponseEntity<MessageResponse> updateSubscriberStatus(@RequestBody UnsubsRequest unsubsRequest) {
+
+        try {
+            LOG.info("Unsubscribing from whatsapp");
+            boolean success = subscriberService.updateUserSubscribedStatus(unsubsRequest.getUserId(), unsubsRequest.getRoomId());
+            if(success) {
+                return new ResponseEntity<>(new MessageResponse("You have successfully unsubscribed to whatsapp", true), HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(new MessageResponse("You have already unsubscribed to whatsapp", false), HttpStatus.PRECONDITION_FAILED);
+            }
+        }catch(Exception e){
+
+            LOG.error("Error while unsubscribing for whatsapp : {}", e.getMessage(),e);
+            MessageResponse messageResponse = new MessageResponse("Error while unsubscribing to whatsapp. Please check with the admin", false);
+            return new ResponseEntity<>(messageResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
     }
 
 }
