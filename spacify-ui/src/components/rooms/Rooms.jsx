@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./rooms.css";
-import { ALL_SUBSCRIBED_ROOMS_API, USER_NAME_KEY, UPDATE_SUBSCRIBED_ROOMS_API, UPDATE_SUBSCRIBED_STATUS_API } from "../../endpoints";
+import { ALL_SUBSCRIBED_ROOMS_API, USER_NAME_KEY, UPDATE_SUBSCRIBED_ROOMS_API, UPDATE_SUBSCRIBED_STATUS_API, GET_ALL_MONITORING_ROOMS_WITH_ZERO_OCCUPANCY_API } from "../../endpoints";
 
 const Rooms = () => {
   const [rooms, setRooms] = useState([]);
@@ -10,36 +10,73 @@ const Rooms = () => {
   const [roomId, setRoomID] = useState("");
   const savedRoomId = null;
   const savedPhoneNo = null;
+  const [roomIds, setRoomIds] = useState([]);
+  const [roomColor, setRoomColor] = useState(false)
   const [response, setResponse] = useState({
     header: "",
     show: false,
     responseMessage: ""
   });
-  //   const axios = require('axios');
 
   useEffect(() => {
     // let userId = global.sessionStorage.getItem(USER_NAME_KEY);
     let url = ALL_SUBSCRIBED_ROOMS_API + "kshatris"; //HARDCODED change later
-    console.log(url);
+
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        data.forEach(element => {
+          element.available = false  
+        });
+        console.log("data is ", data);
         setRooms(data);
       });
   }, []);
 
   useEffect(() => {
+    handleRoomVacancy();
     // Retrieve subscribed room IDs from local storage
     const subscribedRooms = JSON.parse(localStorage.getItem("subscribedRooms")) || [];
+    const ids = rooms.map(room => room.roomId);
+    setRoomIds(ids);
+    console.log("room IDS are ", roomIds);
     const updatedRooms = rooms.map((room) => {
       if (subscribedRooms.includes(room.roomId)) {
         return { ...room, subscribed: true };
       }
       return room;
     });
-    //     setRooms(updatedRooms);
   }, [rooms]);
+
+  const handleRoomVacancy = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(roomIds),
+      redirect: 'follow'
+    };
+
+    fetch(GET_ALL_MONITORING_ROOMS_WITH_ZERO_OCCUPANCY_API, requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log("Vacant rooms:" + result);
+        rooms.forEach((element) => {
+          // console.log(element.roomId == result[0]);
+          // console.log(element.roomId == result[1]);
+          console.log(element);
+          // console.log(result);
+          if(result.some(it => it == element.roomId)) {
+          console.log(`${element.roomId} is vacant`)
+            element.available = true
+          }
+        });
+        setRooms(rooms);
+      })
+      .catch(error => console.log('error', error));
+  }
 
   const handleRoomSelect = (room) => {
     setSelectedRoom(room);
@@ -124,7 +161,7 @@ const Rooms = () => {
       <h1 className="rooms-header">My Rooms</h1>
       <ul className="rooms-list">
         {rooms.map((room) => (
-          <li key={room.roomId} className="rooms-list-item">
+          <li key={room.roomId} className="rooms-list-item" style={{backgroundColor:room.available?'#0f0':'#fff'}}>
             <h3 onClick={() => handleRoomSelect(room)}>{room.roomDescription}</h3>
             {room.subscribed && (
               <div className="subscription-status-container">

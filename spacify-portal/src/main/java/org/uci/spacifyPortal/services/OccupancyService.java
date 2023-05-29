@@ -8,9 +8,8 @@ import org.uci.spacifyLib.repository.RoomRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 
 @Service
 public class OccupancyService {
@@ -21,10 +20,10 @@ public class OccupancyService {
     private MonitoringRepository monitoringRepository;
 
     public List<Long> getRoomsWithZeroOccupancy(List<Long> roomIds) {
+
         LocalDateTime current_time = LocalDateTime.parse("2023-02-22T12:00:00"); // HARDCODED
 
         List<Long> roomIdsWithZeroOccupancy = new ArrayList<>();
-        Set<Long> monitoringIdsWithZeroOccupancy = new HashSet<>();
 
         for (Long roomId : roomIds) {
             Integer tippers_room_id = roomRepository.findByRoomId(roomId).getTippersSpaceId();
@@ -47,8 +46,6 @@ public class OccupancyService {
                 for (MonitoringEntity monitoring : monitoringList) {
                     if (monitoring.getRoomOccupancy() == 0) {
                         hasZeroOccupancy = true;
-                        monitoringIdsWithZeroOccupancy.add(monitoring.getMonitoring_id());
-
                         break; // No need to continue checking other entities with the same timestamp
                     }
                 }
@@ -62,8 +59,7 @@ public class OccupancyService {
             }
         }
 
-//        return roomIdsWithZeroOccupancy;
-        return new ArrayList<>(monitoringIdsWithZeroOccupancy);
+        return roomIdsWithZeroOccupancy;
     }
 
 
