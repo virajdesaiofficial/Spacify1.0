@@ -1,72 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './profile.css';
 import { Button, Form } from 'react-bootstrap';
 
 function Profile(props) {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [userName, setUserName] = useState('');
-  const [macAddress, setMacAddress] = useState([]);
+  const [firstName, setFirstName] = useState('John');
+  const [lastName, setLastName] = useState('Doe');
+  const [email, setEmail] = useState('johndoe@example.com');
+  const [macAddress, setMacAddress] = useState([
+    { id: 1, macAddress: '00:11:22:33:44:55', deviceName: 'Laptop' },
+    { id: 2, macAddress: '66:77:88:99:aa:bb', deviceName: 'Phone' },
+  ]);
 
-    function getUserId(userName) {
-      // Fetch user data using the API endpoint /api/v1/user/{userName}
-      return fetch(`http://127.0.0.1:8083/api/v1/user/${userName}`)
-        .then(response => response.json())
-        .then(data => data.user.userId)
-        .catch(error => {
-          console.log(error);
-          console.log(error.response);
-        });
-    }
-
-  useEffect(() => {
-    const userName = sessionStorage.getItem('userName');
-    const userId = getUserId(userName);
-    console.log('userId:', userId); // Log the fetched userId
-
-    if (userName) {
-      fetch(`http://127.0.0.1:8083/api/v1/user/${userName}`)
-        .then(response => response.json())
-        .then(data => {
-          console.log('Fetched user data:', data); // Log the fetched user data
-          setFirstName(data.user.firstName);
-          setLastName(data.user.lastName);
-          setEmail(data.user.email);
-          setMacAddress(data.user.macAddress);
-        })
-        .catch(error => {
-          console.log('Error fetching user data:', error);
-        });
-    }
-  }, []);
-
-const handleSave = async () => {
+  const handleSave = () => {
+    // TODO: save the updated user information to the backend API
     console.log('Saving updated user information...');
-
-    const updatedUserData = {
-      firstName,
-      lastName,
-      macAddress,
-    };
-
-    try {
-      const response = await fetch('http://127.0.0.1:8083/api/v1/user/updateUser', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedUserData),
-      });
-
-      if (response.ok) {
-        console.log('User information saved successfully!');
-      } else {
-        console.log('Failed to save user information.');
-      }
-    } catch (error) {
-      console.log('An error occurred while saving user information:', error);
-    }
   };
 
   const handleCancel = () => {
@@ -74,9 +21,9 @@ const handleSave = async () => {
     console.log('Cancelling changes...');
   };
 
-  const handleEditMacAddress = (index, newMacAddress) => {
+  const handleEdit = (index, newMacAddress) => {
     const updatedMacAddress = [...macAddress];
-    updatedMacAddress[index] = newMacAddress;
+    updatedMacAddress[index].macAddress = newMacAddress;
     setMacAddress(updatedMacAddress);
   };
 
@@ -84,10 +31,6 @@ return (
 <div className="profile">
   <h2>User Profile</h2>
   <Form>
-    <Form.Group className="mb-3" controlId="userName">
-      <Form.Label className="form-label">Username</Form.Label>
-      <Form.Control type="text" value={userName} readOnly />
-    </Form.Group>
     <Form.Group className="mb-3" controlId="firstName">
       <Form.Label className="form-label">First Name</Form.Label>
       <Form.Control type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
@@ -98,7 +41,7 @@ return (
     </Form.Group>
     <Form.Group className="mb-3" controlId="email">
       <Form.Label className="form-label">Email Address</Form.Label>
-      <Form.Control type="text" value={email} readOnly />
+      <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
     </Form.Group>
     <Form.Group className="mb-3" controlId="macAddress">
       <Form.Label className="form-label mac-address-label">Mac Address</Form.Label>
@@ -106,31 +49,49 @@ return (
         <head>
           <tr>
             <th>Mac Address</th>
+            <th>Device Name</th>
             <th></th>
           </tr>
         </head>
         <body>
-          {macAddress.map((mac, index) => (
-            <tr key={index}>
+          {macAddress.map((device, index) => (
+            <tr key={device.id}>
               <td>
                 <Form.Control
                   type="text"
-                  value={mac}
-                  onChange={(e) => handleEditMacAddress(index, e.target.value)}
+                  value={device.macAddress}
+                  onChange={(e) => handleEdit(index, e.target.value)}
                 />
-                </td>
-                </tr>
-              ))}
-            </body>
-          </Form.Control>
-        </Form.Group>
-        <div className="button-container">
-          <Button variant="primary" onClick={handleSave}>Save</Button>
-          <Button variant="secondary" onClick={handleCancel}>Cancel</Button>
-        </div>
-      </Form>
+              </td>
+              <td>
+                <Form.Control
+                  type="text"
+                  value={device.deviceName}
+                  onChange={(e) => {
+                    const updatedMacAddress = [...macAddress];
+                    updatedMacAddress[index].deviceName = e.target.value;
+                    setMacAddress(updatedMacAddress);
+                  }}
+                />
+              </td>
+            </tr>
+          ))}
+        </body>
+      </Form.Control>
+    </Form.Group>
+    <div className="btn">
+      <Button variant="primary" onClick={handleSave}>
+        Save Changes
+      </Button>{" "}
+      <Button variant="secondary" onClick={handleCancel}>
+        Cancel
+      </Button>
     </div>
-  );
+  </Form>
+</div>
+
+);
+
 }
 
 export default Profile;
