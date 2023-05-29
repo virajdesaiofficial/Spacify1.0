@@ -21,3 +21,4 @@ export const UPDATE_SUBSCRIBED_ROOMS_API = "http://127.0.0.1:8083/api/v1/user/up
 export const UPDATE_SUBSCRIBED_STATUS_API = "http://127.0.0.1:8083/api/v1/room/updateSubscriberStatus/";
 
 export const GET_ALL_MONITORING_ROOMS_WITH_ZERO_OCCUPANCY_API = "http://127.0.0.1:8083/api/v1/occupancy/vacantRooms";
+export const GET_ALL_WHATSAPP_SUBSCRIBED_ROOMS = "http://127.0.0.1:8083/api/v1/room/whatsappSubscribedRooms/";

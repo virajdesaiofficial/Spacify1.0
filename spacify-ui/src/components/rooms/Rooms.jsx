@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./rooms.css";
-import { ALL_SUBSCRIBED_ROOMS_API, USER_NAME_KEY, UPDATE_SUBSCRIBED_ROOMS_API, UPDATE_SUBSCRIBED_STATUS_API, GET_ALL_MONITORING_ROOMS_WITH_ZERO_OCCUPANCY_API } from "../../endpoints";
+import { ALL_SUBSCRIBED_ROOMS_API, USER_NAME_KEY, UPDATE_SUBSCRIBED_ROOMS_API, UPDATE_SUBSCRIBED_STATUS_API, GET_ALL_MONITORING_ROOMS_WITH_ZERO_OCCUPANCY_API, GET_ALL_WHATSAPP_SUBSCRIBED_ROOMS } from "../../endpoints";
 
 const Rooms = () => {
   const [rooms, setRooms] = useState([]);
@@ -12,6 +12,7 @@ const Rooms = () => {
   const savedPhoneNo = null;
   const [roomIds, setRoomIds] = useState([]);
   const [roomColor, setRoomColor] = useState(false)
+  const [firstEffectCompleted, setFirstEffectCompleted] = useState(false);
   const [response, setResponse] = useState({
     header: "",
     show: false,
@@ -19,57 +20,98 @@ const Rooms = () => {
   });
 
   useEffect(() => {
-    // let userId = global.sessionStorage.getItem(USER_NAME_KEY);
-    let url = ALL_SUBSCRIBED_ROOMS_API + "kshatris"; //HARDCODED change later
-
+    
+    let userId = global.sessionStorage.getItem(USER_NAME_KEY);
+    let url = ALL_SUBSCRIBED_ROOMS_API + userId;
+    console.log("Getting all Subscribed rooms");
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
         data.forEach(element => {
-          element.available = false  
+          element.available = false
+          element.subscribed = false  
         });
         console.log("data is ", data);
-        setRooms(data);
-      });
+        setRooms(data)
+         setFirstEffectCompleted(true);
+      })
+      
   }, []);
 
   useEffect(() => {
-    handleRoomVacancy();
-    // Retrieve subscribed room IDs from local storage
-    const subscribedRooms = JSON.parse(localStorage.getItem("subscribedRooms")) || [];
-    const ids = rooms.map(room => room.roomId);
-    setRoomIds(ids);
-    console.log("room IDS are ", roomIds);
-    const updatedRooms = rooms.map((room) => {
-      if (subscribedRooms.includes(room.roomId)) {
-        return { ...room, subscribed: true };
-      }
-      return room;
-    });
-  }, [rooms]);
+    if (firstEffectCompleted) {
+      console.log("if condition triggered");
+      
+      handleSubscribedRooms();
+    }
+    
+  },[firstEffectCompleted])
+
+  // useEffect(() => {
+
+  //   // Retrieve subscribed room IDs from local storage
+  //   const subscribedRooms = JSON.parse(localStorage.getItem("subscribedRooms")) || [];
+  //   console.log("subscribed rooms ", subscribedRooms);
+  //   const ids = rooms.map(room => room.roomId);
+  //   setRoomIds(ids);
+  //   console.log("room IDS are ", roomIds);
+  //   const updatedRooms = rooms.map((room) => {
+  //     if (subscribedRooms.includes(room.roomId)) {
+  //       return { ...room, subscribed: true };
+  //     }
+  //     return room;
+  //   });
+  // }, [rooms]);
+
+  const handleSubscribedRooms = () => {
+    let userId = global.sessionStorage.getItem(USER_NAME_KEY);
+    let url = GET_ALL_WHATSAPP_SUBSCRIBED_ROOMS + userId;
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    
+    fetch(url, requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        rooms.forEach((element) => {
+          console.log(element);
+          if(result.includes(element.roomId)) {
+          console.log(`${element.roomId} is wa subscribed`)
+            element.subscribed = true
+          }
+        });
+        setRooms(rooms)
+        handleRoomVacancy();    
+      })
+      .catch(error => console.log('error', error));
+      
+  }
 
   const handleRoomVacancy = () => {
+    var new_room_ids = [];
+    rooms.forEach((room) => {
+      new_room_ids.push(room.roomId)
+    })
+  console.log("handle vacancy called ", new_room_ids);
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     var requestOptions = {
       method: 'POST',
       headers: myHeaders,
-      body: JSON.stringify(roomIds),
+      body: JSON.stringify(new_room_ids),
       redirect: 'follow'
     };
-
+    
     fetch(GET_ALL_MONITORING_ROOMS_WITH_ZERO_OCCUPANCY_API, requestOptions)
       .then(response => response.json())
       .then(result => {
-        console.log("Vacant rooms:" + result);
+      
         rooms.forEach((element) => {
-          // console.log(element.roomId == result[0]);
-          // console.log(element.roomId == result[1]);
           console.log(element);
-          // console.log(result);
-          if(result.some(it => it == element.roomId)) {
-          console.log(`${element.roomId} is vacant`)
+          if(result.includes(element.roomId)) {
+            console.log(`${element.roomId} is vacant`)
             element.available = true
           }
         });
@@ -104,8 +146,8 @@ const Rooms = () => {
 
     console.log("Saved phone number:", savedPhoneNo);
     console.log("Saved room ID:", savedRoomId);
-    // let userId = global.sessionStorage.getItem(USER_NAME_KEY);
-    let userId = "kshatris"; //hardcoded change later
+    let userId = global.sessionStorage.getItem(USER_NAME_KEY);
+//     let userId = "kshatris"; //hardcoded change later
     const requestHeader = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -132,8 +174,7 @@ const Rooms = () => {
   };
 
   const handleUnsubscription = () => {
-    // let userId = global.sessionStorage.getItem(USER_NAME_KEY);
-    let userId = "kshatris";      //hardcoded change later
+    let userId = global.sessionStorage.getItem(USER_NAME_KEY);
 
     const requestHeader = {
       method: "POST",

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.uci.spacifyLib.dto.*;
 import org.uci.spacifyLib.entity.RoomEntity;
+import org.uci.spacifyLib.entity.SubscriberEntity;
 import org.uci.spacifyLib.services.TippersConnectivityService;
 import org.uci.spacifyPortal.services.OwnerService;
 import org.uci.spacifyPortal.services.RoomService;
@@ -175,13 +176,23 @@ public class RoomController {
                 return new ResponseEntity<>(new MessageResponse("You have already unsubscribed to whatsapp", false), HttpStatus.PRECONDITION_FAILED);
             }
         }catch(Exception e){
-
             LOG.error("Error while unsubscribing for whatsapp : {}", e.getMessage(),e);
             MessageResponse messageResponse = new MessageResponse("Error while unsubscribing to whatsapp. Please check with the admin", false);
             return new ResponseEntity<>(messageResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
-
     }
+
+    @GetMapping("/whatsappSubscribedRooms/{userId}")
+    public List<Long> whatsappSubscribedRooms(@PathVariable String userId) {
+        List<SubscriberEntity> subscriberEntities = this.subscriberService.getAllSubscribedRooms(userId);
+        List<Long> roomId = new ArrayList<>();
+        for (SubscriberEntity obj : subscriberEntities) {
+            if(obj.isSubscribed()) {
+                roomId.add((obj.getUserRoomPK().getRoomId()));
+            }
+        }
+        return roomId;
+    }
+
 
 }
