@@ -5,7 +5,10 @@ import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.uci.spacifyLib.entity.*;
+import org.uci.spacifyLib.entity.AccessLevel;
+import org.uci.spacifyLib.entity.AuthenticationEntity;
+import org.uci.spacifyLib.entity.MacAddressEntity;
+import org.uci.spacifyLib.entity.UserEntity;
 import org.uci.spacifyLib.repository.AuthenticationRepository;
 import org.uci.spacifyLib.repository.MacAddressRepository;
 import org.uci.spacifyLib.repository.UserRepository;
@@ -15,10 +18,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -42,6 +43,32 @@ public class UserService {
 
     public Optional<UserEntity> getUser(String userId) {
         return this.userRepository.findById(userId);
+    }
+
+    public List<String> getMacAddressesForUser(String userId) {
+        List<MacAddressEntity> macAddressEntityList = this.macAddressRepository.findAllByUserId(userId);
+        if (macAddressEntityList.isEmpty())
+            return new ArrayList<String>();
+
+        return macAddressEntityList.stream().map(MacAddressEntity::getMacAddress).collect(Collectors.toList());
+    }
+
+    public boolean updateMacAddresses(String userId, List<String> macAddresses) {
+        // remove duplicate mac addresses
+        Set<String> uniqueMacAddresses = new HashSet<>(macAddresses);
+        // check whether provided mac address is assigned to another user
+        List<MacAddressEntity> macAddressEntityList = this.macAddressRepository.findAllById(uniqueMacAddresses);
+        Optional<MacAddressEntity> optionalMacAddressEntity = macAddressEntityList.stream().filter(macAddressEntity -> !macAddressEntity.getUserId().equals(userId)).findFirst();
+        if (optionalMacAddressEntity.isPresent()) {
+            return false;
+        }
+        // delete existing mac addresses for user
+        this.macAddressRepository.deleteAll(this.macAddressRepository.findAllByUserId(userId));
+
+        // add new mac addresses for user
+        List<MacAddressEntity> updatedMacAddress = uniqueMacAddresses.stream().map(macAddress -> new MacAddressEntity(userId, macAddress)).collect(Collectors.toList());
+        this.macAddressRepository.saveAll(updatedMacAddress);
+        return true;
     }
 
     public Optional<UserEntity> checkIfUserExists(String userId, String email) {

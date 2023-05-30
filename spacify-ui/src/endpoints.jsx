@@ -16,3 +16,6 @@ export const USER_NAME_KEY = "userName";
 
 export const SEND_VERIFICATION_API = "http://127.0.0.1:8083/api/v1/user/sendVerification/";
 export const FORGOT_PASSWORD_API = "http://127.0.0.1:8083/api/v1/user/forgotPassword/";
+
+export const GET_OWNED_ROOMS_API = "http://127.0.0.1:8083/api/v1/room/";
+export const UPDATE_RULES_API = "http://127.0.0.1:8083/api/v1/room/updateRules";

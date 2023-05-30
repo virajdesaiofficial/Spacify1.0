@@ -5,6 +5,7 @@ import './signin.css';
 import {FORGOT_PASSWORD_API, SEND_VERIFICATION_API, SIGNIN_USER_API, USER_NAME_KEY} from "../../endpoints";
 import Alert from "react-bootstrap/Alert";
 import LoadingSpinner from "../utilities/LoadingSpinner";
+import {Link} from "react-router-dom";
 
 function SignIn(props) {
     const initialState = {
@@ -118,7 +119,7 @@ function SignIn(props) {
                         </Button>
                     </Form>
                 </div>
-                <p>Not a member? <a href="signUp">Register</a></p>
+                <p>Not a member? <Link to={"/signUp"} >Register</Link></p>
                 <p>Trouble signing in? <a href="" onClick={(e) => handleForgetPassword(e)}>Forgot Password</a></p>
                 <p><a href="" onClick={(e) => handleSendVerification(e)}>Send Verification Link</a></p>
             </section>

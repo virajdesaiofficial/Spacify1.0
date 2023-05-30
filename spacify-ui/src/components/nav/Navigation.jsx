@@ -11,8 +11,8 @@ function Navigation() {
         <div>
             <Navbar variant="dark">
                 <Container>
-                    <Navbar.Brand href="/"><img src={logo}  alt="Spacify Logo"/></Navbar.Brand>
                     <Nav className="me-auto">
+                        <Nav.Link><Link to={"/"} className="link"><img src={logo}  alt="Spacify Logo"/></Link></Nav.Link>
                         <Nav.Link><Link to={"/create"} className="link">Create Room</Link></Nav.Link>
                         <Nav.Link><Link to={"/rules"} className="link">Rule</Link></Nav.Link>
                         <Nav.Link><Link to={"/reserve"} className="link">Reserve</Link></Nav.Link>
