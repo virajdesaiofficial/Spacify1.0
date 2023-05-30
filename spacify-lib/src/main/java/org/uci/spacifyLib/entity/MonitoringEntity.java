@@ -43,6 +43,10 @@ public class MonitoringEntity {
     public MonitoringEntity() {
     }
 
+    public Integer getHourOfEntity(LocalDateTime timestamp){
+         return timestamp.getHour();
+    }
+
     public MonitoringEntity(Long monitoring_id, Integer tippersSpaceId, String macAddress, Integer roomOccupancy, LocalDateTime timestampFrom, LocalDateTime timestampTo) {
         this.monitoring_id = monitoring_id;
         this.tippersSpaceId = tippersSpaceId;
