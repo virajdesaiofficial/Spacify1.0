@@ -3,14 +3,14 @@
     justify-content: center;
 }
 
-#selection {
+#selection, #subscribeButtons {
     display: flex;
     gap: 2rem;
     margin: 2rem 3rem;
     padding: 2rem;
 }
 
-#subscribeButton, #subscribeRoomTitle, #rules, #rulesTitle   {
+#subscribeButtons, #subscribeRoomTitle, #rules, #rulesTitle, #trendGraph  {
     margin-top: 2rem;
     display: flex;
     justify-content: center;

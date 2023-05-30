@@ -27,7 +27,7 @@ public class OccupancyService {
 
         for (Long roomId : roomIds) {
             Integer tippers_room_id = roomRepository.findByRoomId(roomId).getTippersSpaceId();
-            List<MonitoringEntity> monitoringObjects = monitoringRepository.findAllByTippersSpaceId(tippers_room_id);
+            List<MonitoringEntity> monitoringObjects = monitoringRepository.findAllBytippersSpaceId(tippers_room_id);
             List<LocalDateTime> timestampToValues = new ArrayList<>(); // timestamp_to values for the given room ID
 
             LocalDateTime fifteenMinutesBeforeCurrentTime = current_time.minusMinutes(15);

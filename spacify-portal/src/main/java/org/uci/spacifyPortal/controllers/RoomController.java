@@ -1,5 +1,6 @@
 package org.uci.spacifyPortal.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.uci.spacifyLib.dto.*;
+import org.uci.spacifyLib.entity.OwnerEntity;
 import org.uci.spacifyLib.entity.RoomEntity;
+import org.uci.spacifyLib.entity.UserRoomPK;
 import org.uci.spacifyLib.entity.SubscriberEntity;
 import org.uci.spacifyLib.services.TippersConnectivityService;
 import org.uci.spacifyPortal.services.OwnerService;
@@ -18,7 +21,12 @@ import org.uci.spacifyPortal.utilities.TipperSpace;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static org.uci.spacifyLib.utilities.SpacifyUtility.deserializeListOfRules;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
@@ -115,12 +123,12 @@ public class RoomController {
         return list;
     }
 
-    @PostMapping("/addRules")
-    public ResponseEntity<String> addRules(@RequestBody RulesRequest request) throws Exception {
+    @PostMapping("/updateRules")
+    public ResponseEntity<MessageResponse> addRules(@RequestBody RulesRequest request) throws Exception {
         // Call the rule service with the provided data
         this.roomService.addRules(request.getRoomId(), request.getUserId(), request.getRules());
 
-        return new ResponseEntity<>("Rules created successfully", HttpStatus.CREATED);
+        return new ResponseEntity<>(new MessageResponse("Room rules changed successfully!", true), HttpStatus.CREATED);
     }
 
     @GetMapping("/buildings")
@@ -163,6 +171,41 @@ public class RoomController {
         }
     }
 
+    @GetMapping("/trend/{spacifyRoomId}")
+    public List<StringPairDto> getRoomTrends(@PathVariable String spacifyRoomId) {
+
+        LOG.info("Finding trends for the room {}", spacifyRoomId);
+
+        return roomService.getRoomTrends(spacifyRoomId);
+    }
+
+    @GetMapping("/{userId}")
+    public List<RulesRequest> getRoomsOwnedByUser(@PathVariable String userId) {
+        List<OwnerEntity> ownedRooms = this.ownerService.getAllOwnedRooms(userId);
+        List<Long> roomIds = ownedRooms.stream().map(OwnerEntity::getUserRoomPK).map(UserRoomPK::getRoomId).collect(Collectors.toList());
+        List<RoomEntity> roomEntityList = this.roomService.getRoomsBasedOnIds(roomIds);
+
+        List<RulesRequest> rulesRequests = new ArrayList<RulesRequest>();
+        roomEntityList.forEach(roomEntity -> {
+            try {
+                RulesRequest rulesRequest = new RulesRequest(roomEntity.getRoomId(), roomEntity.getRoomName());
+                rulesRequest.setUserId(userId);
+                if (Objects.nonNull(roomEntity.getRoomRules()))
+                    rulesRequest.setRules(deserializeListOfRules(roomEntity.getRoomRules()));
+                rulesRequests.add(rulesRequest);
+            } catch (JsonProcessingException e) {
+
+                LOG.error("Error while fetching owned rooms for the user with error message as : {} Unable to deserialize rules for room: {}", e.getMessage(), roomEntity.getRoomId(), e);
+            }
+        });
+        rulesRequests.sort(new Comparator<RulesRequest>() {
+            @Override
+            public int compare(RulesRequest o1, RulesRequest o2) {
+                return o1.getRoomName().compareTo(o2.getRoomName());
+            }
+        });
+        return rulesRequests;
+    }
     @PostMapping("/updateSubscriberStatus")
     public ResponseEntity<MessageResponse> updateSubscriberStatus(@RequestBody UnsubsRequest unsubsRequest) {
 

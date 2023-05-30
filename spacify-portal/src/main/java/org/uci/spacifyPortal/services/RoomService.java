@@ -7,23 +7,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.uci.spacifyLib.dto.CreateRequest;
 import org.uci.spacifyLib.dto.RoomDetail;
 import org.uci.spacifyLib.dto.Rule;
+import org.uci.spacifyLib.dto.StringPairDto;
 import org.uci.spacifyLib.entity.*;
-import org.uci.spacifyLib.repository.AvailableSlotsRepository;
-import org.uci.spacifyLib.repository.OwnerRepository;
-import org.uci.spacifyLib.repository.RoomRepository;
-import org.uci.spacifyLib.repository.SubscriberRepository;
+import org.uci.spacifyLib.repository.*;
 import org.uci.spacifyLib.services.TippersConnectivityService;
 import org.uci.spacifyLib.utilities.SpacifyUtility;
-import org.uci.spacifyLib.dto.CreateRequest;
-import org.uci.spacifyPortal.controllers.RoomController;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class RoomService {
@@ -42,6 +40,9 @@ public class RoomService {
 
     @Autowired
     private SubscriberRepository subscriberRepository;
+
+    @Autowired
+    private MonitoringRepository monitoringRepository;
 
     private static final Logger LOG = LoggerFactory.getLogger(RoomService.class);
 
@@ -98,19 +99,19 @@ public class RoomService {
         return false;
     }
 
-    public List<RoomDetail> getRoomsForSubscribtion(String buildingTipperSpaceId){
-        List<RoomDetail> buildingRooms =  tippersConnectivityService.getSpaceIdAndRoomName(Integer.parseInt(buildingTipperSpaceId));
+    public List<RoomDetail> getRoomsForSubscribtion(String buildingTipperSpaceId) {
+        List<RoomDetail> buildingRooms = tippersConnectivityService.getSpaceIdAndRoomName(Integer.parseInt(buildingTipperSpaceId));
         List<Integer> roomTippersId = buildingRooms.stream().map(room -> room.getRoomId().intValue()).collect(Collectors.toList());
         List<RoomEntity> spacifyRooms = roomRepository.findByroomTypeAndTippersSpaceIdIn(RoomType.COMMON_SPACE, roomTippersId);
 
         LOG.info("Found spacify rooms available for subscribing and all tippers room. Finding for intersection now");
 
-        List<RoomDetail> roomsForSubscribtion = spacifyRooms.stream().map( room -> {
-                                                    RoomDetail r = new RoomDetail();
-                                                    r.setRoomDescription(room.getRoomName());
-                                                    r.setRoomId(room.getRoomId());
-                                                    return r;
-                                                }).collect(Collectors.toList());
+        List<RoomDetail> roomsForSubscribtion = spacifyRooms.stream().map(room -> {
+            RoomDetail r = new RoomDetail();
+            r.setRoomDescription(room.getRoomName());
+            r.setRoomId(room.getRoomId());
+            return r;
+        }).collect(Collectors.toList());
 
         return roomsForSubscribtion;
     }
@@ -142,13 +143,13 @@ public class RoomService {
         return listOfRules;
     }
 
-    public boolean subscribeToRoom(String userId, String spacifyRoomId){
+    public boolean subscribeToRoom(String userId, String spacifyRoomId) {
         UserRoomPK userRoomPK = new UserRoomPK(userId, Long.parseLong(spacifyRoomId));
         Optional<SubscriberEntity> subscriberEntity = subscriberRepository.findAllByUserRoomPK(userRoomPK);
-        if(subscriberEntity.isPresent()){
+        if (subscriberEntity.isPresent()) {
             LOG.info("User has already subscribed to the room");
             return false;
-        }else{
+        } else {
             SubscriberEntity subscriber = new SubscriberEntity(userRoomPK, false);
             subscriberRepository.save(subscriber);
             LOG.info("User has successfully subscribed to the room");
@@ -159,5 +160,35 @@ public class RoomService {
 
     public List<RoomEntity> getRoomsBasedOnIds(List<Long> roomIds) {
         return this.roomRepository.findByRoomIdIn(roomIds);
+    }
+
+    public List<StringPairDto> getRoomTrends(String spacifyRoomId) {
+
+        RoomEntity room = roomRepository.findByRoomId(Long.parseLong(spacifyRoomId));
+        List<MonitoringEntity> occupancyDataList = monitoringRepository.findAllBytippersSpaceId(room.getTippersSpaceId());
+
+        Map<Integer, Integer> hourToOccupancyMap = occupancyDataList.stream()
+                .collect(Collectors.groupingBy(data -> data.getHourOfEntity(data.getTimestampFrom()), Collectors.summingInt(MonitoringEntity::getRoomOccupancy)));
+
+        LOG.info("monitoring info for room fetched from the table.");
+
+        if (!hourToOccupancyMap.isEmpty()) {
+            AvailableSlotsEntity slotsEntity = availableSlotsRepository.findByroomType(RoomType.COMMON_SPACE).get(0);
+            IntStream.range(slotsEntity.getTimeFrom().getHours(), slotsEntity.getTimeTo().getHours())
+                    .filter(hour -> !hourToOccupancyMap.containsKey(hour))
+                    .forEach(hour -> hourToOccupancyMap.put(hour, 0));
+
+            LOG.info("missing hours filled as 0 occupancy.");
+        }
+
+        return hourToOccupancyMap.entrySet().stream()
+                .map(entry -> {
+
+                    StringPairDto dto = new StringPairDto();
+                    dto.setString1(entry.getKey() > 11 ? entry.getKey() + "p" : entry.getKey() + "a");
+                    dto.setString2(entry.getValue().toString());
+                    return dto;
+
+                }).sorted(Comparator.comparingInt(a -> Integer.parseInt(a.getString1().split("a|p")[0]))).collect(Collectors.toList());
     }
 }

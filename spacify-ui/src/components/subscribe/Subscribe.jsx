@@ -5,19 +5,19 @@ import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Toast from 'react-bootstrap/Toast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
-import {ALL_BUILDINGS_API, ROOOMS_FOR_SUBS_API, ROOM_RULES_API, SUBSCRIBE_ROOM_API, USER_NAME_KEY} from "../../endpoints";
+import Chart from "../chart/Chart";
+import {ALL_BUILDINGS_API, ROOMS_FOR_SUBS_API, ROOM_RULES_API, SUBSCRIBE_ROOM_API, USER_NAME_KEY, ROOM_TREND_API} from "../../endpoints";
 
 function Subscribe(props) {
     const [rooms, setRooms] = useState([]);
     const [buildings, setBuildings] = useState([]);
-    const [spacifyRoomId, setSpacifyRoomId] = useState([]);
+    const [spacifyRoomId, setSpacifyRoomId] = useState('');
     const [rules, setRules] = useState([]);
     const [response, setResponse] = useState({header: "", show: false,  responseMessage: ""});
-
-
+    const [trendData, setTrendData] = useState([]);
 
     function getRoomsFromBuildingSpaceId(buildingSpaceId) {
-        const url = ROOOMS_FOR_SUBS_API + buildingSpaceId;
+        const url = ROOMS_FOR_SUBS_API + buildingSpaceId;
         fetch(url).then((res) => res.json())
                     .then((data) => {
                           setRooms(data);
@@ -25,13 +25,18 @@ function Subscribe(props) {
 
     }
 
-    function setTippersSpaceIdAndGetRules(spacifyRoomId){
-        setSpacifyRoomId(spacifyRoomId);
-        const url = ROOM_RULES_API + spacifyRoomId;
+    function setSpacifyRoomIdAndGetRulesandTrends(selectedRoomId){
+        setSpacifyRoomId(selectedRoomId);
+        const url = ROOM_RULES_API + selectedRoomId;
         fetch(url).then((result) => result.json())
                     .then((data) => {
                         setRules(data);
                     })
+        fetch(ROOM_TREND_API + selectedRoomId)
+                 .then((res) => res.json())
+                 .then((data) => {
+                       setTrendData(data);
+                  });
     }
 
     function closeToast(){
@@ -87,7 +92,7 @@ function Subscribe(props) {
                         );
                     })}
                 </Form.Select>
-                <Form.Select aria-label="Default select example" onChange={(e) => setTippersSpaceIdAndGetRules(e.target.value)}>
+                <Form.Select aria-label="Default select example" onChange={(e) => setSpacifyRoomIdAndGetRulesandTrends(e.target.value)}>
                     <option value=''>Select a room</option>
                     {rooms.map((item, index) => {
                         return (
@@ -97,7 +102,7 @@ function Subscribe(props) {
                 </Form.Select>
             </div>
             {rules.length > 0 && (<div>
-               <div id="rulesTitle"><h6> Below are the rules of the room: </h6></div>
+               <div id="rulesTitle"><h6> Below are the rules of the room and its occupancy trend graph: </h6></div>
                <div id="rules">
                <ListGroup as="ol" numbered>
                  {rules.map((item, index) => {
@@ -109,10 +114,16 @@ function Subscribe(props) {
                        </ListGroup.Item>
                   );
                  })}
-               </ListGroup></div></div>)}
-            <div id="subscribeButton">
+               </ListGroup></div>x
+               <div id="trendGraph">
+                 {trendData.length > 0 && <Chart trend={trendData}  />}
+               </div>
+               </div>
+               )}
+            <div id="subscribeButtons">
                 <Button variant="primary" size="lg" onClick={subscribeToRoom} disabled={spacifyRoomId === ''}>Subscribe!</Button>
             </div>
+
         </section>
     );
 }
