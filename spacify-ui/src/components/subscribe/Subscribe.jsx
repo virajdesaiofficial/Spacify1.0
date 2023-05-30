@@ -11,46 +11,10 @@ import {ALL_BUILDINGS_API, ROOMS_FOR_SUBS_API, ROOM_RULES_API, SUBSCRIBE_ROOM_AP
 function Subscribe(props) {
     const [rooms, setRooms] = useState([]);
     const [buildings, setBuildings] = useState([]);
-    const [trendData, setTrendData] = useState([]);
     const [spacifyRoomId, setSpacifyRoomId] = useState('');
     const [rules, setRules] = useState([]);
     const [response, setResponse] = useState({header: "", show: false,  responseMessage: ""});
-    const [chartView, setChartView] = useState(false);
-
-
-    function fetchRoomTrend() {
-
-         fetch(ROOM_TREND_API + "123")
-              .then((res) => res.json())
-              .then((data) => {
-                    setTrendData(data);
-                    });
-    }
-
-//     async function toggleChartView() {
-//         let trend = await fetch(ROOM_TREND_API + "123");
-//         let trendJson = await trend.json();
-//         return trendJson;
-//     }
-
-//     toggleChartView().then(trendJson => {
-// //       setTrendData(trendJson); // fetched movies
-//       setChartView(!true);
-// //       setChartView(!chartView);
-//     });
-
-     function toggleChartView(){
-        setChartView(!chartView);
-     }
-
-//     function getAllTrendData(){
-// //       return Promise.all([fetchRoomTrend()]);
-//     }
-//
-//     getAllTrendData().then(([trendDate]) => {
-//         setChartView(!chartView);
-//         console.log("loaded both successfully");
-//     })
+    const [trendData, setTrendData] = useState([]);
 
     function getRoomsFromBuildingSpaceId(buildingSpaceId) {
         const url = ROOMS_FOR_SUBS_API + buildingSpaceId;
@@ -61,13 +25,18 @@ function Subscribe(props) {
 
     }
 
-    function setSpacifyRoomIdAndGetRules(selectedRoomId){
+    function setSpacifyRoomIdAndGetRulesandTrends(selectedRoomId){
         setSpacifyRoomId(selectedRoomId);
         const url = ROOM_RULES_API + selectedRoomId;
         fetch(url).then((result) => result.json())
                     .then((data) => {
                         setRules(data);
                     })
+        fetch(ROOM_TREND_API + selectedRoomId)
+                 .then((res) => res.json())
+                 .then((data) => {
+                       setTrendData(data);
+                  });
     }
 
     function closeToast(){
@@ -123,7 +92,7 @@ function Subscribe(props) {
                         );
                     })}
                 </Form.Select>
-                <Form.Select aria-label="Default select example" onChange={(e) => setSpacifyRoomIdAndGetRules(e.target.value)}>
+                <Form.Select aria-label="Default select example" onChange={(e) => setSpacifyRoomIdAndGetRulesandTrends(e.target.value)}>
                     <option value=''>Select a room</option>
                     {rooms.map((item, index) => {
                         return (
@@ -147,7 +116,7 @@ function Subscribe(props) {
                  })}
                </ListGroup></div>x
                <div id="trendGraph">
-                 {spacifyRoomId != '' && <Chart trigger={chartView} trendDataChart={trendData} />}
+                 {trendData.length > 0 && <Chart trend={trendData}  />}
                </div>
                </div>
                )}

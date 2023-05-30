@@ -21,6 +21,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class RoomService {
@@ -168,6 +169,17 @@ public class RoomService {
 
         Map<Integer, Integer> hourToOccupancyMap = occupancyDataList.stream()
                 .collect(Collectors.groupingBy(data -> data.getHourOfEntity(data.getTimestampFrom()), Collectors.summingInt(MonitoringEntity::getRoomOccupancy)));
+
+        LOG.info("monitoring info for room fetched from the table.");
+
+        if (!hourToOccupancyMap.isEmpty()) {
+            AvailableSlotsEntity slotsEntity = availableSlotsRepository.findByroomType(RoomType.COMMON_SPACE).get(0);
+            IntStream.range(slotsEntity.getTimeFrom().getHours(), slotsEntity.getTimeTo().getHours())
+                    .filter(hour -> !hourToOccupancyMap.containsKey(hour))
+                    .forEach(hour -> hourToOccupancyMap.put(hour, 0));
+
+            LOG.info("missing hours filled as 0 occupancy.");
+        }
 
         return hourToOccupancyMap.entrySet().stream()
                 .map(entry -> {

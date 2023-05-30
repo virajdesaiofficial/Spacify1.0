@@ -5,26 +5,12 @@ import {ROOM_TREND_API} from "../../endpoints";
 
 function Chart(props) {
 
-const [trendData, setTrendData] = useState([]);
-
-
-    useEffect(() => {
-         fetch(ROOM_TREND_API + "6")
-                     .then((res) => res.json())
-                     .then((data) => {
-                           setTrendData(data);
-                           });
-
-    }, []);
-
-
-
-  return ( trendData.length > 0) ? (
+  return ( props.trend.length > 0) ? (
 
 <div>
     <BarChart
         width={500} height={300}
-        data={trendData}
+        data={props.trend}
         margin={{
             top: 5,
             right: 30,
