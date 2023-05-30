@@ -7,12 +7,9 @@ const Rooms = () => {
   const [selectedRoom, setSelectedRoom] = useState(null); // Selected room for the pop-up form
   const [phoneNo, setPhoneNo] = useState(""); // Phone number for WhatsApp subscription
   const [showPhoneNumberInput, setShowPhoneNumberInput] = useState(false); // Control visibility of phone number input
-  const [roomId, setRoomID] = useState("");
-  const savedRoomId = null;
-  const savedPhoneNo = null;
-  const [roomIds, setRoomIds] = useState([]);
-  const [roomColor, setRoomColor] = useState(false)
   const [firstEffectCompleted, setFirstEffectCompleted] = useState(false);
+  const [vacantRooms, setVacantRooms] = useState([])
+  const [subToWhatsapp, setSubToWhatsapp] = useState([])
   const [response, setResponse] = useState({
     header: "",
     show: false,
@@ -20,48 +17,30 @@ const Rooms = () => {
   });
 
   useEffect(() => {
-    
+
     let userId = global.sessionStorage.getItem(USER_NAME_KEY);
     let url = ALL_SUBSCRIBED_ROOMS_API + userId;
-    console.log("Getting all Subscribed rooms");
+
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
         data.forEach(element => {
           element.available = false
-          element.subscribed = false  
+          element.subscribed = false
         });
-        console.log("data is ", data);
         setRooms(data)
-         setFirstEffectCompleted(true);
+        setFirstEffectCompleted(true);
       })
-      
+
   }, []);
 
   useEffect(() => {
     if (firstEffectCompleted) {
-      console.log("if condition triggered");
-      
       handleSubscribedRooms();
+      handleRoomVacancy();
     }
-    
-  },[firstEffectCompleted])
 
-  // useEffect(() => {
-
-  //   // Retrieve subscribed room IDs from local storage
-  //   const subscribedRooms = JSON.parse(localStorage.getItem("subscribedRooms")) || [];
-  //   console.log("subscribed rooms ", subscribedRooms);
-  //   const ids = rooms.map(room => room.roomId);
-  //   setRoomIds(ids);
-  //   console.log("room IDS are ", roomIds);
-  //   const updatedRooms = rooms.map((room) => {
-  //     if (subscribedRooms.includes(room.roomId)) {
-  //       return { ...room, subscribed: true };
-  //     }
-  //     return room;
-  //   });
-  // }, [rooms]);
+  }, [firstEffectCompleted])
 
   const handleSubscribedRooms = () => {
     let userId = global.sessionStorage.getItem(USER_NAME_KEY);
@@ -70,22 +49,14 @@ const Rooms = () => {
       method: 'GET',
       redirect: 'follow'
     };
-    
+
     fetch(url, requestOptions)
       .then(response => response.json())
-      .then(result => {
-        rooms.forEach((element) => {
-          console.log(element);
-          if(result.includes(element.roomId)) {
-          console.log(`${element.roomId} is wa subscribed`)
-            element.subscribed = true
-          }
-        });
-        setRooms(rooms)
-        handleRoomVacancy();    
-      })
+      .then(result =>
+        setSubToWhatsapp(result)
+      )
       .catch(error => console.log('error', error));
-      
+
   }
 
   const handleRoomVacancy = () => {
@@ -93,7 +64,7 @@ const Rooms = () => {
     rooms.forEach((room) => {
       new_room_ids.push(room.roomId)
     })
-  console.log("handle vacancy called ", new_room_ids);
+
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -103,20 +74,12 @@ const Rooms = () => {
       body: JSON.stringify(new_room_ids),
       redirect: 'follow'
     };
-    
+
     fetch(GET_ALL_MONITORING_ROOMS_WITH_ZERO_OCCUPANCY_API, requestOptions)
       .then(response => response.json())
-      .then(result => {
-      
-        rooms.forEach((element) => {
-          console.log(element);
-          if(result.includes(element.roomId)) {
-            console.log(`${element.roomId} is vacant`)
-            element.available = true
-          }
-        });
-        setRooms(rooms);
-      })
+      .then(result =>
+        setVacantRooms(result)
+      )
       .catch(error => console.log('error', error));
   }
 
@@ -140,14 +103,10 @@ const Rooms = () => {
   };
 
   const handleConfirmSubscription = () => {
-    console.log(`Subscribing to WhatsApp for room: ${selectedRoom.roomDescription}`);
-    console.log(`Phone number: ${phoneNo}`);
+    
     setShowPhoneNumberInput(false);
 
-    console.log("Saved phone number:", savedPhoneNo);
-    console.log("Saved room ID:", savedRoomId);
     let userId = global.sessionStorage.getItem(USER_NAME_KEY);
-//     let userId = "kshatris"; //hardcoded change later
     const requestHeader = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -157,7 +116,8 @@ const Rooms = () => {
       .then((res) => res.json())
       .then((data) => {
         setResponse({ header: data.success ? "Subscribed!" : "Uh-Oh error", show: true, responseMessage: data.message });
-
+      
+        setSubToWhatsapp([...subToWhatsapp, selectedRoom.roomId])
         // Store the subscribed room ID in local storage
         const subscribedRooms = JSON.parse(localStorage.getItem("subscribedRooms")) || [];
         localStorage.setItem("subscribedRooms", JSON.stringify([...subscribedRooms, selectedRoom.roomId]));
@@ -184,27 +144,29 @@ const Rooms = () => {
     fetch(UPDATE_SUBSCRIBED_STATUS_API, requestHeader)
       .then((res) => res.json())
       .then((data) => {
-        setResponse({header: data.success ? "Unsubscribed!" : "Uh-Oh error", show: true, responseMessage: data.message });
-
-      // Update the rooms state to mark the room as unsubscribed
-      const updatedRooms = rooms.map((room) => {
-        if (room.roomId === selectedRoom.roomId) {
-          return { ...room, subscribed: false };
-        }
-        return room;
+        setResponse({ header: data.success ? "Unsubscribed!" : "Uh-Oh error", show: true, responseMessage: data.message });
+        var new_array = subToWhatsapp
+        new_array.splice(new_array.indexOf(selectedRoom.roomId), 1)
+        setSubToWhatsapp(new_array)
+        // Update the rooms state to mark the room as unsubscribed
+        const updatedRooms = rooms.map((room) => {
+          if (room.roomId === selectedRoom.roomId) {
+            return { ...room, subscribed: false };
+          }
+          return room;
+        });
+        setRooms(updatedRooms);
       });
-      setRooms(updatedRooms);
-    });
-}
+  }
 
   return (
     <div className="rooms-container">
       <h1 className="rooms-header">My Rooms</h1>
       <ul className="rooms-list">
         {rooms.map((room) => (
-          <li key={room.roomId} className="rooms-list-item" style={{backgroundColor:room.available?'#0f0':'#fff'}}>
+          <li key={room.roomId} className="rooms-list-item" style={{ backgroundColor: vacantRooms.includes(room.roomId) ? '#0f0' : '#fff' }}>
             <h3 onClick={() => handleRoomSelect(room)}>{room.roomDescription}</h3>
-            {room.subscribed && (
+            {subToWhatsapp.includes(room.roomId) && (
               <div className="subscription-status-container">
                 <p className="subscription-status" style={{ color: "green" }}>Subscribed to Whatsapp</p>
               </div>
@@ -225,7 +187,7 @@ const Rooms = () => {
             <p className="room-name">Name: {selectedRoom.roomDescription}</p>
             <p className="room-type">Type: {selectedRoom.type}</p>
 
-            {!showPhoneNumberInput && !response.show && !selectedRoom.subscribed && (
+            {!showPhoneNumberInput && !response.show && !subToWhatsapp.includes(selectedRoom.roomId) && (
               <button id="formButton" variant="primary" size="lg" onClick={handleSubscribe}>
                 Subscribe to WhatsApp
               </button>
@@ -249,7 +211,7 @@ const Rooms = () => {
               </div>
             )}
 
-            {!showPhoneNumberInput && !response.show && selectedRoom.subscribed && (
+            {!showPhoneNumberInput && !response.show && subToWhatsapp.includes(selectedRoom.roomId) && (
               <div className="form-buttons">
                 <button className="unsubscribe-button" id="formButton" variant="primary" size="lg" onClick={handleUnsubscription}>
                   Unsubscribe
