@@ -1,5 +1,8 @@
 package org.uci.spacifyLib.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum RoomType {
     STUDY("Study"),
     OFFICE("Office"),
