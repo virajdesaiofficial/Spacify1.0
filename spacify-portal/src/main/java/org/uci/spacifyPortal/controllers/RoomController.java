@@ -167,9 +167,9 @@ public class RoomController {
     }
 
     @GetMapping("/trend/{spacifyRoomId}")
-    public List<StringPairDto> getRoomTrends(@PathVariable String spacifyRoomId){
+    public List<StringPairDto> getRoomTrends(@PathVariable String spacifyRoomId) {
 
-        LOG.info("Finding rules for the room {}", spacifyRoomId);
+        LOG.info("Finding trends for the room {}", spacifyRoomId);
 
         return roomService.getRoomTrends(spacifyRoomId);
     }
@@ -189,8 +189,8 @@ public class RoomController {
                     rulesRequest.setRules(deserializeListOfRules(roomEntity.getRoomRules()));
                 rulesRequests.add(rulesRequest);
             } catch (JsonProcessingException e) {
-                e.printStackTrace();
-                System.out.println("Unable to deserialize rules for room: "+roomEntity.getRoomId());
+
+                LOG.error("Error while fetching owned rooms for the user with error message as : {} Unable to deserialize rules for room: {}", e.getMessage(), roomEntity.getRoomId(), e);
             }
         });
         rulesRequests.sort(new Comparator<RulesRequest>() {
