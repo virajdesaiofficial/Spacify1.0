@@ -166,6 +166,14 @@ public class RoomController {
         }
     }
 
+    @GetMapping("/trend/{spacifyRoomId}")
+    public List<StringPairDto> getRoomTrends(@PathVariable String spacifyRoomId){
+
+        LOG.info("Finding rules for the room {}", spacifyRoomId);
+
+        return roomService.getRoomTrends(spacifyRoomId);
+    }
+
     @GetMapping("/{userId}")
     public List<RulesRequest> getRoomsOwnedByUser(@PathVariable String userId) {
         List<OwnerEntity> ownedRooms = this.ownerService.getAllOwnedRooms(userId);

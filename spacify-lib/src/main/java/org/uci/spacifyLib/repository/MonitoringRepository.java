@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface MonitoringRepository extends JpaRepository<MonitoringEntity, Long> {
     List<MonitoringEntity> findAllByTimestampFromAfterAndTippersSpaceIdAndMacAddressIn(LocalDateTime localDateTime, Integer tippersSpaceIds, List<String> macAddressList);
+
+    List<MonitoringEntity> findAllBytippersSpaceId(int tipperSpaceId);
 }

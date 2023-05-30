@@ -5,19 +5,55 @@ import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Toast from 'react-bootstrap/Toast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
-import {ALL_BUILDINGS_API, ROOOMS_FOR_SUBS_API, ROOM_RULES_API, SUBSCRIBE_ROOM_API, USER_NAME_KEY} from "../../endpoints";
+import Chart from "../chart/Chart";
+import {ALL_BUILDINGS_API, ROOMS_FOR_SUBS_API, ROOM_RULES_API, SUBSCRIBE_ROOM_API, USER_NAME_KEY, ROOM_TREND_API} from "../../endpoints";
 
 function Subscribe(props) {
     const [rooms, setRooms] = useState([]);
     const [buildings, setBuildings] = useState([]);
-    const [spacifyRoomId, setSpacifyRoomId] = useState([]);
+    const [trendData, setTrendData] = useState([]);
+    const [spacifyRoomId, setSpacifyRoomId] = useState('');
     const [rules, setRules] = useState([]);
     const [response, setResponse] = useState({header: "", show: false,  responseMessage: ""});
+    const [chartView, setChartView] = useState(false);
 
 
+    function fetchRoomTrend() {
+
+         fetch(ROOM_TREND_API + "123")
+              .then((res) => res.json())
+              .then((data) => {
+                    setTrendData(data);
+                    });
+    }
+
+//     async function toggleChartView() {
+//         let trend = await fetch(ROOM_TREND_API + "123");
+//         let trendJson = await trend.json();
+//         return trendJson;
+//     }
+
+//     toggleChartView().then(trendJson => {
+// //       setTrendData(trendJson); // fetched movies
+//       setChartView(!true);
+// //       setChartView(!chartView);
+//     });
+
+     function toggleChartView(){
+        setChartView(!chartView);
+     }
+
+//     function getAllTrendData(){
+// //       return Promise.all([fetchRoomTrend()]);
+//     }
+//
+//     getAllTrendData().then(([trendDate]) => {
+//         setChartView(!chartView);
+//         console.log("loaded both successfully");
+//     })
 
     function getRoomsFromBuildingSpaceId(buildingSpaceId) {
-        const url = ROOOMS_FOR_SUBS_API + buildingSpaceId;
+        const url = ROOMS_FOR_SUBS_API + buildingSpaceId;
         fetch(url).then((res) => res.json())
                     .then((data) => {
                           setRooms(data);
@@ -25,9 +61,9 @@ function Subscribe(props) {
 
     }
 
-    function setTippersSpaceIdAndGetRules(spacifyRoomId){
-        setSpacifyRoomId(spacifyRoomId);
-        const url = ROOM_RULES_API + spacifyRoomId;
+    function setSpacifyRoomIdAndGetRules(selectedRoomId){
+        setSpacifyRoomId(selectedRoomId);
+        const url = ROOM_RULES_API + selectedRoomId;
         fetch(url).then((result) => result.json())
                     .then((data) => {
                         setRules(data);
@@ -87,7 +123,7 @@ function Subscribe(props) {
                         );
                     })}
                 </Form.Select>
-                <Form.Select aria-label="Default select example" onChange={(e) => setTippersSpaceIdAndGetRules(e.target.value)}>
+                <Form.Select aria-label="Default select example" onChange={(e) => setSpacifyRoomIdAndGetRules(e.target.value)}>
                     <option value=''>Select a room</option>
                     {rooms.map((item, index) => {
                         return (
@@ -97,7 +133,7 @@ function Subscribe(props) {
                 </Form.Select>
             </div>
             {rules.length > 0 && (<div>
-               <div id="rulesTitle"><h6> Below are the rules of the room: </h6></div>
+               <div id="rulesTitle"><h6> Below are the rules of the room and its occupancy trend graph: </h6></div>
                <div id="rules">
                <ListGroup as="ol" numbered>
                  {rules.map((item, index) => {
@@ -109,10 +145,16 @@ function Subscribe(props) {
                        </ListGroup.Item>
                   );
                  })}
-               </ListGroup></div></div>)}
-            <div id="subscribeButton">
+               </ListGroup></div>x
+               <div id="trendGraph">
+                 {spacifyRoomId != '' && <Chart trigger={chartView} trendDataChart={trendData} />}
+               </div>
+               </div>
+               )}
+            <div id="subscribeButtons">
                 <Button variant="primary" size="lg" onClick={subscribeToRoom} disabled={spacifyRoomId === ''}>Subscribe!</Button>
             </div>
+
         </section>
     );
 }
