@@ -6,6 +6,7 @@ import Incentives from "./incentives/Incentives";
 import {GET_USER_PROFILE_API, USER_NAME_KEY} from "../../endpoints";
 import LoadingSpinner from "../utilities/LoadingSpinner";
 import Password from "./password/Password";
+import SignInDisclaimer from "../utilities/SignInDisclaimer";
 
 function UserProfile(props) {
     const initialState = {
@@ -80,24 +81,38 @@ function UserProfile(props) {
         }
     };
 
-    return (
-        <div className="userProfileContainer">
-            <LoadingSpinner show={state.loading} />
-            <div className="settingsPane">
-                <ul>
-                    <li onClick={e => setState({...state, selectedTab: 1})} className="pane-link">Profile</li>
-                    <li onClick={e => setState({...state, selectedTab: 4})} className="pane-link">Password</li>
-                    <li onClick={e => setState({...state, selectedTab: 2})} className="pane-link">My Rooms</li>
-                    <li onClick={e => setState({...state, selectedTab: 3})} className="pane-link">My Rewards</li>
-                    <li onClick={e => setState({...state, selectedTab: 5})} className="pane-link">Redeem</li>
-                    <li onClick={e => setState({...state, selectedTab: 6})} className="pane-link">Notifications</li>
-                </ul>
-            </div>
-            <div className="contentPane">
-                {displayRightPane()}
-            </div>
-        </div>
-    );
+    const display = () => {
+        if (global.sessionStorage.getItem(USER_NAME_KEY)) {
+            return (
+                <div className="userProfileContainer">
+                    <LoadingSpinner show={state.loading} />
+                    <div className="settingsPane">
+                        <ul>
+                            <li onClick={e => setState({...state, selectedTab: 1})} className={state.selectedTab === 1 ? "active" : "pane-link"} >Profile</li>
+                            <li onClick={e => setState({...state, selectedTab: 4})} className={state.selectedTab === 4 ? "active" : "pane-link"} >Password</li>
+                            <li onClick={e => setState({...state, selectedTab: 2})} className={state.selectedTab === 2 ? "active" : "pane-link"} >My Rooms</li>
+                            <li onClick={e => setState({...state, selectedTab: 3})} className={state.selectedTab === 3 ? "active" : "pane-link"} >My Rewards</li>
+                            <li onClick={e => setState({...state, selectedTab: 5})} className={state.selectedTab === 5 ? "active" : "pane-link"} >Redeem</li>
+                            <li onClick={e => setState({...state, selectedTab: 6})} className={state.selectedTab === 6 ? "active" : "pane-link"} >Notifications</li>
+                        </ul>
+                    </div>
+                    <div className="contentPane">
+                        {displayRightPane()}
+                    </div>
+                </div>
+            );
+        } else {
+            return (
+                <div style={{textAlign: 'center'}}>
+                    <SignInDisclaimer
+                        header = "Please Sign In to view your profile!"
+                    />
+                </div>
+            );
+        }
+    };
+
+    return display();
 }
 
 export default UserProfile;

@@ -38,3 +38,8 @@
   text-decoration: none;
   color: white;
 }
+
+.active {
+  background-color: #e0e0e0;
+  color: black;
+}
