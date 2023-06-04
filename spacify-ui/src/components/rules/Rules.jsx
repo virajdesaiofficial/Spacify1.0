@@ -5,6 +5,7 @@ import LoadingSpinner from "../utilities/LoadingSpinner";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
+import SignInDisclaimer from "../utilities/SignInDisclaimer";
 
 function Rules() {
     const addedRule = {
@@ -248,6 +249,34 @@ function Rules() {
         }
     };
 
+    const display = () => {
+        if (global.sessionStorage.getItem(USER_NAME_KEY)) {
+            return (
+                <div className="rules-container">
+                    <h1 className="rules-header">Rule Management</h1>
+                    <Form.Select aria-label="select" className="rule-select" onChange={(e) => handleRoomSelect(e)} >
+                        <option value=''>Select the room</option>
+                        {state.rooms.map((item, index) => {
+                            return (
+                                <option key={index} value={item.roomId}>{item.roomName}</option>
+                            );
+                        })}
+                    </Form.Select>
+                    {selectRule()}
+                    {displayRuleParameters()}
+                </div>
+            );
+        } else {
+            return (
+                <div style={{textAlign: 'center'}}>
+                    <SignInDisclaimer
+                        header = "Please Sign In to create rules for your rooms!"
+                    />
+                </div>
+            );
+        }
+    }
+
     return (
         <section className="rules" >
             <LoadingSpinner show={state.loading} />
@@ -256,19 +285,7 @@ function Rules() {
                    dismissible>
                 {state.responseMessage}
             </Alert>
-            <div className="rules-container">
-                <h1 className="rules-header">Rule Management</h1>
-                <Form.Select aria-label="select" className="rule-select" onChange={(e) => handleRoomSelect(e)} >
-                    <option value=''>Select the room</option>
-                    {state.rooms.map((item, index) => {
-                        return (
-                            <option key={index} value={item.roomId}>{item.roomName}</option>
-                        );
-                    })}
-                </Form.Select>
-                {selectRule()}
-                {displayRuleParameters()}
-            </div>
+            {display()}
         </section>
   );
 }

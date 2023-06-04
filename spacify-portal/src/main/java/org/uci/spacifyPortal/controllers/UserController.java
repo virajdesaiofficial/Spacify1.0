@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.uci.spacifyLib.dto.RoomDetail;
 import org.uci.spacifyLib.entity.*;
 import org.uci.spacifyPortal.services.*;
+import org.uci.spacifyPortal.utilities.ChangePasswordRequest;
 import org.uci.spacifyPortal.utilities.MessageResponse;
 import org.uci.spacifyPortal.utilities.RegisterUserRequest;
 import org.uci.spacifyPortal.utilities.UserDetail;
@@ -39,6 +40,9 @@ public class UserController {
 
     @Autowired
     private EmailService emailService;
+    
+    @Autowired
+    private ReservationService reservationService;
 
     @GetMapping("/eligibleOwners")
     public List<UserEntity> getAllEligibleOwners() {
@@ -55,7 +59,7 @@ public class UserController {
                     .collect(Collectors.toList());
             ownedRooms = this.roomService.getRoomsBasedOnIds(ownerRoomIds)
                     .stream()
-                    .map(room -> new RoomDetail(room.getRoomId(), room.getRoomName()))
+                    .map(room -> new RoomDetail(room.getRoomId(), room.getRoomName(), room.getRoomType().getPrettyName()))
                     .collect(Collectors.toList());
         }
 
@@ -72,7 +76,7 @@ public class UserController {
                     .collect(Collectors.toList());
             subscribedRooms = this.roomService.getRoomsBasedOnIds(subscribedRoomIds)
                     .stream()
-                    .map(room -> new RoomDetail(room.getRoomId(), room.getRoomName()))
+                    .map(room -> new RoomDetail(room.getRoomId(), room.getRoomName(), room.getRoomType().getPrettyName()))
                     .collect(Collectors.toList());
         }
         return subscribedRooms;
@@ -127,6 +131,29 @@ public class UserController {
         }
     }
 
+    // close account functionality. Erases user from the system.
+//    @DeleteMapping("/{userId}")
+//    public ResponseEntity<MessageResponse> deleteUser(@PathVariable String userId) {
+//        if (Objects.isNull(userId) || userId.isEmpty()) {
+//            return new ResponseEntity<MessageResponse>(new MessageResponse("Please provide valid user name.", false), HttpStatus.BAD_REQUEST);
+//        }
+//
+//        Optional<UserEntity> userEntity = this.userService.getUser(userId);
+//        if (userEntity.isPresent()) {
+//            this.userService.deleteUser(userId);
+//            this.incentiveService.deleteIncentivesForUser(userId);
+//            this.subscriberService.deleteSubscriptionsForUser(userId);
+//
+//            List<Integer> roomIds = this.ownerService.deleteOwnersForUser(userId);
+//            this.roomService.deleteRoomsCreatedByUser(roomIds);
+//
+//            this.reservationService.deleteReservationsForUser(userId);
+//
+//        } else {
+//            return new ResponseEntity<MessageResponse>(new MessageResponse("No such user name exists.", false), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+//
     @PostMapping("/signup")
     public ResponseEntity<MessageResponse> registerNewUser(@RequestBody RegisterUserRequest registerUserRequest) {
         Optional<UserEntity> userEntity = this.userService.checkIfUserExists(registerUserRequest.getUserId(), registerUserRequest.getEmailId());
@@ -245,6 +272,26 @@ public class UserController {
         }
 
         MessageResponse messageResponse = new MessageResponse("Invalid user. Please Sign Up to use Spacify!", false);
+        return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<MessageResponse> userSignIn(@RequestBody ChangePasswordRequest changeRequest) {
+        Optional<AuthenticationEntity> authenticationEntity = this.userService.getAuthentication(changeRequest.getUserId());
+        if (authenticationEntity.isPresent()) {
+            boolean signInAllowed = this.userService.verifyUserSignIn(authenticationEntity.get(), changeRequest.getOldPassword());
+            if (signInAllowed) {
+                authenticationEntity.get().setHashedPassword(this.userService.hashPassword(changeRequest.getNewPassword()));
+                this.userService.saveNewPassword(authenticationEntity.get());
+                MessageResponse messageResponse = new MessageResponse("Your password was changed successfully!.", true);
+                return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+            } else {
+                MessageResponse messageResponse = new MessageResponse("Your old password is incorrect! Please enter correct password.", false);
+                return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        MessageResponse messageResponse = new MessageResponse("User name does not exist. Please register if you are a new user.", false);
         return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
     }
 }
