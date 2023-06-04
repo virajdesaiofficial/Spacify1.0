@@ -10,9 +10,6 @@ import SignIn from "./components/signin/SignIn";
 import SignUp from "./components/signup/SignUp";
 import UserProfile from "./components/userProfile/UserProfile";
 import Reservation from "./components/reservation/Reservation";
-import Rooms from "./components/rooms/Rooms";
-import Incentives from "./components/incentives/Incentives";
-import Profile from "./components/profile/Profile";
 import Subscribe from "./components/subscribe/Subscribe";
 import {USER_NAME_KEY} from "./endpoints";
 
@@ -51,18 +48,6 @@ const router = createBrowserRouter([
             {
                 path: "/user",
                 element: <UserProfile />
-            },
-            {
-                path: "/rooms",
-                element: <Rooms />
-            },
-            {
-                path: "/incentives",
-                element: <Incentives />
-            },
-            {
-                path: "/profile",
-                element: <Profile />
             },
             {
                 path: "/subscribe",

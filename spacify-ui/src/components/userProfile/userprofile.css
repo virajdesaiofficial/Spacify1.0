@@ -5,11 +5,12 @@
 
 .settingsPane {
   float: left;
-  width: 200px;
+  width: 15rem;
   color: white;
   padding: 20px;
-  margin-right: 20px;
-  height: 100vh;
+  height: 40rem;
+  margin: 2rem 2rem;
+  background-color: rgba(0, 0, 0, .25);
 }
 
 .settingsPane ul {
@@ -36,4 +37,9 @@
 .pane-link {
   text-decoration: none;
   color: white;
+}
+
+.active {
+  background-color: #e0e0e0;
+  color: black;
 }
