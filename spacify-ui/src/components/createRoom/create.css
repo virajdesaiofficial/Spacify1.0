@@ -1,33 +1,13 @@
 .createRoom {
-    width: 100%;
-    justify-content: center;
-}
-
-#selection {
     display: flex;
-    gap: 2rem;
-    margin: 2rem 3rem;
-    padding: 2rem;
-}
-
-#createButton, #createRoomTitle {
-    margin-top: 2rem;
-    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-}
-.createRoom {
-    width: 100%;
-    justify-content: center;
+    text-align: center;
+    margin: 2rem;
 }
 
-#selection {
-    display: flex;
-    gap: 2rem;
-    margin: 2rem 3rem;
-    padding: 2rem;
-}
-
-#createButton, #createRoomTitle {
+#createButton {
     margin-top: 2rem;
     display: flex;
     justify-content: center;
