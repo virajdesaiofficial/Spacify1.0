@@ -102,7 +102,7 @@ public class RoomService {
     public List<RoomDetail> getRoomsForSubscribtion(String buildingTipperSpaceId) {
         List<RoomDetail> buildingRooms = tippersConnectivityService.getSpaceIdAndRoomName(Integer.parseInt(buildingTipperSpaceId));
         List<Integer> roomTippersId = buildingRooms.stream().map(room -> room.getRoomId().intValue()).collect(Collectors.toList());
-        List<RoomEntity> spacifyRooms = roomRepository.findByroomTypeAndTippersSpaceIdIn(RoomType.COMMON_SPACE, roomTippersId);
+        List<RoomEntity> spacifyRooms = roomRepository.findByroomTypeAndTippersSpaceIdIn(RoomType.STUDY, roomTippersId);
 
         LOG.info("Found spacify rooms available for subscribing and all tippers room. Finding for intersection now");
 
@@ -174,7 +174,7 @@ public class RoomService {
 
 
         if (!hourToOccupancyMap.values().stream().allMatch(val -> val == 0)) {
-            AvailableSlotsEntity slotsEntity = availableSlotsRepository.findByroomType(RoomType.COMMON_SPACE).get(0);
+            AvailableSlotsEntity slotsEntity = availableSlotsRepository.findByroomType(RoomType.STUDY).get(0);
             Map<Integer, Integer> finalHourToOccupancyMap = hourToOccupancyMap;
             IntStream.range(slotsEntity.getTimeFrom().getHours(), slotsEntity.getTimeTo().getHours())
                     .filter(hour -> !finalHourToOccupancyMap.containsKey(hour))

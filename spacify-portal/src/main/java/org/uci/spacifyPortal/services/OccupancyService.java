@@ -21,7 +21,7 @@ public class OccupancyService {
 
     public List<Long> getRoomsWithZeroOccupancy(List<Long> roomIds) {
 
-        LocalDateTime current_time = LocalDateTime.parse("2023-02-22T12:00:00"); // HARDCODED
+        LocalDateTime current_time = LocalDateTime.parse("2023-02-22T13:15:00"); // HARDCODED
 
         List<Long> roomIdsWithZeroOccupancy = new ArrayList<>();
 

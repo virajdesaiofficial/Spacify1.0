@@ -165,7 +165,7 @@ function Rules() {
                 if (rule.ruleId === state.addedRule.ruleId) {
                     ruleUpdated = true;
                     rule.incentive = state.addedRule.incentive;
-                    rule.threshold = state.addedRule.thresholdValue;
+                    rule.thresholdValue = state.addedRule.thresholdValue;
                 }
             });
 
