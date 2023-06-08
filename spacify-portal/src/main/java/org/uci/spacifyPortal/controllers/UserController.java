@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.uci.spacifyLib.dto.RoomDetail;
 import org.uci.spacifyLib.dto.SubsRequest;
 import org.uci.spacifyLib.entity.*;
+import org.uci.spacifyLib.services.SubscriberService;
 import org.uci.spacifyPortal.services.*;
 import org.uci.spacifyPortal.utilities.ChangePasswordRequest;
 import org.uci.spacifyPortal.utilities.MessageResponse;

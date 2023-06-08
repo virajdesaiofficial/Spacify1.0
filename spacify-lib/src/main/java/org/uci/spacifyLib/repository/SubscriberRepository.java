@@ -12,4 +12,7 @@ import java.util.Optional;
 public interface SubscriberRepository extends JpaRepository<SubscriberEntity, UserRoomPK> {
     public List<SubscriberEntity> findAllByUserRoomPK_UserId(String user_id);
     public Optional<SubscriberEntity> findAllByUserRoomPK(UserRoomPK userRoomPK);
+    Optional<SubscriberEntity> findByUserRoomPK(UserRoomPK userRoomPK);
+
+    List<SubscriberEntity> findAllByUserRoomPK_RoomId(Long roomId);
 }

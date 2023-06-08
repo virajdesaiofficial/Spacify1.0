@@ -6,7 +6,8 @@
 }
 
 .rooms-header {
-  margin: 1rem 1rem;
+  font-size: 32px;
+  margin-bottom: 20px;
 }
 
 .rooms-list {
@@ -31,8 +32,6 @@
 
 .rooms-list-item:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  background-color: #1a8cff;
-  color: white;
 }
 
 .rooms-list-item h3 {

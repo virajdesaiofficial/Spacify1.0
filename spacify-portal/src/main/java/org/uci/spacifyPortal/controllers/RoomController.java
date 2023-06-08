@@ -15,7 +15,7 @@ import org.uci.spacifyLib.entity.SubscriberEntity;
 import org.uci.spacifyLib.services.TippersConnectivityService;
 import org.uci.spacifyPortal.services.OwnerService;
 import org.uci.spacifyPortal.services.RoomService;
-import org.uci.spacifyPortal.services.SubscriberService;
+import org.uci.spacifyLib.services.SubscriberService;
 import org.uci.spacifyPortal.utilities.MessageResponse;
 import org.uci.spacifyPortal.utilities.TipperSpace;
 
