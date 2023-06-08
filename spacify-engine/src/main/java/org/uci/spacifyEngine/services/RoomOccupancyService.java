@@ -3,9 +3,11 @@ package org.uci.spacifyEngine.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.uci.spacifyLib.entity.MonitoringEntity;
+import org.uci.spacifyLib.entity.SubscriberEntity;
 import org.uci.spacifyLib.repository.MonitoringRepository;
 import org.uci.spacifyLib.repository.RoomRepository;
 import org.uci.spacifyLib.entity.RoomEntity;
+import org.uci.spacifyLib.repository.SubscriberRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,15 +22,20 @@ public class RoomOccupancyService {
     @Autowired
     private MonitoringRepository monitoringRepository;
 
-    public List<Long> getRoomsWithZeroOccupancy() {
+    @Autowired
+    private SubscriberRepository subscriberRepository;
+
+    public List<RoomEntity> getRoomsWithZeroOccupancy() {
         LocalDateTime current_time = LocalDateTime.parse("2023-02-22T12:00:00"); // HARDCODED
 
-        List<Long> roomIdsWithZeroOccupancy = new ArrayList<>();
+        List<RoomEntity> roomIdsWithZeroOccupancy = new ArrayList<>();
 
         // Iterate over rooms to check occupancy
-        List<RoomEntity> rooms = roomRepository.findAll();
-        for (RoomEntity room : rooms) {
-            Integer tippers_room_id = room.getTippersSpaceId();
+        List<SubscriberEntity> rooms = subscriberRepository.findAllBySubscribed(true);
+        for (SubscriberEntity room : rooms) {
+            Long spacifyRoomId = room.getUserRoomPK().getRoomId();
+            RoomEntity roomEntity = roomRepository.findByRoomId(spacifyRoomId);
+            int tippers_room_id = roomEntity.getTippersSpaceId();
             List<MonitoringEntity> monitoringObjects = monitoringRepository.findAllBytippersSpaceId(tippers_room_id);
             List<LocalDateTime> timestampToValues = new ArrayList<>(); // timestamp_to values for the given room ID
 
@@ -54,7 +61,7 @@ public class RoomOccupancyService {
             }
 
             if (hasZeroOccupancy) {
-                roomIdsWithZeroOccupancy.add(room.getRoomId());
+                roomIdsWithZeroOccupancy.add(roomEntity);
             }
 
             // Debug statements

@@ -90,10 +90,9 @@ function UserProfile(props) {
                         <ul>
                             <li onClick={e => setState({...state, selectedTab: 1})} className={state.selectedTab === 1 ? "active" : "pane-link"} >Profile</li>
                             <li onClick={e => setState({...state, selectedTab: 4})} className={state.selectedTab === 4 ? "active" : "pane-link"} >Password</li>
-                            <li onClick={e => setState({...state, selectedTab: 2})} className={state.selectedTab === 2 ? "active" : "pane-link"} >My Rooms</li>
+                            <li onClick={e => setState({...state, selectedTab: 2})} className={state.selectedTab === 2 ? "active" : "pane-link"} >Subscribed Rooms</li>
                             <li onClick={e => setState({...state, selectedTab: 3})} className={state.selectedTab === 3 ? "active" : "pane-link"} >My Rewards</li>
                             <li onClick={e => setState({...state, selectedTab: 5})} className={state.selectedTab === 5 ? "active" : "pane-link"} >Redeem</li>
-                            <li onClick={e => setState({...state, selectedTab: 6})} className={state.selectedTab === 6 ? "active" : "pane-link"} >Notifications</li>
                         </ul>
                     </div>
                     <div className="contentPane">

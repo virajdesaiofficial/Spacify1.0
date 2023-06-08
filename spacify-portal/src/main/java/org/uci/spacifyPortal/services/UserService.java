@@ -127,7 +127,7 @@ public class UserService {
             return null;
         }
         String verificationCode = this.generateRandomCode();
-        UserEntity userEntity = new UserEntity(userId, emailId, firstName, lastName, AccessLevel.STUDENT, 0L, verificationCode, false, null);
+        UserEntity userEntity = new UserEntity(userId, emailId, firstName, lastName, AccessLevel.ADMIN, 0L, verificationCode, false, null);
 
         try {
             this.saveRecords(userEntity, new MacAddressEntity(userId, macAddress), new AuthenticationEntity(userId, hashedPassword));
