@@ -172,13 +172,18 @@ public class RoomService {
 
         LOG.info("monitoring info for room fetched from the table.");
 
-        if (!hourToOccupancyMap.isEmpty()) {
+
+        if (!hourToOccupancyMap.values().stream().allMatch(val -> val == 0)) {
             AvailableSlotsEntity slotsEntity = availableSlotsRepository.findByroomType(RoomType.COMMON_SPACE).get(0);
+            Map<Integer, Integer> finalHourToOccupancyMap = hourToOccupancyMap;
             IntStream.range(slotsEntity.getTimeFrom().getHours(), slotsEntity.getTimeTo().getHours())
-                    .filter(hour -> !hourToOccupancyMap.containsKey(hour))
-                    .forEach(hour -> hourToOccupancyMap.put(hour, 0));
+                    .filter(hour -> !finalHourToOccupancyMap.containsKey(hour))
+                    .forEach(hour -> finalHourToOccupancyMap.put(hour, 0));
 
             LOG.info("missing hours filled as 0 occupancy.");
+        }else{
+
+            hourToOccupancyMap = new HashMap<>();
         }
 
         return hourToOccupancyMap.entrySet().stream()
