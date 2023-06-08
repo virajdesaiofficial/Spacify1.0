@@ -1,5 +1,4 @@
 package org.uci.spacifyPortal.configurations;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -8,12 +7,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.uci.spacifyLib.services.TippersConnectivityService;
+import org.uci.spacifyLib.services.SubscriberService;
 
 import javax.sql.DataSource;
 
 @Configuration
 @ComponentScan(basePackages = "org.uci.spacify")
-@Import(value = TippersConnectivityService.class)
+@Import(value = {TippersConnectivityService.class, SubscriberService.class})
 public class SpacifyConfiguration {
 
     @Value("${spring.datasource.driver-class-name}")

@@ -17,8 +17,18 @@ export const USER_NAME_KEY = "userName";
 export const SEND_VERIFICATION_API = "http://127.0.0.1:8083/api/v1/user/sendVerification/";
 export const FORGOT_PASSWORD_API = "http://127.0.0.1:8083/api/v1/user/forgotPassword/";
 
+export const ALL_USER_INFO = "http://127.0.0.1:8083/api/v1/user/";
+
 export const GET_OWNED_ROOMS_API = "http://127.0.0.1:8083/api/v1/room/";
 export const UPDATE_RULES_API = "http://127.0.0.1:8083/api/v1/room/updateRules";
+
+export const ALL_SUBSCRIBED_ROOMS_API = "http://127.0.0.1:8083/api/v1/user/userSubscribedRooms/";
+export const UPDATE_SUBSCRIBED_ROOMS_API = "http://127.0.0.1:8083/api/v1/user/updateSubscriber/";
+
+export const UPDATE_SUBSCRIBED_STATUS_API = "http://127.0.0.1:8083/api/v1/room/updateSubscriberStatus/";
+
+export const GET_ALL_MONITORING_ROOMS_WITH_ZERO_OCCUPANCY_API = "http://127.0.0.1:8083/api/v1/occupancy/vacantRooms";
+export const GET_ALL_WHATSAPP_SUBSCRIBED_ROOMS = "http://127.0.0.1:8083/api/v1/room/whatsappSubscribedRooms/";
 
 export const GET_USER_PROFILE_API = "http://127.0.0.1:8083/api/v1/user/";
 

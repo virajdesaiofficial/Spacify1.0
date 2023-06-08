@@ -1,11 +1,15 @@
 package org.uci.spacifyPortal.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.uci.spacifyLib.dto.RoomDetail;
+import org.uci.spacifyLib.dto.SubsRequest;
 import org.uci.spacifyLib.entity.*;
+import org.uci.spacifyLib.services.SubscriberService;
 import org.uci.spacifyPortal.services.*;
 import org.uci.spacifyPortal.utilities.ChangePasswordRequest;
 import org.uci.spacifyPortal.utilities.MessageResponse;
@@ -40,9 +44,11 @@ public class UserController {
 
     @Autowired
     private EmailService emailService;
-    
+
     @Autowired
     private ReservationService reservationService;
+
+    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping("/eligibleOwners")
     public List<UserEntity> getAllEligibleOwners() {
@@ -66,7 +72,8 @@ public class UserController {
         return ownedRooms;
     }
 
-    private List<RoomDetail> getSubscribedRoomDetails(String userId) {
+    @GetMapping("/userSubscribedRooms/{userId}")
+    public List<RoomDetail> getSubscribedRoomDetails(@PathVariable String userId) {
         List<SubscriberEntity> subscriberEntities = this.subscriberService.getAllSubscribedRooms(userId);
         List<RoomDetail> subscribedRooms = new ArrayList<RoomDetail>();
         if (!subscriberEntities.isEmpty()) {
@@ -88,7 +95,7 @@ public class UserController {
         Optional<UserEntity> userEntity = this.userService.getUser(userId);
         if (userEntity.isPresent()) {
             userDetail.setUser(userEntity.get());
-            List <IncentiveEntity> incentiveEntities = this.incentiveService.getIncentivesForUser(userId);
+            List<IncentiveEntity> incentiveEntities = this.incentiveService.getIncentivesForUser(userId);
             userDetail.setIncentives(incentiveEntities);
             userDetail.setOwnedRooms(getOwnedRoomDetails(userId));
             userDetail.setSubscribedRooms(getSubscribedRoomDetails(userId));
@@ -274,6 +281,26 @@ public class UserController {
         MessageResponse messageResponse = new MessageResponse("Invalid user. Please Sign Up to use Spacify!", false);
         return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/updateSubscriber")
+    public ResponseEntity<MessageResponse> updateSubscriber(@RequestBody SubsRequest subsRequest) {
+
+        try {
+            LOG.info("Subscribing on whatsapp");
+            userService.updateUserProfForWhatsappSub(subsRequest.getUserId(), subsRequest.getPhoneNumber(), subsRequest.getRoomId());
+            MessageResponse messageResponse = new MessageResponse("Voila! you have successfully connected with us on whatsapp.", true);
+            return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+
+        }catch(Exception e){
+
+            LOG.error("Error while subscribing for whatsapp : {}", e.getMessage(),e);
+            MessageResponse messageResponse = new MessageResponse("Error while subscribing to whatsapp. Please check with the admin", false);
+            return new ResponseEntity<>(messageResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
+    }
+
 
     @PostMapping("/changePassword")
     public ResponseEntity<MessageResponse> userSignIn(@RequestBody ChangePasswordRequest changeRequest) {

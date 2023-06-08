@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import './profile.css';
 import {Button, Col, Form, Row} from 'react-bootstrap';
-import {ImCross, IoIosAddCircle} from "react-icons/all";
+import { ImCross } from 'react-icons/im';
+import { IoIosAddCircle } from 'react-icons/io';
 import {SAVE_USER_PROFILE_API} from "../../../endpoints";
 import Alert from "react-bootstrap/Alert";
 
