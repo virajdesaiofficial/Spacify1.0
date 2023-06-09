@@ -35,3 +35,7 @@ export const GET_USER_PROFILE_API = "http://127.0.0.1:8083/api/v1/user/";
 export const SAVE_USER_PROFILE_API = "http://127.0.0.1:8083/api/v1/user/updateUser";
 
 export const CHANGE_PASSWORD_API = "http://127.0.0.1:8083/api/v1/user/changePassword";
+
+export const GET_ALL_ROOMS_API = "http://127.0.0.1:8083/api/v1/room/all";
+
+export const CREATE_RESERVATION_API = "http://127.0.0.1:8083/api/v1/reservation/create";

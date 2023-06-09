@@ -24,7 +24,7 @@ public class ReservationService {
             ReservationEntity reservationEntity = new ReservationEntity();
             reservationEntity.setReservation_id(-1L);
             reservationEntity.setRoomId(Long.valueOf(reservationRequest.getReservedRoomId()));
-            reservationEntity.setGuests(5);
+            reservationEntity.setGuests(reservationRequest.getNumberOfGuests());
             reservationEntity.setUser_id(reservationRequest.getReservedBy());
             reservationEntity.setTimeTo(LocalDateTime.parse(reservationRequest.getTimeTo()));
             reservationEntity.setTimeFrom(LocalDateTime.parse(reservationRequest.getTimeFrom()));
