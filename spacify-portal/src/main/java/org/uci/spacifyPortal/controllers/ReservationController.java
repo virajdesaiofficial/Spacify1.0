@@ -5,12 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.uci.spacifyLib.dto.ReservationRequest;
-import org.uci.spacifyLib.repository.ReservationRepository;
-import org.uci.spacifyPortal.services.ReservationService;
 import org.uci.spacifyLib.entity.ReservationEntity;
+import org.uci.spacifyPortal.services.ReservationService;
+import org.uci.spacifyPortal.utilities.MessageResponse;
 
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/reservation")
 public class ReservationController {
@@ -18,22 +19,19 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
-    @Autowired
-    private ReservationRepository reservationRepository;
-
     @GetMapping("/all")
     public List<ReservationEntity> getAllReservations() {
         return this.reservationService.getAllReservations();
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createRoom(@RequestBody ReservationRequest createRequest) {
+    public ResponseEntity<MessageResponse> createRoom(@RequestBody ReservationRequest createRequest) {
         try {
             reservationService.createReservation(createRequest);
-            return new ResponseEntity<>("Successful", HttpStatus.OK);
+            return new ResponseEntity<>(new MessageResponse("Successfully reserved!", true), HttpStatus.OK);
 
         } catch (Exception e) {
-            return new ResponseEntity<>("Failure", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new MessageResponse("Failed to reserve. Please try again later.", false), HttpStatus.BAD_REQUEST);
         }
     }
 }
