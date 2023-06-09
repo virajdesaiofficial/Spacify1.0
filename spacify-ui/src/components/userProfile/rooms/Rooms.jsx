@@ -1,6 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import "./rooms.css";
-import { ALL_SUBSCRIBED_ROOMS_API, USER_NAME_KEY, UPDATE_SUBSCRIBED_ROOMS_API, UPDATE_SUBSCRIBED_STATUS_API, GET_ALL_MONITORING_ROOMS_WITH_ZERO_OCCUPANCY_API, GET_ALL_WHATSAPP_SUBSCRIBED_ROOMS } from "../../../endpoints";
+import {
+  ALL_SUBSCRIBED_ROOMS_API,
+  GET_ALL_MONITORING_ROOMS_WITH_ZERO_OCCUPANCY_API,
+  GET_ALL_WHATSAPP_SUBSCRIBED_ROOMS,
+  UPDATE_SUBSCRIBED_ROOMS_API,
+  UPDATE_SUBSCRIBED_STATUS_API,
+  USER_NAME_KEY
+} from "../../../endpoints";
 
 const Rooms = () => {
   const [rooms, setRooms] = useState([]);
@@ -161,7 +168,7 @@ const Rooms = () => {
 
   return (
     <div className="rooms-container">
-      <h1 className="rooms-header">My Rooms</h1>
+      <h1 className="rooms-header">Subscribed Rooms</h1>
       <ul className="rooms-list">
         {rooms.map((room) => (
           <li key={room.roomId} className="rooms-list-item" style={{ backgroundColor: vacantRooms.includes(room.roomId) ? '#0f0' : '#fff' }}>
