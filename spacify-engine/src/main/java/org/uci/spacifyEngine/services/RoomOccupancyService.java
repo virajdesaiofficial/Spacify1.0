@@ -12,6 +12,7 @@ import org.uci.spacifyLib.repository.SubscriberRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -26,14 +27,14 @@ public class RoomOccupancyService {
     private SubscriberRepository subscriberRepository;
 
     public List<RoomEntity> getRoomsWithZeroOccupancy() {
-        LocalDateTime current_time = LocalDateTime.parse("2023-02-22T12:00:00"); // HARDCODED
+        LocalDateTime current_time = LocalDateTime.parse("2023-02-22T13:15:00"); // HARDCODED
 
         List<RoomEntity> roomIdsWithZeroOccupancy = new ArrayList<>();
 
         // Iterate over rooms to check occupancy
         List<SubscriberEntity> rooms = subscriberRepository.findAllBySubscribed(true);
-        for (SubscriberEntity room : rooms) {
-            Long spacifyRoomId = room.getUserRoomPK().getRoomId();
+        List<Long> distinctRoomIds = rooms.stream().map(entity -> entity.getUserRoomPK().getRoomId()).distinct().collect(Collectors.toList());
+        for (Long spacifyRoomId : distinctRoomIds) {
             RoomEntity roomEntity = roomRepository.findByRoomId(spacifyRoomId);
             int tippers_room_id = roomEntity.getTippersSpaceId();
             List<MonitoringEntity> monitoringObjects = monitoringRepository.findAllBytippersSpaceId(tippers_room_id);
@@ -49,7 +50,7 @@ public class RoomOccupancyService {
             }
 
             // Check if the occupancy is zero for timestampToValues
-            boolean hasZeroOccupancy = false;
+            boolean hasZeroOccupancy = true;
             for (LocalDateTime timestampToValue : timestampToValues) {
                 List<MonitoringEntity> monitoringList = monitoringRepository.findByTippersSpaceIdAndTimestampTo(tippers_room_id, timestampToValue);
                 for (MonitoringEntity monitoring : monitoringList) {

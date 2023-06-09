@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.uci.spacifyEngine.services.RoomOccupancyService;
 import org.uci.spacifyEngine.services.UserSubscriberService;
 import org.uci.spacifyEngine.services.WhatsAppService;
+import org.uci.spacifyLib.entity.RoomEntity;
 import org.uci.spacifyLib.entity.UserEntity;
 import org.uci.spacifyLib.repository.UserRepository;
 import org.uci.spacifyLib.services.SubscriberService;
@@ -16,6 +17,7 @@ import org.uci.spacifyLib.services.SubscriberService;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/notification")
@@ -61,8 +63,6 @@ public class RoomNotification {
                         } else {
                             return "Failed to send unsubscribed message.";
                         }
-                    } else {
-                        return "Failed to update subscriber status.";
                     }
                 }
             }
@@ -71,6 +71,14 @@ public class RoomNotification {
         }
 
         return "Webhook verification completed.";
+    }
+
+    @GetMapping("/health")
+    @ResponseBody
+    public String healthCheck() {
+
+        return "Boo Yeah !";
+
     }
 
     // Verify the webhook for GET request
@@ -87,20 +95,15 @@ public class RoomNotification {
     @GetMapping("/send-empty-room-notification")
     public ResponseEntity<String> sendEmptyRoomNotification() {
         // Get room IDs with zero occupancy
-        List<Long> roomIdsWithZeroOccupancy = roomOccupancyService.getRoomsWithZeroOccupancy();
+        List<RoomEntity> roomEntitiesWithZeroOccupancy = roomOccupancyService.getRoomsWithZeroOccupancy();
 
-        if (roomIdsWithZeroOccupancy.isEmpty()) {
+        if (roomEntitiesWithZeroOccupancy.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No rooms with zero occupancy.");
         }
 
-        // Iterate over the roomIdsWithZeroOccupancy list
-        for (Long roomId : roomIdsWithZeroOccupancy) {
+        for (RoomEntity roomEntity : roomEntitiesWithZeroOccupancy) {
             //List<String> userIds = subscriberService.getUserIdsByRoomIds(List.of(roomId));
-            List<String> userIds = subscriberService.getUserIdsByRoomIds(roomIdsWithZeroOccupancy);
-
-            if (userIds.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No subscribed users found.");
-            }
+            List<String> userIds = subscriberService.getUserIdsByRoomIdsForWhatsapp(roomEntity.getRoomId());
 
             // Iterate over the userIds list
             for (String userId : userIds) {
@@ -111,27 +114,21 @@ public class RoomNotification {
                 }
 
                 // Check if the user is already unsubscribed
-                boolean isSubscribed = userSubscriberService.isSubscriberSubscribed(phoneNumber, roomId);
+                boolean isSubscribed = userSubscriberService.isSubscriberSubscribed(phoneNumber, roomEntity.getRoomId());
                 if (!isSubscribed) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User is already unsubscribed.");
                 }
 
                 // Create the message with dynamic room information
-                String message = "The room Conference Room 1 you've subscribed to is available to occupy! " +
+                String message = "The room " + roomEntity.getRoomName() + " you've subscribed to is available to occupy! " +
                         "Please select the Unsubscribe button below to unsubscribe. " +
                         "Thank you for choosing Spacify!";
 
                 // Trigger the WhatsApp message
-                boolean messageSent = whatsAppService.sendInteractiveWhatsAppMessage(phoneNumber, message, roomId);
+                boolean messageSent = whatsAppService.sendInteractiveWhatsAppMessage(phoneNumber, message, roomEntity.getRoomId());
 
                 if (!messageSent) {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to trigger WhatsApp message.");
-                }
-
-                // Update the subscribed status for the user and room
-                boolean updated = subscriberService.updateUserSubscribedStatus(userId, roomId.toString());
-                if (!updated) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update subscriber status.");
                 }
             }
         }
