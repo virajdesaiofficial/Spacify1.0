@@ -7,6 +7,7 @@ import {GET_USER_PROFILE_API, USER_NAME_KEY} from "../../endpoints";
 import LoadingSpinner from "../utilities/LoadingSpinner";
 import Password from "./password/Password";
 import SignInDisclaimer from "../utilities/SignInDisclaimer";
+import OwnedRooms from "./rooms/OwnedRooms";
 
 function UserProfile(props) {
     const initialState = {
@@ -56,6 +57,14 @@ function UserProfile(props) {
                     />
                 );
             }
+            case 5: {
+                return (
+                    <OwnedRooms
+                        ownedRooms={state.user.ownedRooms}
+                        subscribedRooms={state.user.subscribedRooms}
+                    />
+                );
+            }
             case 3: {
                 return (
                     <Incentives
@@ -90,9 +99,10 @@ function UserProfile(props) {
                         <ul>
                             <li onClick={e => setState({...state, selectedTab: 1})} className={state.selectedTab === 1 ? "active" : "pane-link"} >Profile</li>
                             <li onClick={e => setState({...state, selectedTab: 4})} className={state.selectedTab === 4 ? "active" : "pane-link"} >Password</li>
+                            <li onClick={e => setState({...state, selectedTab: 5})} className={state.selectedTab === 5 ? "active" : "pane-link"} >Owned Rooms</li>
                             <li onClick={e => setState({...state, selectedTab: 2})} className={state.selectedTab === 2 ? "active" : "pane-link"} >Subscribed Rooms</li>
                             <li onClick={e => setState({...state, selectedTab: 3})} className={state.selectedTab === 3 ? "active" : "pane-link"} >My Rewards</li>
-                            <li onClick={e => setState({...state, selectedTab: 5})} className={state.selectedTab === 5 ? "active" : "pane-link"} >Redeem</li>
+                            <li onClick={e => setState({...state, selectedTab: 6})} className={state.selectedTab === 6 ? "active" : "pane-link"} >Redeem</li>
                         </ul>
                     </div>
                     <div className="contentPane">
