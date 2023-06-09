@@ -28,7 +28,7 @@ public class UserSubscriberService {
             UserEntity user = userOptional.get();
             UserRoomPK userRoomPK = new UserRoomPK(user.getUserId(), (long) roomId);
             Optional<SubscriberEntity> subscriberOptional = subscriberRepository.findByUserRoomPK(userRoomPK);
-            if (subscriberOptional.isPresent()) {
+            if (subscriberOptional.isPresent() && subscriberOptional.get().isSubscribed()) {
                 SubscriberEntity subscriber = subscriberOptional.get();
                 subscriber.setSubscribed(subscribed);
                 subscriberRepository.save(subscriber);

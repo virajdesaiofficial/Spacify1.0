@@ -16,4 +16,5 @@ public interface SubscriberRepository extends JpaRepository<SubscriberEntity, Us
 
     List<SubscriberEntity> findAllByUserRoomPK_RoomId(Long roomId);
     List<SubscriberEntity> findAllBySubscribed(Boolean subs);
+    List<SubscriberEntity> findAllByUserRoomPK_RoomIdAndSubscribed(Long roomId, Boolean subs);
 }

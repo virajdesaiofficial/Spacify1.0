@@ -28,18 +28,17 @@ public class SubscriberService {
         });
         return true;
     }
-    public List<String> getUserIdsByRoomIds(List<Long> roomIds) {
-        List<String> userIds = new ArrayList<>();
 
-        for (Long roomId : roomIds) {
-            List<SubscriberEntity> subscribers = subscriberRepository.findAllByUserRoomPK_RoomId(roomId);
-            for (SubscriberEntity subscriber : subscribers) {
-                String userId = subscriber.getUserRoomPK().getUserId();
-                if (!userIds.contains(userId)) {
-                    userIds.add(userId);
-                }
+    public List<String> getUserIdsByRoomIdsForWhatsapp(Long roomId) {
+        List<String> userIds = new ArrayList<>();
+        List<SubscriberEntity> subscribers = subscriberRepository.findAllByUserRoomPK_RoomIdAndSubscribed(roomId, true);
+        for (SubscriberEntity subscriber : subscribers) {
+            String userId = subscriber.getUserRoomPK().getUserId();
+            if (!userIds.contains(userId)) {
+                userIds.add(userId);
             }
         }
+
 
         return userIds;
     }
