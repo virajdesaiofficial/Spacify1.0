@@ -109,7 +109,7 @@ function Reservation(props) {
                          dismissible>
                       {state.responseMessage}
                   </Alert>
-                  <h2 style={{margin: '1rem'}}>Create your room!</h2>
+                  <h2 style={{margin: '1rem'}}>Reserve a room!</h2>
                   <Form>
                       <Form.Group className="mb-3">
                           <Form.Label className="form-label">Select room</Form.Label>
