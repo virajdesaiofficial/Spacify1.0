@@ -1,0 +1,40 @@
+.team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 2rem;
+}
+
+.team-image {
+    width: 250px;
+    max-width: 100%;
+}
+
+.desc{
+    margin-top: 3rem;
+}
+
+.team-members {
+    margin-top: 2rem;
+}
+
+.name{
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 27px;
+}
+
+/*.position{*/
+/*    font-family: 'PT Serif', serif;*/
+/*    font-style: normal;*/
+/*    font-weight: normal;*/
+/*    font-size: 12px;*/
+/*    line-height: 16px;*/
+/*    text-transform: uppercase;*/
+/*    vertical-align: top;*/
+/*    writing-mode: vertical-rl;*/
+/*}*/
