@@ -10,7 +10,7 @@ Spacify stands out from other systems in several ways. Few of them are listed be
    
 Overall, Spacify provides a comprehensive & user-friendly study space management system, enhancing the university experience.
 
-# Product Demo
+# Product Demo Video
 [![Product Demo Video](https://img.youtube.com/vi/OCmRQBqJqtQ/0.jpg)](https://www.youtube.com/watch?v=OCmRQBqJqtQ)
 
 # Setup installation:  
