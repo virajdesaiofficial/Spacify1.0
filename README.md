@@ -20,19 +20,19 @@ create-react-app, this will take care of react installation. React version shoul
 node, v19.5.0  
 nvm, v0.35.3  
 npm, v9.4.0  
-Java SDK 11 or newer
-Spring Boot
-PostGreSQL server
-PgAdmin
-IntelliJ 2022 (any 2022 version works)  
+Java SDK 11 or newer  
+Spring Boot  
+PostGreSQL server  
+PgAdmin  
+IntelliJ 2022 (any 2022 version works)    
 
-1. Clone the project into IntelliJ
-2. Run the queries in the important-queries.sql file to setup the databaase schema
-3. Run the spacify-portal and spacify-engine applications to bring up the back end servers.
-4. Navigate to spacify-ui module via the terminal
-5. Run npm install
-6. Run npm start
-7. Now open http://localhost:3000 in your borwser to view the application.
+1. Clone the project into IntelliJ.  
+2. Run the queries in the important-queries.sql file to setup the databaase schema.  
+3. Run the spacify-portal and spacify-engine applications to bring up the back end servers.  
+4. Navigate to spacify-ui module via the terminal.  
+5. Run npm install   
+6. Run npm start  
+7. Now open http://localhost:3000 in your borwser to view the application.  
 
 
 
